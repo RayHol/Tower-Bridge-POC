@@ -3,8 +3,8 @@
         "media": [
             {
                 "type": "image",
-                "url": "./assets/images/01 - TowerBridge - Monochrome.jpg",
-                "secondImageUrl": "./assets/images/01 - TowerBridge - Colour.jpg",
+                "url": "./assets/images/01 - TowerBridge - MonochromeP.jpg",
+                "secondImageUrl": "./assets/images/01 - TowerBridge - ColourP.jpg",
                 "scale": "10 7 1",
                 "rotation": "0 0 0",
                 "fixedAngleDegrees": 0,
