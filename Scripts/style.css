@@ -115,7 +115,7 @@ button[data-action="change"] {
 }
 
 .overlay-background {
-    position: relative;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
