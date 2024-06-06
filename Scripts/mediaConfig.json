@@ -12,7 +12,7 @@
             },
             {
                 "type": "video",
-                "url": "./assets/videos/01 - TowerBridge.mp4",
+                "url": "https://rayhol.github.io/TB_Videos/Videos/01 - TowerBridge.mp4",
                 "scale": "10 7 1",
                 "rotation": "0 0 0",
                 "fixedAngleDegrees": 0,
