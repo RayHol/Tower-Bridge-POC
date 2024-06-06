@@ -28,7 +28,6 @@ window.onload = () => {
 function initializeAR(mediaArray) {
     let modelIndex = 0;
     let videoEntity = null;
-    let sliderTimeout = null;
     const button = document.querySelector('button[data-action="change"]');
     const slider = document.getElementById("slider");
     const buttonText = document.createElement('div');
@@ -116,38 +115,18 @@ function initializeAR(mediaArray) {
 
                 // Show the video button only when the slider is at 100%
                 if (value === '100') {
-                    if (!sliderTimeout) {
-                        sliderTimeout = setTimeout(() => {
-                            button.style.display = 'block'; // Show the button after 3 seconds
-                            buttonText.innerText = isIPhone ? "Tap to play the animation" : "Tap to go back";
-                            if (!isIPhone) {
-                                changeMedia(); // Automatically change to video on non-iPhone devices
-                            }
-                            sliderTimeout = null;
-                        }, 3000);
-                    }
+                    button.style.display = 'block';
+                    buttonText.innerText = "Tap to play the animation";
                 } else {
                     button.style.display = 'none';
                     buttonText.innerText = "Use the slider to transition";
-                    if (sliderTimeout) {
-                        clearTimeout(sliderTimeout);
-                        sliderTimeout = null;
-                    }
                 }
             });
 
             // Check the slider value on load to determine button visibility
             if (slider.value === '100') {
-                if (!sliderTimeout) {
-                    sliderTimeout = setTimeout(() => {
-                        button.style.display = 'block'; // Show the button after 0.1 seconds
-                        buttonText.innerText = isIPhone ? "Tap to play the animation" : "Tap to go back";
-                        if (!isIPhone) {
-                            changeMedia(); // Automatically change to video on non-iPhone devices
-                        }
-                        sliderTimeout = null;
-                    }, 100);
-                }
+                button.style.display = 'block';
+                buttonText.innerText = "Tap to play the animation";
             } else {
                 button.style.display = 'none';
                 buttonText.innerText = "Use the slider to transition";
@@ -208,4 +187,4 @@ function initializeAR(mediaArray) {
             displayMedia(modelIndex); // Initial media display
         });
     }
-}
+} 
