@@ -132,22 +132,21 @@ button[data-action="change"] {
     position: relative;
     z-index: 100;
     max-width: 80%;
-    padding: 2%;
+    padding: 20px;
     text-align: center;
 }
 
 .logo {
-    width: 10%;
-    max-width: 81px;
-    height: auto;
-    margin-bottom: 2%;
+    width: 81px;
+    height: 70px;
+    margin-bottom: 20px;
 }
 
 .overlay-content h1 {
     font-family: 'Kapra-Condensed', sans-serif;
-    font-size: 4.5vw;
+    font-size: 48px;
     font-weight: 400;
-    line-height: 1.2;
+    line-height: 40.02px;
     letter-spacing: 0.15px;
     text-align: center;
     width: 100%;
@@ -159,26 +158,33 @@ button[data-action="change"] {
 
 .overlay-content h1-2 {
     font-family: 'Kapra-Condensed', sans-serif;
-    font-size: 4vw;
+    font-size: 41px;
     font-weight: 400;
-    line-height: 1.2;
+    line-height: 40.02px;
     letter-spacing: 0.15px;
     text-align: center;
     width: 100%;
-    margin: 1% 0 0 0;
+    margin: 10px 0 0 0;
     padding: 0;
     color: #FDB0D4;
     text-transform: uppercase;
 }
 
+.overlay-line {
+    width: 268px;
+    height: 5px;
+    background-color: #FDB0D4;
+    margin: 10px auto;
+}
+
 .overlay-content h2 {
     font-family: 'Kapra-Condensed', sans-serif;
-    font-size: 3vw;
+    font-size: 32px;
     font-weight: 400;
-    line-height: 1.2;
+    line-height: 27.84px;
     text-align: center;
     width: 100%;
-    margin: 1% 0;
+    margin: 10px 0;
     padding: 0;
     color: #FFFFFF;
     text-transform: uppercase;
@@ -186,45 +192,36 @@ button[data-action="change"] {
 
 .overlay-content p {
     font-family: 'Caslons Egyptian', sans-serif;
-    font-size: 1.6vw;
+    font-size: 16px;
     font-weight: 300;
-    line-height: 1.2;
+    line-height: 19.2px;
     text-align: center;
     width: 80%;
     max-width: 327px;
-    margin: 2% 0;
+    margin: 20px 0;
     color: #FAFAFA;
 }
 
 .overlay-content button {
     font-family: 'Kapra-Condensed', sans-serif;
-    font-size: 2.4vw;
+    font-size: 24px;
     font-weight: 400;
-    line-height: 1.2;
+    line-height: 20.88px;
     letter-spacing: 0.03em;
-    padding: 1% 4%;
+    padding: 0 16px;
     background-color: #FFC734;
     border: none;
     border-radius: 4px;
     color: black;
     cursor: pointer;
     display: inline-block;
-    margin-top: 2%;
+    margin-top: 20px;
     text-transform: uppercase;
     width: 80%;
     max-width: 327px;
-    height: auto;
+    height: 44px;
 }
 
 .overlay-content button:hover {
     background-color: #FFA500;
-}
-
-.overlay-line {
-    width: 80%;
-    max-width: 268px;
-    height: 0.5%;
-    max-height: 5px;
-    background-color: #FDB0D4;
-    margin: 1% auto;
 }
