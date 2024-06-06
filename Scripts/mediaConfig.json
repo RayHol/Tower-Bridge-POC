@@ -1,0 +1,171 @@
+{
+    "location1": {
+        "media": [
+            {
+                "type": "image",
+                "url": "./assets/images/01 - TowerBridge - Monochrome.jpg",
+                "secondImageUrl": "./assets/images/01 - TowerBridge - Colour.jpg",
+                "scale": "10 7 1",
+                "rotation": "0 0 0",
+                "fixedAngleDegrees": 0,
+                "info": "Image 1"
+            },
+            {
+                "type": "video",
+                "url": "./assets/videos/02 - TowerBridge70.mp4",
+                "scale": "10 7 1",
+                "rotation": "0 0 0",
+                "fixedAngleDegrees": 0,
+                "info": "Video 1"
+            }
+        ]
+    },
+    "location2": {
+        "media": [
+            {
+                "type": "image",
+                "url": "./assets/images/02 - TowerBridge - Monochrome.jpg",
+                "secondImageUrl": "./assets/images/02 - TowerBridge - Colour.jpg",
+                "scale": "10 7 1",
+                "rotation": "0 0 0",
+                "fixedAngleDegrees": 90,
+                "info": "Image 2"
+            },
+            {
+                "type": "video",
+                "url": "./assets/videos/01 - TowerBridge.mp4",
+                "scale": "10 7 1",
+                "rotation": "0 0 0",
+                "fixedAngleDegrees": 90,
+                "info": "Video 2"
+            }
+        ]
+    },
+  
+  "location3": {
+        "media": [
+            {
+                "type": "image",
+                "url": "./assets/images/03 - TowerBridge - Monochrome.jpg",
+                "secondImageUrl": "./assets/images/03 - TowerBridge - Colour.jpg",
+                "scale": "10 7 1",
+                "rotation": "0 90 0",
+                "fixedAngleDegrees": 180,
+                "info": "Image 3"
+            },
+            {
+                "type": "video",
+                "url": "./assets/videos/03 - TowerBridge50.mp4",
+                "scale": "10 7 1",
+                "rotation": "0 90 0",
+                "fixedAngleDegrees": 180,
+                "info": "VIdeo 3"
+            }
+        ]
+    },
+  "location4": {
+        "media": [
+            {
+                "type": "image",
+                "url": "./assets/images/04 - TowerBridge - Monochrome.jpg",
+                "secondImageUrl": "./assets/images/04 - TowerBridge - Colour.jpg",
+                "scale": "10 7 1",
+                "rotation": "0 90 0",
+                "fixedAngleDegrees": 270,
+                "info": "Image 4"
+            },
+            {
+                "type": "video",
+                "url": "./assets/videos/04 - TowerBridge.mp4",
+                "scale": "10 7 1",
+                "rotation": "0 90 0",
+                "fixedAngleDegrees": 270,
+                "info": "Video 4"
+            }
+        ]
+    },
+  "location5": {
+        "media": [
+            {
+                "type": "image",
+                "url": "./assets/images/05 - TowerBridge - Monochrome.jpg",
+                "secondImageUrl": "./assets/images/05 - TowerBridge - Colour.jpg",
+                "scale": "10 7 1",
+                "rotation": "0 90 0",
+                "fixedAngleDegrees": 0,
+                "info": "Tap the button to play the animation"
+            },
+            {
+                "type": "video",
+                "url": "./assets/videos/05 - TowerBridge.mp4",
+                "scale": "10 7 1",
+                "rotation": "0 90 0",
+                "fixedAngleDegrees": 0,
+                "info": "Tap the button to switch back"
+            }
+        ]
+    },
+  "location6": {
+        "media": [
+            {
+                "type": "image",
+                "url": "./assets/images/06 - TowerBridge - Monochromet.jpg",
+                "secondImageUrl": "./assets/images/06 - TowerBridge - Colour.jpg",
+                "scale": "10 7 1",
+                "rotation": "0 90 0",
+                "fixedAngleDegrees": 0,
+                "info": "Tap the button to play the animation"
+            },
+            {
+                "type": "video",
+                "url": "./assets/videos/06 - TowerBridge.mp4",
+                "scale": "10 7 1",
+                "rotation": "0 90 0",
+                "fixedAngleDegrees": 0,
+                "info": "Tap the button to switch back"
+            }
+        ]
+    },
+  "location7": {
+        "media": [
+            {
+                "type": "image",
+                "url": "./assets/images/071 - TowerBridge - Start.jpg",
+                "secondImageUrl": "./assets/images/071 - TowerBridge - Start2.jpg",
+                "scale": "10 7 1",
+                "rotation": "0 90 0",
+                "fixedAngleDegrees": 0,
+                "info": "Tap the button to play the animation"
+            },
+            {
+                "type": "video",
+                "url": "./assets/videos/07 - TowerBridge.mp4",
+                "scale": "10 7 1",
+                "rotation": "0 90 0",
+                "fixedAngleDegrees": 0,
+                "info": "Tap the button to switch back"
+            }
+        ]
+    },
+  "location8": {
+        "media": [
+            {
+                "type": "image",
+                "url": "./assets/images/08 - TowerBridge - Start.jpg",
+                "secondImageUrl": "./assets/images/08 - TowerBridge - Start2.jpg",
+                "scale": "10 7 1",
+                "rotation": "0 90 0",
+                "fixedAngleDegrees": 0,
+                "info": "Tap the button to play the animation"
+            },
+            {
+                "type": "video",
+                "url": "./assets/videos/08 - TowerBridge.mp4",
+                "scale": "10 7 1",
+                "rotation": "0 90 0",
+                "fixedAngleDegrees": 0,
+                "info": "Tap the button to switch back"
+            }
+        ]
+    }
+}
