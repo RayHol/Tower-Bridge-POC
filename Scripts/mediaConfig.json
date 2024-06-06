@@ -24,8 +24,8 @@
         "media": [
             {
                 "type": "image",
-                "url": "./assets/images/02 - TowerBridge - Monochrome.jpg",
-                "secondImageUrl": "./assets/images/02 - TowerBridge - Colour.jpg",
+                "url": "./assets/images/02 - TowerBridge - MonochromeP.jpg",
+                "secondImageUrl": "./assets/images/02 - TowerBridge - ColourP.jpg",
                 "scale": "10 7 1",
                 "rotation": "0 0 0",
                 "fixedAngleDegrees": 90,
@@ -46,8 +46,8 @@
         "media": [
             {
                 "type": "image",
-                "url": "./assets/images/03 - TowerBridge - Monochrome.jpg",
-                "secondImageUrl": "./assets/images/03 - TowerBridge - Colour.jpg",
+                "url": "./assets/images/03 - TowerBridge - MonochromeP.jpg",
+                "secondImageUrl": "./assets/images/03 - TowerBridge - ColourP.jpg",
                 "scale": "10 7 1",
                 "rotation": "0 90 0",
                 "fixedAngleDegrees": 180,
@@ -67,8 +67,8 @@
         "media": [
             {
                 "type": "image",
-                "url": "./assets/images/04 - TowerBridge - Monochrome.jpg",
-                "secondImageUrl": "./assets/images/04 - TowerBridge - Colour.jpg",
+                "url": "./assets/images/04 - TowerBridge - MonochromeP.jpg",
+                "secondImageUrl": "./assets/images/04 - TowerBridge - ColourP.jpg",
                 "scale": "10 7 1",
                 "rotation": "0 90 0",
                 "fixedAngleDegrees": 270,
@@ -88,8 +88,8 @@
         "media": [
             {
                 "type": "image",
-                "url": "./assets/images/05 - TowerBridge - Monochrome.jpg",
-                "secondImageUrl": "./assets/images/05 - TowerBridge - Colour.jpg",
+                "url": "./assets/images/05 - TowerBridge - MonochromeP.jpg",
+                "secondImageUrl": "./assets/images/05 - TowerBridge - ColourP.jpg",
                 "scale": "10 7 1",
                 "rotation": "0 90 0",
                 "fixedAngleDegrees": 0,
@@ -109,8 +109,8 @@
         "media": [
             {
                 "type": "image",
-                "url": "./assets/images/06 - TowerBridge - Monochromet.jpg",
-                "secondImageUrl": "./assets/images/06 - TowerBridge - Colour.jpg",
+                "url": "./assets/images/06 - TowerBridge - MonochromeP.jpg",
+                "secondImageUrl": "./assets/images/06 - TowerBridge - ColourP.jpg",
                 "scale": "10 7 1",
                 "rotation": "0 90 0",
                 "fixedAngleDegrees": 0,
