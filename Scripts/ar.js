@@ -140,13 +140,13 @@ function initializeAR(mediaArray) {
             if (slider.value === '100') {
                 if (!sliderTimeout) {
                     sliderTimeout = setTimeout(() => {
-                        button.style.display = 'block'; // Show the button after 3 seconds
+                        button.style.display = 'block'; // Show the button after 0.1 seconds
                         buttonText.innerText = isIPhone ? "Tap to play the animation" : "Tap to go back";
                         if (!isIPhone) {
                             changeMedia(); // Automatically change to video on non-iPhone devices
                         }
                         sliderTimeout = null;
-                    }, 3000);
+                    }, 100);
                 }
             } else {
                 button.style.display = 'none';
@@ -169,6 +169,7 @@ function initializeAR(mediaArray) {
                 entity.setAttribute('position', `${x} 5 ${z}`);
                 entity.setAttribute('rotation', `0 ${rotationY} 0`);
                 entity.setAttribute('scale', mediaItem.scale);
+                entity.setAttribute('preload', 'true');
                 scene.appendChild(entity);
                 videoEntity = entity;
             }
