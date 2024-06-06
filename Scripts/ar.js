@@ -169,6 +169,7 @@ function initializeAR(mediaArray) {
                 entity.setAttribute('position', `${x} 5 ${z}`);
                 entity.setAttribute('rotation', `0 ${rotationY} 0`);
                 entity.setAttribute('scale', mediaItem.scale);
+                entity.setAttribute('preload', 'auto');
                 scene.appendChild(entity);
                 videoEntity = entity;
             }
