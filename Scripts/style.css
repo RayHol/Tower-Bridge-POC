@@ -200,7 +200,7 @@ button[data-action="change"] {
 
 .overlay-content p {
     position: fixed;
-    bottom: 10%;
+    bottom: 12%;
     left: 10%;
     font-family: 'Caslons Egyptian', sans-serif;
     font-size: 16px;
