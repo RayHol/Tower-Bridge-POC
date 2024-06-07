@@ -38,11 +38,13 @@ button {
 .instructions {
     position: fixed;
     top: 5%;
-    font-size: 1.25em;
+    font-size: 24px;
     color: white;
-    font-family: 'Poppins', sans-serif;
-    font-style: normal;
-    font-weight: 500;
+    font-family: 'Kapra-Condensed', sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.15px;
+    text-align: justify;
+    text-transform: uppercase;
     z-index: 1;
 }
 
@@ -75,11 +77,15 @@ button {
     bottom: 130px;
     left: 50%;
     transform: translateX(-50%);
-    text-align: center;
     z-index: 10;
-    color: white;
-    font-family: 'Poppins', sans-serif;
-    font-size: 16px;
+    font-family: 'Kapra-Condensed', sans-serif;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 40.02px;
+    letter-spacing: 0.15px;
+    text-align: justify;
+    color: #FFFFFF;
+    text-transform: uppercase;
 }
 
 button[data-action="change"] {
@@ -107,7 +113,7 @@ button[data-action="change"] {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+/*     justify-content: center; */
     z-index: 100;
     color: white;
     font-family: 'Kapra-Condensed', sans-serif;
@@ -131,15 +137,16 @@ button[data-action="change"] {
 .overlay-content {
     position: relative;
     z-index: 100;
-    max-width: 80%;
-    padding: 20px;
+    max-width: 100%;
+    padding: 10px;
     text-align: center;
 }
 
 .logo {
-    width: 81px;
-    height: 70px;
-    margin-bottom: 20px;
+    max-width: 81px;
+    max-height: 70px;
+    margin-bottom: 5px; 
+    margin-top: 30%;
 }
 
 .overlay-content h1-1 {
@@ -187,22 +194,32 @@ button[data-action="change"] {
     margin: 10px 0;
     padding: 0;
     color: #FFFFFF;
+/*     margin-bottom: 45%; */
     text-transform: uppercase;
 }
 
 .overlay-content p {
+    position: fixed;
+    bottom: 10%;
     font-family: 'Caslons Egyptian', sans-serif;
     font-size: 16px;
     font-weight: 300;
     line-height: 19.2px;
     text-align: center;
-    width: 100%;
+    width: 80%;
     max-width: 327px;
-    margin: 20px 0;
+    margin: 10px 0;
+    padding: 0;
+    align-items: center;
+/*     margin-top: 200px; */
     color: #FAFAFA;
 }
 
 .overlay-content button {
+    position: fixed;
+    bottom: 5%;
+    left: 10%;
+  
     font-family: 'Kapra-Condensed', sans-serif;
     font-size: 24px;
     font-weight: 400;
@@ -215,7 +232,7 @@ button[data-action="change"] {
     color: black;
     cursor: pointer;
     display: inline-block;
-    margin-top: 20px;
+/*     margin-top: 0px; */
     text-transform: uppercase;
     width: 80%;
     max-width: 327px;
