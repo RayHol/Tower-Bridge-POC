@@ -12,11 +12,11 @@
     height: 20%;
     justify-content: center;
     position: fixed;
-    bottom: 0;
+    bottom: 0%;
     display: flex;
     flex-direction: row;
     width: 100%;
-    margin: 0 auto;
+    margin: 0px auto;
     left: 0;
     right: 0;
 }
@@ -144,7 +144,7 @@ button[data-action="change"] {
 
 .overlay-content h1 {
     font-family: 'Kapra-Condensed', sans-serif;
-    font-size: 48px;
+    font-size: 46px;
     font-weight: 400;
     line-height: 40.02px;
     letter-spacing: 0.15px;
@@ -158,7 +158,7 @@ button[data-action="change"] {
 
 .overlay-content h1-2 {
     font-family: 'Kapra-Condensed', sans-serif;
-    font-size: 41px;
+    font-size: 46px;
     font-weight: 400;
     line-height: 40.02px;
     letter-spacing: 0.15px;
@@ -168,13 +168,6 @@ button[data-action="change"] {
     padding: 0;
     color: #FDB0D4;
     text-transform: uppercase;
-}
-
-.overlay-line {
-    width: 268px;
-    height: 5px;
-    background-color: #FDB0D4;
-    margin: 10px auto;
 }
 
 .overlay-content h2 {
@@ -196,8 +189,7 @@ button[data-action="change"] {
     font-weight: 300;
     line-height: 19.2px;
     text-align: center;
-    width: 80%;
-    max-width: 327px;
+    width: 327px;
     margin: 20px 0;
     color: #FAFAFA;
 }
@@ -217,11 +209,17 @@ button[data-action="change"] {
     display: inline-block;
     margin-top: 20px;
     text-transform: uppercase;
-    width: 80%;
-    max-width: 327px;
+    width: 327px;
     height: 44px;
 }
 
 .overlay-content button:hover {
     background-color: #FFA500;
+}
+
+.overlay-line {
+    width: 268px;
+    height: 5px;
+    background-color: #FDB0D4;
+    margin: 10px auto;
 }
