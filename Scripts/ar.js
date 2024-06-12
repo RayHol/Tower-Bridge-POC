@@ -1,4 +1,7 @@
-// v.012 background audio
+// v.011 pinch to zoom
+// v.012 drag to rotate
+// v.013 background audio
+// v.014 look around images placed around the user
 window.onload = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const locationId = urlParams.get('location');
@@ -35,6 +38,7 @@ function initializeAR(mediaArray) {
     let modelIndex = 0;
     let videoEntity = null;
     let frameEntity = null;
+    let lookImages = [];
     const button = document.querySelector('button[data-action="change"]');
     const buttonText = document.createElement('div');
     buttonText.className = 'button-text';
@@ -47,10 +51,10 @@ function initializeAR(mediaArray) {
     let currentY = 0; // Initial Y position
     const minZoom = 10; // Minimum distance from the user
     const maxZoom = 50; // Maximum distance from the user
-    const minY = -10; // Set minimum Y value
+    const minY = -5; // Set minimum Y value
     const maxY = 10; // Set maximum Y value
-    const zoomSpeed = 0.01; // Adjust the zoom speed as needed
-    const dragSpeed = 0.01; // Adjust the drag speed as needed
+    const zoomSpeed = 0.1; // Adjust the zoom speed as needed
+    const dragSpeed = 0.1; // Adjust the drag speed as needed
 
     // Pinch-to-zoom variables
     let initialPinchDistance = null;
@@ -83,7 +87,7 @@ function initializeAR(mediaArray) {
 
             mediaEntity.setAttribute('position', { x, y: currentY, z });
             if (frameEntity) {
-                frameEntity.setAttribute('position', { x, y: currentY, z });
+                frameEntity.setAttribute('position', { x, y: currentY, z: z }); // Ensure frame is slightly in front dynamically
             }
             currentZoom = newZoom; // Update current zoom level
         }
@@ -130,19 +134,27 @@ function initializeAR(mediaArray) {
                 fixedAngleDegrees = initialFixedAngle + deltaX * dragSpeed; // Adjust the sensitivity as needed
 
                 // Calculate the new position based on fixedAngleDegrees
-                const radians = fixedAngleDegrees * (Math.PI / 180);
+                const radians = fixedAngleDegrees * Math.PI / 180;
                 const x = -currentZoom * Math.sin(radians); // Adjust for current zoom level
                 const z = -currentZoom * Math.cos(radians); // Adjust for current zoom level
 
                 mediaEntity.setAttribute('position', { x, y: currentY, z });
                 mediaEntity.setAttribute('rotation', `0 ${fixedAngleDegrees} 0`);
                 if (frameEntity) {
-                    frameEntity.setAttribute('position', { x, y: currentY, z });
+                    frameEntity.setAttribute('position', { x, y: currentY, z: z });
                     frameEntity.setAttribute('rotation', `0 ${fixedAngleDegrees} 0`);
                 }
+                lookImages.forEach((lookImage, index) => {
+                    const angle = (index + 1) * 90;
+                    const lookRadians = (fixedAngleDegrees + angle) * Math.PI / 180;
+                    const lookX = -25 * Math.sin(lookRadians);
+                    const lookZ = -25 * Math.cos(lookRadians);
+                    lookImage.setAttribute('position', { x: lookX, y: 0, z: lookZ });
+                    lookImage.setAttribute('rotation', { x: 0, y: angle + fixedAngleDegrees, z: 0 });
+                });
             } else if (dragAxis === 'y') {
                 // Calculate the new Y position
-                const newY = currentY - (deltaY * dragSpeed * 0.2); // Adjust the sensitivity as needed and invert the drag
+                const newY = currentY - deltaY * dragSpeed * 0.2; // Adjust the sensitivity as needed and invert the drag
                 const clampedY = Math.max(minY, Math.min(maxY, newY)); // Constrain the Y value within minY and maxY
 
                 // Update the media entity position
@@ -155,6 +167,8 @@ function initializeAR(mediaArray) {
             }
         }
     }, { passive: false });
+
+
 
     document.addEventListener('touchend', function () {
         initialPinchDistance = null;
@@ -173,6 +187,26 @@ function initializeAR(mediaArray) {
         }
     }
 
+    function createLookImages() {
+        let scene = document.querySelector('a-scene');
+        lookImages.forEach(lookImage => lookImage.parentNode.removeChild(lookImage));
+        lookImages = [];
+        const angles = [90, 180, 270]; // Angles for lookImage
+        angles.forEach(angle => {
+            const radians = (fixedAngleDegrees + angle) * Math.PI / 180;
+            const lookX = -currentZoom * Math.sin(radians);
+            const lookZ = -currentZoom * Math.cos(radians);
+
+            const lookImage = document.createElement('a-image');
+            lookImage.setAttribute('src', './assets/lookImage.png');
+            lookImage.setAttribute('position', { x: lookX, y: 0, z: lookZ });
+            lookImage.setAttribute('rotation', { x: 0, y: angle + fixedAngleDegrees , z: 0 });
+            lookImage.setAttribute('scale', '14 4 1');
+            scene.appendChild(lookImage);
+            lookImages.push(lookImage);
+        });
+    }
+
     function changeMedia() {
         modelIndex = (modelIndex + 1) % mediaArray.length;
         displayMedia(modelIndex);
@@ -181,10 +215,9 @@ function initializeAR(mediaArray) {
     function displayMedia(index) {
         let scene = document.querySelector('a-scene');
         let mediaItem = mediaArray[index];
-        let lookImage = document.getElementById('look_1');
 
         // Remove existing media (image or video)
-        let existingMedia = scene.querySelector('a-image:not(#look_1), a-video:not([visible=false])');
+        let existingMedia = scene.querySelector('a-image:not([id^="look_"]) , a-video:not([visible=false])');
         if (existingMedia) {
             existingMedia.parentNode.removeChild(existingMedia);
         }
@@ -197,7 +230,7 @@ function initializeAR(mediaArray) {
 
         // Correct media element placement
         fixedAngleDegrees = mediaItem.fixedAngleDegrees; // Store the fixed angle degrees for initial placement
-        const radians = fixedAngleDegrees * (Math.PI / 180);
+        const radians = fixedAngleDegrees * Math.PI / 180;
         const x = -currentZoom * Math.sin(radians); // Set initial X based on fixedAngleDegrees and current zoom level
         const z = -currentZoom * Math.cos(radians); // Set initial Z based on fixedAngleDegrees and current zoom level
         const rotationY = fixedAngleDegrees; // Set initial rotation
@@ -220,16 +253,11 @@ function initializeAR(mediaArray) {
             entity.setAttribute('scale', mediaItem.scale);
 
             scene.appendChild(entity);
-            lookImage.setAttribute('visible', 'true'); // Ensure lookImage is visible
+            document.getElementById('look_1').setAttribute('visible', 'true'); // Ensure lookImage is visible
             buttonText.innerText = isIPhone ? "Tap to play the animation" : "Tap to play";
 
-            // Set the look image opposite to the media item
-            const oppositeAngleDegrees = (fixedAngleDegrees + 180) % 360;
-            const oppositeRadians = oppositeAngleDegrees * (Math.PI / 180);
-            const oppositeX = -currentZoom * Math.sin(oppositeRadians); // Adjusted for correct opposite placement and current zoom level
-            const oppositeZ = -currentZoom * Math.cos(oppositeRadians); // Adjusted for correct opposite placement and current zoom level
-            lookImage.setAttribute('position', { x: oppositeX, y: currentY, z: oppositeZ });
-            lookImage.setAttribute('rotation', { x: 0, y: 180, z: 0 });
+            // Create lookImage copies at specific angles
+            createLookImages();
         } else if (mediaItem.type === 'video') {
             if (videoEntity) {
                 videoEntity.setAttribute('visible', 'true');
@@ -247,8 +275,11 @@ function initializeAR(mediaArray) {
                 scene.appendChild(entity);
                 videoEntity = entity;
             }
-            lookImage.setAttribute('visible', 'false'); // Hide lookImage when video is playing
+            document.getElementById('look_1').setAttribute('visible', 'true'); // Ensure lookImage is visible
             buttonText.innerText = "Tap to go back";
+
+            // Create lookImage copies at specific angles
+            createLookImages();
         }
         mediaEntity = entity;
 
@@ -256,7 +287,7 @@ function initializeAR(mediaArray) {
         if (mediaItem.frameUrl) {
             frameEntity = document.createElement('a-image');
             frameEntity.setAttribute('src', mediaItem.frameUrl);
-            frameEntity.setAttribute('position', { x, y: currentY, z }); // Ensure frame is slightly in front dynamically
+            frameEntity.setAttribute('position', { x, y: currentY, z: z }); // Ensure frame is slightly in front dynamically
             frameEntity.setAttribute('rotation', { x: 0, y: rotationY, z: 0 });
             frameEntity.setAttribute('scale', mediaItem.scale);
             scene.appendChild(frameEntity);
@@ -294,3 +325,4 @@ function initializeAR(mediaArray) {
         });
     }
 }
+
