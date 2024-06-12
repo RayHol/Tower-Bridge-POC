@@ -1,3 +1,4 @@
+// v.011 Frames, drag and zoom
 window.onload = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const locationId = urlParams.get('location');
@@ -44,9 +45,10 @@ function initializeAR(mediaArray) {
     let currentY = 0; // Initial Y position
     const minZoom = 10; // Minimum distance from the user
     const maxZoom = 50; // Maximum distance from the user
-    const minY = -5; // Set minimum Y value
+    const minY = -10; // Set minimum Y value
     const maxY = 10; // Set maximum Y value
-    const zoomSpeed = 0.02; // Adjust the zoom speed as needed
+    const zoomSpeed = 0.01; // Adjust the zoom speed as needed
+    const dragSpeed = 0.01; // Adjust the drag speed as needed
 
     // Pinch-to-zoom variables
     let initialPinchDistance = null;
@@ -58,30 +60,6 @@ function initializeAR(mediaArray) {
     let initialFixedAngle = 0;
     let dragAxis = null; // 'x' for rotation, 'y' for vertical movement
 
-    // Debug elements to display position, rotation, and fixedAngleDegrees
-    const debugDiv = document.createElement('div');
-    debugDiv.id = 'debug-info';
-    debugDiv.style.position = 'fixed';
-    debugDiv.style.top = '10px';
-    debugDiv.style.left = '10px';
-    debugDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-    debugDiv.style.color = 'white';
-    debugDiv.style.padding = '10px';
-    debugDiv.style.zIndex = '1000';
-    document.body.appendChild(debugDiv);
-
-    function updateDebugInfo() {
-        if (mediaEntity) {
-            const position = mediaEntity.getAttribute('position');
-            const rotation = mediaEntity.getAttribute('rotation');
-            debugDiv.innerHTML = `
-                Position: x: ${position.x.toFixed(2)}, y: ${position.y.toFixed(2)}, z: ${position.z.toFixed(2)}<br>
-                Rotation: x: ${rotation.x.toFixed(2)}, y: ${rotation.y.toFixed(2)}, z: ${rotation.z.toFixed(2)}<br>
-                Fixed Angle Degrees: ${fixedAngleDegrees}
-            `;
-        }
-    }
-
     function getPinchDistance(e) {
         const dx = e.touches[0].pageX - e.touches[1].pageX;
         const dy = e.touches[0].pageY - e.touches[1].pageY;
@@ -90,23 +68,22 @@ function initializeAR(mediaArray) {
 
     function updateZoom(currentPinchDistance) {
         if (mediaEntity) {
-            const scale = currentPinchDistance / initialPinchDistance;
             const directionX = -Math.sin(fixedAngleDegrees * Math.PI / 180);
             const directionZ = -Math.cos(fixedAngleDegrees * Math.PI / 180);
-            let distance = currentZoom * scale;
+            let distanceChange = (currentPinchDistance - initialPinchDistance) * zoomSpeed;
+            let newZoom = currentZoom + distanceChange;
 
             // Constrain the zoom distance within minZoom and maxZoom
-            distance = Math.max(minZoom, Math.min(maxZoom, distance));
+            newZoom = Math.max(minZoom, Math.min(maxZoom, newZoom));
 
-            const x = distance * directionX;
-            const z = distance * directionZ;
+            const x = newZoom * directionX;
+            const z = newZoom * directionZ;
 
             mediaEntity.setAttribute('position', { x, y: currentY, z });
             if (frameEntity) {
-                frameEntity.setAttribute('position', { x, y: currentY, z: z - 0.1 }); // Ensure frame is slightly in front
+                frameEntity.setAttribute('position', { x, y: currentY, z });
             }
-            currentZoom = distance; // Update current zoom level
-            updateDebugInfo(); // Update debug info
+            currentZoom = newZoom; // Update current zoom level
         }
     }
 
@@ -148,7 +125,7 @@ function initializeAR(mediaArray) {
 
             if (dragAxis === 'x') {
                 // Adjust fixedAngleDegrees based on horizontal movement
-                fixedAngleDegrees = initialFixedAngle + deltaX * 0.1; // Adjust the sensitivity as needed
+                fixedAngleDegrees = initialFixedAngle + deltaX * dragSpeed; // Adjust the sensitivity as needed
 
                 // Calculate the new position based on fixedAngleDegrees
                 const radians = fixedAngleDegrees * (Math.PI / 180);
@@ -158,24 +135,22 @@ function initializeAR(mediaArray) {
                 mediaEntity.setAttribute('position', { x, y: currentY, z });
                 mediaEntity.setAttribute('rotation', `0 ${fixedAngleDegrees} 0`);
                 if (frameEntity) {
-                    frameEntity.setAttribute('position', { x, y: currentY, z: z - 0.1 }); // Ensure frame is slightly in front
+                    frameEntity.setAttribute('position', { x, y: currentY, z });
+                    frameEntity.setAttribute('rotation', `0 ${fixedAngleDegrees} 0`);
                 }
             } else if (dragAxis === 'y') {
                 // Calculate the new Y position
-                const newY = currentY - (deltaY * 0.02); // Adjust the sensitivity as needed and invert the drag
+                const newY = currentY - (deltaY * dragSpeed * 0.2); // Adjust the sensitivity as needed and invert the drag
                 const clampedY = Math.max(minY, Math.min(maxY, newY)); // Constrain the Y value within minY and maxY
 
                 // Update the media entity position
                 const position = mediaEntity.getAttribute('position');
                 mediaEntity.setAttribute('position', { x: position.x, y: clampedY, z: position.z });
                 if (frameEntity) {
-                    frameEntity.setAttribute('position', { x: position.x, y: clampedY, z: position.z - 0.1 }); // Ensure frame is slightly in front
+                    frameEntity.setAttribute('position', { x: position.x, y: clampedY, z: position.z });
                 }
                 currentY = clampedY; // Store the current Y position
             }
-
-            // Update debug info
-            updateDebugInfo();
         }
     }, { passive: false });
 
@@ -279,7 +254,7 @@ function initializeAR(mediaArray) {
         if (mediaItem.frameUrl) {
             frameEntity = document.createElement('a-image');
             frameEntity.setAttribute('src', mediaItem.frameUrl);
-            frameEntity.setAttribute('position', { x, y: currentY, z: z +1 }); // Ensure frame is slightly in front
+            frameEntity.setAttribute('position', { x, y: currentY, z }); // Ensure frame is slightly in front dynamically
             frameEntity.setAttribute('rotation', { x: 0, y: rotationY, z: 0 });
             frameEntity.setAttribute('scale', mediaItem.scale);
             scene.appendChild(frameEntity);
@@ -300,7 +275,6 @@ function initializeAR(mediaArray) {
             const doubleCheckRotation = mediaEntity.getAttribute('rotation');
             console.log(`Double-check position: x: ${doubleCheckPosition.x}, y: ${doubleCheckPosition.y}, z: ${doubleCheckPosition.z}`);
             console.log(`Double-check rotation: x: ${doubleCheckRotation.x}, y: ${doubleCheckRotation.y}, z: ${doubleCheckRotation.z}`);
-            updateDebugInfo();
         }, 100);
     }
 
