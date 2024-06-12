@@ -7,7 +7,7 @@
                 "scale": "10 7 1",
                 "rotation": "0 0 0",
                 "fixedAngleDegrees": 0,
-                "frameUrl": "./assets/frames/frame1.png",
+                "frameUrl": "./assets/frames/frame2.png",
                 "info": "Tap the button to play the animation"
             },
             {
@@ -16,7 +16,7 @@
                 "scale": "10 7 1",
                 "rotation": "0 0 0",
                 "fixedAngleDegrees": 0,
-                "frameUrl": "./assets/frames/frame1.png",
+                "frameUrl": "./assets/frames/frame2.png",
                 "info": "Tap the button to switch back"
             }
         ]
@@ -31,6 +31,7 @@
                 "scale": "10 7 1",
                 "rotation": "0 0 0",
                 "fixedAngleDegrees": 90,
+                "frameUrl": "./assets/frames/frame2.png",
                 "info": "Image 2"
             },
             {
@@ -39,6 +40,7 @@
                 "scale": "10 7 1",
                 "rotation": "0 0 0",
                 "fixedAngleDegrees": 90,
+                "frameUrl": "./assets/frames/frame2.png",
                 "info": "Video 2"
             }
         ]
@@ -53,6 +55,7 @@
                 "scale": "10 7 1",
                 "rotation": "0 0 0",
                 "fixedAngleDegrees": 180,
+                "frameUrl": "./assets/frames/frame2.png",
                 "info": "Image 3"
             },
             {
@@ -61,6 +64,7 @@
                 "scale": "10 7 1",
                 "rotation": "0 0 0",
                 "fixedAngleDegrees": 180,
+                "frameUrl": "./assets/frames/frame2.png",
                 "info": "VIdeo 3"
             }
         ]
@@ -74,6 +78,7 @@
                 "scale": "10 7 1",
                 "rotation": "0 0 0",
                 "fixedAngleDegrees": 270,
+                "frameUrl": "./assets/frames/frame2.png",
                 "info": "Image 4"
             },
             {
@@ -82,6 +87,7 @@
                 "scale": "10 7 1",
                 "rotation": "0 0 0",
                 "fixedAngleDegrees": 270,
+                "frameUrl": "./assets/frames/frame2.png",
                 "info": "Video 4"
             }
         ]
@@ -95,6 +101,7 @@
                 "scale": "10 7 1",
                 "rotation": "0 90 0",
                 "fixedAngleDegrees": 0,
+                "frameUrl": "./assets/frames/frame2.png",
                 "info": "Tap the button to play the animation"
             },
             {
@@ -103,6 +110,7 @@
                 "scale": "10 7 1",
                 "rotation": "0 90 0",
                 "fixedAngleDegrees": 0,
+                "frameUrl": "./assets/frames/frame2.png",
                 "info": "Tap the button to switch back"
             }
         ]
@@ -116,6 +124,7 @@
                 "scale": "10 7 1",
                 "rotation": "0 90 0",
                 "fixedAngleDegrees": 0,
+                "frameUrl": "./assets/frames/frame2.png",
                 "info": "Tap the button to play the animation"
             },
             {
@@ -124,6 +133,7 @@
                 "scale": "10 7 1",
                 "rotation": "0 90 0",
                 "fixedAngleDegrees": 0,
+                "frameUrl": "./assets/frames/frame2.png",
                 "info": "Tap the button to switch back"
             }
         ]
@@ -137,6 +147,7 @@
                 "scale": "10 7 1",
                 "rotation": "0 90 0",
                 "fixedAngleDegrees": 0,
+                "frameUrl": "./assets/frames/frame2.png",
                 "info": "Tap the button to play the animation"
             },
             {
@@ -145,6 +156,7 @@
                 "scale": "10 7 1",
                 "rotation": "0 90 0",
                 "fixedAngleDegrees": 0,
+                "frameUrl": "./assets/frames/frame2.png",
                 "info": "Tap the button to switch back"
             }
         ]
@@ -158,6 +170,7 @@
                 "scale": "10 7 1",
                 "rotation": "0 90 0",
                 "fixedAngleDegrees": 0,
+                "frameUrl": "./assets/frames/frame2.png",
                 "info": "Tap the button to play the animation"
             },
             {
@@ -166,6 +179,7 @@
                 "scale": "10 7 1",
                 "rotation": "0 90 0",
                 "fixedAngleDegrees": 0,
+                "frameUrl": "./assets/frames/frame2.png",
                 "info": "Tap the button to switch back"
             }
         ]
