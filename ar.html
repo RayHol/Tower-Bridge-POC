@@ -28,12 +28,16 @@
             <button id="start-experience">Start Exploring</button>
         </div>
     </div>
+    <audio id="background-audio" loop>
+        <source src="./assets/audio/background.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
     <div class="centered instructions"></div>
     <a-scene vr-mode-ui="enabled: false" embedded arjs="sourceType: webcam; sourceWidth:1280; sourceHeight:960; displayWidth: 1280; displayHeight: 960; debugUIEnabled: false;">
         <a-light type="ambient" color="#ffffff"></a-light>
         <a-light type="directional" color="#ffffff" position="-2 4 5"></a-light>
-        <a-camera position="0 0 0" look-controls rotation-reader></a-camera>
-        <a-image id="look_1" position="-25 0 180" rotation="0 270 0" scale="14 4 1" visible="false"></a-image>
+        <a-camera rotation-reader></a-camera>
+        <a-image id="look_1" position="0 0 0" rotation="0 0 0" scale="14 4 1" visible="false"></a-image>
     </a-scene>
     <div class="centered">
         <button data-action="change"></button>
