@@ -31,6 +31,7 @@ window.onload = () => {
 function initializeAR(mediaArray) {
     let modelIndex = 0;
     let videoEntity = null;
+    let frameEntity = null;
     const button = document.querySelector('button[data-action="change"]');
     const buttonText = document.createElement('div');
     buttonText.className = 'button-text';
@@ -101,6 +102,9 @@ function initializeAR(mediaArray) {
             const z = distance * directionZ;
 
             mediaEntity.setAttribute('position', { x, y: currentY, z });
+            if (frameEntity) {
+                frameEntity.setAttribute('position', { x, y: currentY, z: z - 0.1 }); // Ensure frame is slightly in front
+            }
             currentZoom = distance; // Update current zoom level
             updateDebugInfo(); // Update debug info
         }
@@ -153,6 +157,9 @@ function initializeAR(mediaArray) {
 
                 mediaEntity.setAttribute('position', { x, y: currentY, z });
                 mediaEntity.setAttribute('rotation', `0 ${fixedAngleDegrees} 0`);
+                if (frameEntity) {
+                    frameEntity.setAttribute('position', { x, y: currentY, z: z - 0.1 }); // Ensure frame is slightly in front
+                }
             } else if (dragAxis === 'y') {
                 // Calculate the new Y position
                 const newY = currentY - (deltaY * 0.02); // Adjust the sensitivity as needed and invert the drag
@@ -161,6 +168,9 @@ function initializeAR(mediaArray) {
                 // Update the media entity position
                 const position = mediaEntity.getAttribute('position');
                 mediaEntity.setAttribute('position', { x: position.x, y: clampedY, z: position.z });
+                if (frameEntity) {
+                    frameEntity.setAttribute('position', { x: position.x, y: clampedY, z: position.z - 0.1 }); // Ensure frame is slightly in front
+                }
                 currentY = clampedY; // Store the current Y position
             }
 
@@ -200,6 +210,12 @@ function initializeAR(mediaArray) {
         let existingMedia = scene.querySelector('a-image:not(#look_1), a-video:not([visible=false])');
         if (existingMedia) {
             existingMedia.parentNode.removeChild(existingMedia);
+        }
+
+        // Remove existing frame if any
+        if (frameEntity) {
+            frameEntity.parentNode.removeChild(frameEntity);
+            frameEntity = null;
         }
 
         // Correct media element placement
@@ -258,6 +274,16 @@ function initializeAR(mediaArray) {
             buttonText.innerText = "Tap to go back";
         }
         mediaEntity = entity;
+
+        // Add the frame entity
+        if (mediaItem.frameUrl) {
+            frameEntity = document.createElement('a-image');
+            frameEntity.setAttribute('src', mediaItem.frameUrl);
+            frameEntity.setAttribute('position', { x, y: currentY, z: z +1 }); // Ensure frame is slightly in front
+            frameEntity.setAttribute('rotation', { x: 0, y: rotationY, z: 0 });
+            frameEntity.setAttribute('scale', mediaItem.scale);
+            scene.appendChild(frameEntity);
+        }
 
         // Explicitly set initial position and update debug info
         mediaEntity.setAttribute('position', { x: x, y: currentY, z: z });
