@@ -32,12 +32,11 @@
     <a-scene vr-mode-ui="enabled: false" embedded arjs="sourceType: webcam; sourceWidth:1280; sourceHeight:960; displayWidth: 1280; displayHeight: 960; debugUIEnabled: false;">
         <a-light type="ambient" color="#ffffff"></a-light>
         <a-light type="directional" color="#ffffff" position="-2 4 5"></a-light>
-        <a-camera rotation-reader></a-camera>
-        <a-image id="look_1" position="-25 5 180" rotation="0 270 0" scale="14 4 1" visible="false"></a-image>
+        <a-camera position="0 0 0" look-controls rotation-reader></a-camera>
+        <a-image id="look_1" position="-25 0 180" rotation="0 270 0" scale="14 4 1" visible="false"></a-image>
     </a-scene>
     <div class="centered">
         <button data-action="change"></button>
     </div>
-    <input type="range" min="0" max="100" value="0" id="slider" class="slider">
 </body>
 </html>
