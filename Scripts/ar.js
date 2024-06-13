@@ -23,8 +23,8 @@ const minZoom = 10; // Minimum distance from the user
 const maxZoom = 50; // Maximum distance from the user
 const minY = -5; // Set minimum Y value
 const maxY = 10; // Set maximum Y value
-const zoomSpeed = 0.1; // Adjust the zoom speed as needed
-const dragSpeed = 0.1; // Adjust the drag speed as needed
+const zoomSpeed = 0.01; // Adjust the zoom speed as needed
+const dragSpeed = 0.01; // Adjust the drag speed as needed
 
 // Pinch-to-zoom variables
 let initialPinchDistance = null;
