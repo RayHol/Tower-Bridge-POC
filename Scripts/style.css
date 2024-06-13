@@ -250,8 +250,49 @@ button[data-action="change"] {
     height: auto;
     margin: 20px 0;
 }
-#headphone-overlay .overlay-content button {
-    position: relative;
+#headphone-overlay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    z-index: 9999;
+}
+
+#headphone-overlay .popup-content {
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 80%;
+}
+
+#headphone-overlay .popup-content h2 {
+    font-family: 'Kapra-Condensed', sans-serif;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 27.84px;
+    text-align: center;
+    width: 100%;
+    margin: 10px 0;
+    padding: 0;
+    color: #000000;
+    text-transform: uppercase;
+}
+
+#headphone-overlay .popup-content img {
+    width: 100px;
+    height: auto;
+    margin: 20px 0;
+}
+
+#headphone-overlay .popup-content button {
     margin-top: 20px;
     width: auto;
     font-family: 'Kapra-Condensed', sans-serif;
@@ -259,7 +300,7 @@ button[data-action="change"] {
     font-weight: 400;
     line-height: 20.88px;
     letter-spacing: 0.03em;
-    padding: 0 16px;
+    padding: 10px 20px;
     background-color: #FFC734;
     border: none;
     border-radius: 4px;
@@ -271,23 +312,10 @@ button[data-action="change"] {
     height: 44px;
 }
 
-#headphone-overlay .overlay-content button:hover {
+#headphone-overlay .popup-content button:hover {
     background-color: #FFA500;
 }
 
-#headphone-ovelay .overlay-content h2 {
-    font-family: 'Kapra-Condensed', sans-serif;
-    font-size: 32px;
-    font-weight: 400;
-    line-height: 27.84px;
-    text-align: center;
-    width: 100%;
-    margin: 10px 0;
-    margin-top: 10px;
-    padding: 0;
-    color: #FFFFFF;
-    text-transform: uppercase;
-}
 
 
 .a-dialog-allow-button {
@@ -384,7 +412,7 @@ button[data-action="change"] {
 }
 
 #map-overlay .overlay-background {
-    background-image: url('../assets/images/UI/background2.jpg');
+    background-image: url('../assets/images/UI/Map1.png');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
