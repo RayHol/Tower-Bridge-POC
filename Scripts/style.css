@@ -8,10 +8,7 @@
     src: url('../assets/fonts/Caslons Egyptian Light.otf');
 }
 
-/* .a-modal {
-    display: none!important;
-} */
-
+/* General styles */
 .centered {
     height: 20%;
     justify-content: center;
@@ -73,7 +70,6 @@ button {
     -ms-user-select: none;
     user-select: none;
 }
-
 
 .button-text {
     position: fixed;
@@ -145,52 +141,53 @@ button[data-action="change"] {
 }
 
 .logo {
-    max-width: 81px;
-    max-height: 70px;
+    max-width: 55.08px;
+    max-height: 48.2px;
     margin-bottom: 5px; 
     margin-top: 30%;
 }
 
-.overlay-content h1-1 {
+/* Overlay specific styles */
+.overlay-content .overlay-header1 {
     font-family: 'Kapra-Condensed', sans-serif;
-    font-size: 48px;
+    font-size: 31.75px;
     font-weight: 400;
-    line-height: 40.02px;
+    line-height: 27.63px;
     letter-spacing: 0.15px;
     text-align: justify;
-    width: 80%;
+    width: 100%;
     margin: 0px;
     padding: 0;
     color: #FFFFFF;
     text-transform: uppercase;
 }
 
-.overlay-content h1-2 {
+.overlay-content .overlay-header1-v2 {
     font-family: 'Kapra-Condensed', sans-serif;
-    font-size: 41px;
+    font-size: 27.5px;
     font-weight: 400;
-    line-height: 40.02px;
+    line-height: 27.63px;
     letter-spacing: 0.15px;
     text-align: justify;
     width: 100%;
-    margin: 10px 0 0 0;
+    margin: 0px;
     padding: 0;
     color: #FDB0D4;
     text-transform: uppercase;
 }
 
 .overlay-line {
-    width: 268px;
-    height: 5px;
+    width: 185px;
+    height: 3.45px;
     background-color: #FDB0D4;
     margin: 10px auto;
 }
 
-.overlay-content h2 {
+.overlay-content .overlay-header2 {
     font-family: 'Kapra-Condensed', sans-serif;
-    font-size: 32px;
+    font-size: 20px;
     font-weight: 400;
-    line-height: 27.84px;
+    line-height: 17.4px;
     text-align: center;
     width: 100%;
     margin: 10px 0;
@@ -200,9 +197,9 @@ button[data-action="change"] {
     text-transform: uppercase;
 }
 
-.overlay-content p {
+.overlay-content .overlay-text {
     position: fixed;
-    bottom: 12%;
+    bottom: 20%;
     left: 10%;
     font-family: 'Caslons Egyptian', sans-serif;
     font-size: 16px;
@@ -219,9 +216,8 @@ button[data-action="change"] {
 
 .overlay-content button {
     position: fixed;
-    bottom: 5%;
+    bottom: 12%;
     left: 10%;
-  
     font-family: 'Kapra-Condensed', sans-serif;
     font-size: 24px;
     font-weight: 400;
@@ -244,12 +240,156 @@ button[data-action="change"] {
     background-color: #FFA500;
 }
 
-/* New styles for headphone overlay */
+#powered-by-welcome  {
+    font-family: 'Poppins', sans-serif;
+    font-size: 10px;start-experience
+    font-weight: 400;
+    line-height: 16px;
+    letter-spacing: 1.5px;
+    color: #ffffff;
+    text-transform: uppercase;
+    margin: 0;
+    padding: 0;
+}
+
+#smartify-logo {
+    width: 75px;
+    height: 34px;
+    margin-left: 20px; 
+}
+
+.powered-by-container {
+    position: fixed;
+    bottom: 3%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Full-screen overlay specific styles */
+#full-screen-overlay {
+    background-color: #FBD86F; /* Ensure the background is solid yellow */
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    color: #1B1B1B;
+    font-family: 'Kapra-Condensed', sans-serif;
+}
+
+#full-screen-overlay .overlay-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; 
+    width: 80%;
+    max-width: 600px;
+    padding: 20px;
+    margin-top: 20%;
+}
+
+#full-screen-overlay .fsinstructions-h1 {
+    font-size: 56px;
+    font-weight: 400;
+    margin-bottom: 40px;
+    color: #1B1B1B;
+    text-align: center;
+}
+
+#full-screen-overlay .fsinstructions-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; 
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+#full-screen-overlay .fsinstruction {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    width: 100%; 
+    text-align: left; 
+}
+
+#full-screen-overlay .fsinstruction .fsinstruction-icon {
+    width: 50px;
+    height: 50px;
+    margin-right: 20px;
+}
+
+#full-screen-overlay .fsinstruction .fsinstruction-text {
+    font-size: 32px;
+    margin: 0;
+    font-family: 'Kapra-Condensed', sans-serif;
+    color: #1B1B1B;
+    text-align: left; 
+}
+
+
+#full-screen-overlay #got-it-button {
+    background-color: #1B1B1B;
+    color: #FAFAFA;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 20.88px;
+    letter-spacing: 0.03em;
+    padding: 0px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+    font-family: 'Kapra-Condensed', sans-serif; 
+}
+
+#full-screen-overlay #got-it-button:hover {
+    background-color: #333333;
+}
+
+#full-screen-overlay #powered-by-fullscreen {
+    font-family: 'Poppins', sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+    line-height: 16px;
+    letter-spacing: 1.5px;
+    color: #1B1B1B; /* Text color */
+    text-transform: uppercase;
+    margin: 0;
+    padding: 0;
+}
+
+#full-screen-overlay #smartify-logo-fullscreen {
+    width: 75px;
+    height: 34px;
+    margin-left: 20px; 
+}
+
+#full-screen-overlay .powered-by-container {
+    position: fixed;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* styles for headphone overlay */
 .headphone-image {
     width: 100px;
     height: auto;
     margin: 20px 0;
 }
+
 #headphone-overlay {
     display: flex;
     align-items: center;
@@ -273,7 +413,7 @@ button[data-action="change"] {
     width: 80%;
 }
 
-#headphone-overlay .popup-content h2 {
+#headphone-overlay .popup-content .pop-up-header {
     font-family: 'Kapra-Condensed', sans-serif;
     font-size: 24px;
     font-weight: 400;
@@ -316,8 +456,6 @@ button[data-action="change"] {
     background-color: #FFA500;
 }
 
-
-
 .a-dialog-allow-button {
     font-family: 'Kapra-Condensed', sans-serif;
     font-size: 24px;
@@ -335,7 +473,7 @@ button[data-action="change"] {
 }
 
 .a-dialog-deny-button {
-  font-family: 'Kapra-Condensed', sans-serif;
+    font-family: 'Kapra-Condensed', sans-serif;
     font-size: 24px;
     font-weight: 400;
     line-height: 20.88px;
@@ -351,7 +489,7 @@ button[data-action="change"] {
 }
 
 .a-dialog-ok-button {
-   font-family: 'Kapra-Condensed', sans-serif;
+    font-family: 'Kapra-Condensed', sans-serif;
     font-size: 24px;
     font-weight: 400;
     line-height: 20.88px;
@@ -364,20 +502,20 @@ button[data-action="change"] {
     cursor: pointer;
     display: inline-block;
     text-transform: uppercase;
- }
+}
 
 .icon-buttons {
     display: flex;
     justify-content: center;
     position: fixed;
-    bottom: 180px; /* Adjusted to be above the tap-to-play text */
+    top: 10px; /* Adjusted to top of page*/
     left: 50%;
     transform: translateX(-50%);
     z-index: 10;
 }
 
 .icon-button {
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 1);
     border: none;
     border-radius: 8px;
     padding: 10px 20px;
@@ -386,7 +524,7 @@ button[data-action="change"] {
     font-family: 'Kapra-Condensed', sans-serif;
     font-size: 18px;
     font-weight: 400;
-    color: #FFFFFF;
+    color: #000000;
     text-transform: uppercase;
     display: flex;
     align-items: center;
@@ -395,11 +533,31 @@ button[data-action="change"] {
     text-align: center;
 }
 
+.help-button {
+    background: rgba(255, 255, 255, 1);
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+/*     margin: 0 5px; */
+    cursor: pointer;
+    font-family: 'Kapra-Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: #000000;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 10px;
+    text-align: center;
+}
+
 .button-icon {
     width: 20px;
     height: 20px;
     margin-right: 5px;
 }
+
 
 #map-overlay {
     display: none;
@@ -460,4 +618,173 @@ button[data-action="change"] {
     height: auto;
     display: block;
     margin: 0 auto;
+}
+
+/* Help overlay specific styles */
+#help-overlay {
+    background-color: rgba(0, 0, 0, 0.5); /* 50% transparent black background */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    color: #FFFFFF; /* White text color */
+    font-family: 'Kapra-Condensed', sans-serif;
+}
+
+#help-overlay .overlay-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 80%;
+    max-width: 600px;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.5); /* 50% transparent black background */
+    border-radius: 8px;
+}
+
+#help-overlay .help-instruction {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    text-align: center;
+    width: 100%;
+}
+
+#help-overlay .help-icon {
+    width: 48px;
+    height: 48px;
+    margin-right: 20px;
+}
+
+#help-overlay .help-text h2 {
+    font-family: 'Kapra-Condensed', sans-serif;
+    font-size: 40px;
+    font-weight: 400;
+    line-height: 56px;
+    letter-spacing: 0.15px;
+    margin: 0;
+}
+
+#help-overlay .help-text p {
+    font-family: 'Caslons Egyptian', sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 24px;
+    margin: 0;
+    padding-top: 8px;
+    text-align: center;
+}
+
+#help-overlay .overlay-button {
+    background-color: #FFC734;
+    color: #000000;
+    font-family: 'Kapra-Condensed', sans-serif;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 20.88px;
+    letter-spacing: 0.03em;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 20px;
+    text-transform: uppercase;
+}
+
+#help-overlay .overlay-button:hover {
+    background-color: #FFA500;
+}
+
+/* Congratulations overlay styles */
+#congratulations-overlay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #FBD86F; /* Yellow background */
+    z-index: 9999;
+}
+
+#congratulations-overlay .popup-content {
+    background: rgba(0, 0, 0, 1);
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 80%;
+}
+
+#congratulations-overlay .congrats-image {
+    width: 74px;
+    height: 74px;
+    margin-bottom: 20px;
+}
+
+#congratulations-overlay .pop-up-header {
+    font-family: 'Kapra-Condensed', sans-serif;
+    font-size: 40px;
+    font-weight: 400;
+    line-height: 56px;
+    letter-spacing: 0.15px;
+    color: white;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+#congratulations-overlay .congrats-text {
+    font-family: 'Caslons Egyptian', sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 24px;
+    color: white;
+    margin-bottom: 20px;
+}
+
+#congratulations-overlay .congrats-text a {
+    color: white;
+    text-decoration: underline;
+}
+
+#congratulations-overlay button {
+    background-color: #1B1B1B;
+    color: #FAFAFA;
+    font-family: 'Kapra-Condensed', sans-serif;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 20.88px;
+    letter-spacing: 0.03em;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: block;
+    margin: 10px auto;
+    text-transform: uppercase;
+}
+
+#congratulations-overlay button:hover {
+    background-color: #333333;
+}
+
+#congratulations-overlay .close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
 }
