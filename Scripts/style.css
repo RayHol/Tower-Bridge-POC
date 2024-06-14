@@ -9,6 +9,41 @@
 }
 
 /* General styles */
+/* General styles */
+#smartify-logo-welcome-light, #smartify-logo-fullscreen-light {
+    display: none; /* Hide the light logo by default */
+}
+
+#smartify-logo-welcome-dark, #smartify-logo-fullscreen-dark {
+    display: block; /* Show the dark logo by default */
+}
+
+/* For light background overlays */
+#overlay .overlay-content, #full-screen-overlay .overlay-content {
+    background: #FFFFFF; /* Light background */
+}
+
+#overlay .overlay-content #smartify-logo-welcome-light, #full-screen-overlay .overlay-content #smartify-logo-fullscreen-light {
+    display: block; /* Show the light logo */
+}
+
+#overlay .overlay-content #smartify-logo-welcome-dark, #full-screen-overlay .overlay-content #smartify-logo-fullscreen-dark {
+    display: none; /* Hide the dark logo */
+}
+
+/* For dark background overlays */
+#help-overlay .overlay-content, #congratulations-overlay .overlay-content {
+    background: #000000; /* Dark background */
+}
+
+#help-overlay .overlay-content #smartify-logo-welcome-dark, #congratulations-overlay .overlay-content #smartify-logo-fullscreen-dark {
+    display: block; /* Show the dark logo */
+}
+
+#help-overlay .overlay-content #smartify-logo-welcome-light, #congratulations-overlay .overlay-content #smartify-logo-fullscreen-light {
+    display: none; /* Hide the light logo */
+}
+
 .centered {
     height: 20%;
     justify-content: center;
