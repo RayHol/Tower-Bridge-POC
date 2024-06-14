@@ -76,110 +76,124 @@ function addToHomeScreen() {
 }
 
 window.onload = () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  const locationId = urlParams.get("location");
-  if (!locationId) {
-    console.error("No location specified in URL");
-    return;
-  }
-
-  fetch("./Scripts/mediaConfig.json")
-    .then((response) => response.json())
-    .then((data) => {
-      if (!data[locationId]) {
-        console.error("Invalid location specified");
+    const urlParams = new URLSearchParams(window.location.search);
+    const locationId = urlParams.get("location");
+    if (!locationId) {
+        console.error("No location specified in URL");
         return;
-      }
-      initializeAR(data[locationId].media);
-    })
-    .catch((error) => console.error("Error loading media config:", error));
-
-  window.addEventListener("beforeinstallprompt", function (event) {
-    console.log("beforeinstallprompt fired");
-
-    event.preventDefault();
-    window.deferredPrompt = event;
-    return false;
-  });
-
-  // Overlay functionality
-  const overlay = document.getElementById("overlay");
-  const startButton = document.getElementById("start-experience");
-  startButton.addEventListener("click", () => {
-    overlay.style.display = "none";
-    const audio = document.getElementById("background-audio");
-    audio.play();
-  });
-
-  // Headphone Overlay
-  const headphoneOverlay = document.getElementById("headphone-overlay");
-  const addToHomeButton = document.getElementById("add-to-home");
-  const closeHeadphoneOverlayButton = document.getElementById(
-    "close-headphone-overlay"
-  );
-
-  startButton.addEventListener("click", () => {
-    overlay.style.display = "none";
-    headphoneOverlay.style.display = "flex";
-  });
-
-  closeHeadphoneOverlayButton.addEventListener("click", () => {
-    headphoneOverlay.style.display = "none";
-    const audio = document.getElementById("background-audio");
-    audio.play();
-  });
-
-  addToHomeButton.addEventListener("click", () => {
-    addToHomeScreen(); // Call the addToHomeScreen function
-  });
-  
-  const viewMapButton = document.getElementById("view-map");
-  const saveHomeButton = document.getElementById("save-home");
-  const muteButton = document.getElementById("mute");
-  const refreshButton = document.getElementById("refresh");
-  let isMuted = false;
-
-  viewMapButton.addEventListener("click", () => {
-    // Show the map overlay (functionality to be implemented)
-    console.log("View Map button clicked");
-  });
-
-  saveHomeButton.addEventListener("click", () => {
-    addToHomeScreen(); // Use the addToHomeScreen function
-  });
-
-  muteButton.addEventListener("click", () => {
-    const audio = document.getElementById("background-audio");
-    if (isMuted) {
-      audio.play();
-      isMuted = false;
-    } else {
-      audio.pause();
-      isMuted = true;
     }
-  });
 
-  refreshButton.addEventListener("click", () => {
-    refreshMediaPosition(); // Use the refreshMediaPosition function
-  });
-  
-  const mapOverlay = document.getElementById('map-overlay');
-  const closeMapOverlayButton = document.getElementById('close-map-overlay');
+    fetch("./Scripts/mediaConfig.json")
+        .then((response) => response.json())
+        .then((data) => {
+            if (!data[locationId]) {
+                console.error("Invalid location specified");
+                return;
+            }
+            initializeAR(data[locationId].media);
+        })
+        .catch((error) => console.error("Error loading media config:", error));
 
-  viewMapButton.addEventListener('click', () => {
-      mapOverlay.style.display = 'flex'; // Show the map overlay
-  });
+    window.addEventListener("beforeinstallprompt", function (event) {
+        console.log("beforeinstallprompt fired");
 
-  closeMapOverlayButton.addEventListener('click', () => {
-      mapOverlay.style.display = 'none'; // Hide the map overlay
-  });
+        event.preventDefault();
+        window.deferredPrompt = event;
+        return false;
+    });
+
+    // Overlay functionality
+    const overlay = document.getElementById("overlay");
+    const startButton = document.getElementById("start-experience");
+    const fullScreenOverlay = document.getElementById("full-screen-overlay");
+    const gotItButton = document.getElementById("got-it-button");
+
+    startButton.addEventListener("click", () => {
+        overlay.style.display = "none";
+        fullScreenOverlay.style.display = "flex";
+    });
+
+    gotItButton.addEventListener("click", () => {
+        fullScreenOverlay.style.display = "none";
+        const audio = document.getElementById("background-audio");
+        audio.play();
+    });
+
+    // Headphone Overlay
+    const headphoneOverlay = document.getElementById("headphone-overlay");
+    const addToHomeButton = document.getElementById("add-to-home");
+    const closeHeadphoneOverlayButton = document.getElementById("close-headphone-overlay");
+
+    closeHeadphoneOverlayButton.addEventListener("click", () => {
+        headphoneOverlay.style.display = "none";
+        const audio = document.getElementById("background-audio");
+        audio.play();
+    });
+
+    addToHomeButton.addEventListener("click", () => {
+        addToHomeScreen(); // Call the addToHomeScreen function
+    });
+
+    const viewMapButton = document.getElementById("view-map");
+    const helpButton = document.getElementById("help");
+    const muteButton = document.getElementById("mute");
+    const refreshButton = document.getElementById("refresh");
+    let isMuted = false;
+
+    viewMapButton.addEventListener("click", () => {
+        // Show the map overlay (functionality to be implemented)
+        console.log("View Map button clicked");
+    });
+
+    helpButton.addEventListener("click", () => {
+        addToHomeScreen(); // Use the help function
+    });
+
+    muteButton.addEventListener("click", () => {
+        const audio = document.getElementById("background-audio");
+        if (isMuted) {
+            audio.play();
+            isMuted = false;
+        } else {
+            audio.pause();
+            isMuted = true;
+        }
+    });
+
+    refreshButton.addEventListener("click", () => {
+        refreshMediaPosition(); // Use the refreshMediaPosition function
+    });
+
+    const mapOverlay = document.getElementById('map-overlay');
+    const closeMapOverlayButton = document.getElementById('close-map-overlay');
+
+    viewMapButton.addEventListener('click', () => {
+        mapOverlay.style.display = 'flex'; // Show the map overlay
+    });
+
+    closeMapOverlayButton.addEventListener('click', () => {
+        mapOverlay.style.display = 'none'; // Hide the map overlay
+    });
+
+    // Help Overlay
+    const helpOverlay = document.getElementById("help-overlay");
+    const closeHelpOverlayButton = document.getElementById("close-help-overlay");
+
+    helpButton.addEventListener("click", () => {
+        helpOverlay.style.display = "flex"; // Show the help overlay
+    });
+
+    closeHelpOverlayButton.addEventListener("click", () => {
+        helpOverlay.style.display = "none"; // Hide the help overlay
+    });
 
 
-  // Apply unselectable class to relevant elements
-  document
-    .querySelectorAll(".button-text, h1-1, h1-2, h2, p, button")
-    .forEach((el) => el.classList.add("unselectable"));
+    // Apply unselectable class to relevant elements
+    document
+        .querySelectorAll(".button-text, h1-1, h1-2, h2, p, button")
+        .forEach((el) => el.classList.add("unselectable"));
 };
+
 
 function initializeAR(mediaArray) {
   const button = document.querySelector('button[data-action="change"]');
