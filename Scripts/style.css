@@ -254,7 +254,7 @@ button[data-action="change"] {
     padding: 0;
 }
 
-#smartify-logo {
+#smartify-logo-welcome {
     width: 75px;
     height: 34px;
     margin-left: 20px; 
@@ -274,9 +274,6 @@ button[data-action="change"] {
 /* Specific styles for welcome overlay */
 #overlay .powered-by-container #smartify-logo-welcome {
     display: block;
-    width: 75px;
-    height: 34px;
-    margin-left: 20px; 
 }
 
 #full-screen-overlay .powered-by-container #smartify-logo-fullscreen {
