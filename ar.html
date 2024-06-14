@@ -5,11 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap">
-<!--     <link rel="apple-touch-icon" sizes="180x180" href=".\assets\mute-icon.svg"> -->
     <title>Smartify Tower Bridge AR Experience</title>
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/jeromeetienne/AR.js/master/aframe/build/aframe-ar.min.js"></script>
-<!--     <script src="https://raw.githack.com/donmccurdy/aframe-extras/master/dist/aframe-extras.loaders.min.js"></script> -->
     <script>
         THREEx.ArToolkitContext.baseURL = "https://raw.githack.com/jeromeetienne/ar.js/master/three.js/"
     </script>
@@ -23,31 +21,89 @@
         <div class="overlay-background"></div>
         <div class="overlay-content">
             <img src="./assets/images/UI/Logo.png" class="logo" alt="Logo"><br>
-            <h1-1>Launching a landmark</h1-1><br>
-            <h1-2>The unseen opening weeks</h1-2>
+            <h1 class="overlay-header1">Launching a landmark</h1>
+            <h1 class="overlay-header1-v2">The unseen opening weeks</h1>
             <div class="overlay-line"></div>
-            <h2>A new bridge for londoners</h2>
-            <p>Discover a unique collection of newly discovered photographs.<br><br>They record the last few days and weeks leading up to the opening of Tower Bridge in summer 1894. Explore them where they were originally taken.<br><br>Press the start button to find the nearby photograph.</p>
+            <h2 class="overlay-header2">A new bridge for londoners</h2>
+            <p class="overlay-text">Discover a unique collection of previously unseen photographs. They record the last few weeks leading up to the opening of Tower Bridge in the summer of 1894.<br><br>Explore them where they were originally taken and see the Bridge come alive through the eyes of the workers who built it. Press the start button to find the nearby photograph.</p>
             <button id="start-experience">Start Exploring</button>
+            <div class="powered-by-container">
+                <h3 id="powered-by-welcome">POWERED BY</h3>
+                <img id="smartify-logo-welcome" src=".\assets\Smartify-logo.svg" alt="Smartify Logo" width="75" height="34">
+            </div>
         </div>
     </div>
-    <!-- Headphones overlay page -->
-    <div class="overlay" id="headphone-overlay" style="display: none;">
-    <div class="popup-content">
-        <h2>Best Experienced with Headphones</h2>
-        <img src="./assets/images/UI/headphones.png" class="headphone-image" alt="Headphones"><br>
-        <button id="add-to-home" onclick="addToHomeScreen()">Add to Home Screen</button>
-        <button id="close-headphone-overlay">OK</button>
-    </div>
-    </div>
-    <!-- Map overlay -->
-    <div id="map-overlay" class="overlay" style="display: none;">
-        <div class="overlay-background"></div>
+  
+    <!-- Full-screen overlay page -->
+    <div class="overlay" id="full-screen-overlay" style="display: none;">
         <div class="overlay-content">
-            <img src="./assets/image/UI/Map1.jpg" alt="Map Image" class="map-image">
-            <button id="close-map-overlay" class="overlay-button">Close</button>
+            <h1 class="fsinstructions-h1">BEFORE WE START</h1>
+            <div class="fsinstructions-container">
+                <div class="fsinstruction">
+                    <img src="./assets/images/UI/headphones.png" alt="Headphones Icon" class="fsinstruction-icon">
+                    <p class="fsinstruction-text">Use headphones to<br>enhance your experience</p>
+                </div>
+                <div class="fsinstruction">
+                    <img src="./assets/images/UI/refreshIcon.png" alt="Camera Icon" class="fsinstruction-icon">
+                    <p class="fsinstruction-text">Give camera permissions</p>
+                </div>
+                <div class="fsinstruction">
+                    <img src="./assets/images/UI/saveIcon.png" alt="Save Icon" class="fsinstruction-icon">
+                    <p class="fsinstruction-text">Save to Home screen</p>
+                </div>
+            </div>
+            <button id="got-it-button">GOT IT</button>
+            <div class="powered-by-container">
+                <h3 id="powered-by-fullscreen">POWERED BY</h3>
+                <img id="smartify-logo-fullscreen" src=".\assets\Smartify-logo.svg" alt="Smartify Logo" width="75" height="34">
+            </div>
         </div>
     </div>
+
+    <!-- Help overlay page -->
+    <div id="help-overlay" class="overlay" style="display: none;">
+        <div class="overlay-content">
+            <div class="help-instruction">
+                <img src="./assets/images/UI/moveIcon.png" alt="Move Icon" class="help-icon">
+                <div class="help-text">
+                    <h2>Move Around</h2>
+                    <p>Use your camera to find the photograph</p>
+                </div>
+            </div>
+            <div class="help-instruction">
+                <img src="./assets/images/UI/zoomIcon.png" alt="Zoom Icon" class="help-icon">
+                <div class="help-text">
+                    <h2>Zoom</h2>
+                    <p>Touch and pinch your screen</p>
+                </div>
+            </div>
+            <div class="help-instruction">
+                <img src="./assets/images/UI/panIcon.png" alt="Pan Icon" class="help-icon">
+                <div class="help-text">
+                    <h2>Pan</h2>
+                    <p>Touch and drag with your finger</p>
+                </div>
+            </div>
+            <button id="close-help-overlay" class="overlay-button">Close</button>
+        </div>
+    </div>
+
+
+    <!-- Congratulations overlay page -->
+    <div class="overlay" id="congratulations-overlay" style="display: none;">
+        <div class="popup-content">
+            <img src="./assets/images/UI/congratulationsIcon.png" class="congrats-image" alt="Congratulations Icon">
+            <h2 class="pop-up-header">Continue exploring</h2>
+            <p class="congrats-text">
+                There are eight photographs to find in locations across Tower Bridge - look for the QR codes on the exhibition displays on the pavements.<br>
+                Visit our website to find out more: <a href="https://heritage.towerbridge.org.uk" target="_blank">heritage.towerbridge.org.uk</a>
+            </p>
+            <button id="continue-button">Continue to next image</button>
+            <button id="back-button">Go back to previous image</button>
+            <button id="close-congrats-overlay" class="close-button">X</button>
+        </div>
+    </div>
+  
     <!--Background audio -->
     <audio id="background-audio" loop>
         <source src="./assets/audio/background.mp3" type="audio/mpeg">
@@ -55,30 +111,28 @@
     </audio>
     
     <div class="centered instructions"></div>
-    <a-scene vr-mode-ui="enabled: false" embedded arjs="debugUIEnabled: false;" >
+    <a-scene vr-mode-ui="enabled: false" embedded arjs="debugUIEnabled: false;">
         <a-light type="ambient" color="#ffffff"></a-light>
         <a-light type="directional" color="#ffffff" position="-2 4 5"></a-light>
         <a-entity camera look-controls position="0 1.6 0"></a-entity>
         <a-image id="look_1" position="0 0 0" rotation="0 0 0" scale="14 4 1" visible="false"></a-image>
     </a-scene>
+  
     <div class="icon-buttons">
         <button id="view-map" class="icon-button">
-            <img src="./assets/images/UI/mapIcon.png" alt="Map Icon" class="button-icon"> Map
-        </button>
-        <button id="save-home" class="icon-button">
-            <img src="./assets/images/UI/saveIcon.png" alt="Save Icon" class="button-icon"> Save
+            <img src="./assets/images/UI/mapIcon.png" alt="Map button" class="button-icon"> Map
         </button>
         <button id="mute" class="icon-button">
-            <img src="./assets/mute-icon.svg" alt="Mute Icon" class="button-icon"> Mute
+            <img src="./assets/mute-icon.svg" alt="Mute button" class="button-icon"> Mute
         </button>
         <button id="refresh" class="icon-button">
-            <img src="./assets/images/UI/refreshIcon.png" alt="Refresh Icon" class="button-icon"> Refresh
+            <img src="./assets/images/UI/refreshIcon.png" alt="Refresh button" class="button-icon"> Refresh
         </button>
-  </div>
+                <button id="help" class="help-button">
+            <img src="./assets/images/UI/saveIcon.png" alt="help button" class="button-icon"></button>
+    </div>
     <div class="centered">
         <button data-action="change"></button>
     </div>
 </body>
 </html>
-
-<!-- arjs="sourceType: webcam; sourceWidth:1280; sourceHeight:960; displayWidth: 1280; displayHeight: 960; debugUIEnabled: false;" -->
