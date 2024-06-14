@@ -3,7 +3,7 @@
         "media": [
             {
                 "type": "image",
-                "url": "./assets/images/01 - TowerBridge - MonochromeP.jpg",
+                "url": "./assets/images/01.jpg",
                 "scale": "10 7 1",
                 "rotation": "0 0 0",
                 "fixedAngleDegrees": 0,
@@ -12,7 +12,7 @@
             },
             {
                 "type": "video",
-                "url": "https://rayhol.github.io/TB_Videos/Videos/01 - TowerBridgeFade.mp4",
+                "url": "https://rayhol.github.io/TB_Videos/Videos/01.mp4",
                 "scale": "10 7 1",
                 "rotation": "0 0 0",
                 "fixedAngleDegrees": 0,
@@ -26,7 +26,7 @@
         "media": [
             {
                 "type": "image",
-                "url": "./assets/images/02 - TowerBridge - MonochromeP.jpg",
+                "url": "./assets/images/02.jpg",
                 "secondImageUrl": "./assets/images/02 - TowerBridge - ColourP.jpg",
                 "scale": "10 7 1",
                 "rotation": "0 0 0",
@@ -36,7 +36,7 @@
             },
             {
                 "type": "video",
-                "url": "https://rayhol.github.io/TB_Videos/Videos/02 - TowerBridge70.mp4",
+                "url": "https://rayhol.github.io/TB_Videos/Videos/02.mp4",
                 "scale": "10 7 1",
                 "rotation": "0 0 0",
                 "fixedAngleDegrees": 90,
@@ -50,7 +50,7 @@
         "media": [
             {
                 "type": "image",
-                "url": "./assets/images/03 - TowerBridge - MonochromeP.jpg",
+                "url": "./assets/images/03.jpg",
                 "secondImageUrl": "./assets/images/03 - TowerBridge - ColourP.jpg",
                 "scale": "10 7 1",
                 "rotation": "0 0 0",
@@ -60,7 +60,7 @@
             },
             {
                 "type": "video",
-                "url": "https://rayhol.github.io/TB_Videos/Videos/03 - TowerBridge50.mp4",
+                "url": "https://rayhol.github.io/TB_Videos/Videos/03.mp4",
                 "scale": "10 7 1",
                 "rotation": "0 0 0",
                 "fixedAngleDegrees": 180,
@@ -73,8 +73,8 @@
         "media": [
             {
                 "type": "image",
-                "url": "./assets/images/04 - TowerBridge - MonochromeP.jpg",
-                "secondImageUrl": "./assets/images/04 - TowerBridge - ColourP.jpg",
+                "url": "./assets/images/04.jpg",
+                "secondImageUrl": "./assets/images/04.jpg",
                 "scale": "10 7 1",
                 "rotation": "0 0 0",
                 "fixedAngleDegrees": 270,
@@ -83,7 +83,7 @@
             },
             {
                 "type": "video",
-                "url": "https://rayhol.github.io/TB_Videos/Videos/04 - TowerBridge.mp4",
+                "url": "https://rayhol.github.io/TB_Videos/Videos/04.mp4",
                 "scale": "10 7 1",
                 "rotation": "0 0 0",
                 "fixedAngleDegrees": 270,
@@ -97,7 +97,7 @@
             {
                 "type": "image",
                 "url": "./assets/images/05 - TowerBridge - MonochromeP.jpg",
-                "secondImageUrl": "./assets/images/05 - TowerBridge - ColourP.jpg",
+                "secondImageUrl": "./assets/images/05.jpg",
                 "scale": "10 7 1",
                 "rotation": "0 90 0",
                 "fixedAngleDegrees": 0,
@@ -106,7 +106,7 @@
             },
             {
                 "type": "video",
-                "url": "https://rayhol.github.io/TB_Videos/Videos/05 - TowerBridge.mp4",
+                "url": "https://rayhol.github.io/TB_Videos/Videos/05.mp4",
                 "scale": "10 7 1",
                 "rotation": "0 90 0",
                 "fixedAngleDegrees": 0,
@@ -119,7 +119,7 @@
         "media": [
             {
                 "type": "image",
-                "url": "./assets/images/06 - TowerBridge - MonochromeP.jpg",
+                "url": "./assets/images/06.jpg",
                 "secondImageUrl": "./assets/images/06 - TowerBridge - ColourP.jpg",
                 "scale": "10 7 1",
                 "rotation": "0 90 0",
@@ -129,7 +129,7 @@
             },
             {
                 "type": "video",
-                "url": "https://rayhol.github.io/TB_Videos/Videos/06 - TowerBridge.mp4",
+                "url": "https://rayhol.github.io/TB_Videos/Videos/06.mp4",
                 "scale": "10 7 1",
                 "rotation": "0 90 0",
                 "fixedAngleDegrees": 0,
@@ -142,8 +142,8 @@
         "media": [
             {
                 "type": "image",
-                "url": "./assets/images/071 - TowerBridge - Start.jpg",
-                "secondImageUrl": "./assets/images/071 - TowerBridge - Start2.jpg",
+                "url": "./assets/images/07.jpg",
+                "secondImageUrl": "./assets/images/07.jpg",
                 "scale": "10 7 1",
                 "rotation": "0 90 0",
                 "fixedAngleDegrees": 0,
@@ -152,7 +152,7 @@
             },
             {
                 "type": "video",
-                "url": "https://rayhol.github.io/TB_Videos/Videos/07 - TowerBridge.mp4",
+                "url": "https://rayhol.github.io/TB_Videos/Videos/07.mp4",
                 "scale": "10 7 1",
                 "rotation": "0 90 0",
                 "fixedAngleDegrees": 0,
@@ -165,8 +165,8 @@
         "media": [
             {
                 "type": "image",
-                "url": "./assets/images/08 - TowerBridge - Start.jpg",
-                "secondImageUrl": "./assets/images/08 - TowerBridge - Start2.jpg",
+                "url": "./assets/images/08.jpg",
+                "secondImageUrl": "./assets/images/08.jpg",
                 "scale": "10 7 1",
                 "rotation": "0 90 0",
                 "fixedAngleDegrees": 0,
@@ -175,7 +175,7 @@
             },
             {
                 "type": "video",
-                "url": "https://rayhol.github.io/TB_Videos/Videos/08 - TowerBridge.mp4",
+                "url": "https://rayhol.github.io/TB_Videos/Videos/08.mp4",
                 "scale": "10 7 1",
                 "rotation": "0 90 0",
                 "fixedAngleDegrees": 0,
