@@ -448,6 +448,7 @@ function initializeAR(mediaArray) {
         entity.setAttribute("position", position); // Set initial position
         entity.setAttribute("rotation", rotation); // Set initial rotation
         entity.setAttribute("scale", mediaItem.scale);
+        entity.setAttribute("muted", "true");
         entity.setAttribute("preload", "true");
         scene.appendChild(entity);
         videoEntity = entity;
