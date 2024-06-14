@@ -9,20 +9,7 @@
 }
 
 /* General styles */
-.powered-by-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
 
-/* Specific styles for welcome overlay */
-#overlay .powered-by-container #smartify-logo-welcome {
-    display: block;
-}
-
-#full-screen-overlay .powered-by-container #smartify-logo-fullscreen {
-    display: block;
-}
 
 .centered {
     height: 20%;
@@ -281,6 +268,16 @@ button[data-action="change"] {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+
+/* Specific styles for welcome overlay */
+#overlay .powered-by-container #smartify-logo-welcome {
+    display: block;
+}
+
+#full-screen-overlay .powered-by-container #smartify-logo-fullscreen {
+    display: block;
 }
 
 /* Full-screen overlay specific styles */
