@@ -5,7 +5,7 @@
 // v0.15 Frames added
 // v0.16 IOS notification formating (motion sensors) and fixed the change displayMedia not persitstant location
 // v0.17 Added new overlay page for headphones, 4 onscreen buttons for Map (with ovelay on press) save to home (not working), mute/unmute, refresh the location (not working)
-// v0.19 delay to notification of the motion sensor pop up - some formatting fixes, UI buttons working, look around image updated
+// // v0.19 delay to notification of the motion sensor pop up - some formatting fixes, UI buttons working, look around image updated
 
 // Global variable definitions
 let modelIndex = 0;
@@ -119,6 +119,14 @@ window.onload = () => {
         });
     }
 
+    function toggleMuteButton(isMuted) {
+        const muteButton = document.getElementById("mute");
+        const buttonText = isMuted ? "Unmute" : "Mute";
+        const buttonIcon = isMuted ? "./assets/images/UI/unmute-icon.svg" : "./assets/mute-icon.svg";
+
+        muteButton.innerHTML = `<img src="${buttonIcon}" alt="${buttonText} button" class="button-icon"> ${buttonText}`;
+    }
+
     if (muteButton) {
         muteButton.addEventListener("click", () => {
             const audio = document.getElementById("background-audio");
@@ -129,7 +137,11 @@ window.onload = () => {
                 audio.pause();
                 isMuted = true;
             }
+            toggleMuteButton(isMuted); // Update the button appearance
         });
+
+        // Set initial state
+        toggleMuteButton(isMuted);
     }
 
     if (refreshButton) {
