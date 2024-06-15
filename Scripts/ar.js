@@ -5,7 +5,7 @@
 // v0.15 Frames added
 // v0.16 IOS notification formating (motion sensors) and fixed the change displayMedia not persitstant location
 // v0.17 Added new overlay page for headphones, 4 onscreen buttons for Map (with ovelay on press) save to home (not working), mute/unmute, refresh the location (not working)
-// // v0.19 delay to notification of the motion sensor pop up - some formatting fixes, UI buttons working, look around image updated
+// // v0.19 delay to notification of the motion sensor pop up - some formatting fixes, UI buttons working, look around image updated, worked on the audio/mute/unmute, map and help button pops now showing.
 
 // Global variable definitions
 let modelIndex = 0;
@@ -74,6 +74,7 @@ function addToHomeScreen() {
 
     return true;
 }
+
 
 window.onload = () => {
     // Ensure all elements exist before adding event listeners
@@ -184,6 +185,15 @@ window.onload = () => {
             }
         });
     }
+
+    // Ensure background audio plays when 'Got It' button is clicked
+    const gotItButton = document.getElementById('got-it-button');
+    gotItButton.addEventListener('click', () => {
+        const audio = document.getElementById("background-audio");
+        if (!isMuted) {
+            audio.play();
+        }
+    });
 
     // Apply unselectable class to relevant elements
     document
