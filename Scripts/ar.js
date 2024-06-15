@@ -5,7 +5,7 @@
 // v0.15 Frames added
 // v0.16 IOS notification formating (motion sensors) and fixed the change displayMedia not persitstant location
 // v0.17 Added new overlay page for headphones, 4 onscreen buttons for Map (with ovelay on press) save to home (not working), mute/unmute, refresh the location (not working)
-// v0.19 delay to notification of the motion sensor pop up - some formatting broken, UI buttons working
+// v0.19 delay to notification of the motion sensor pop up - some formatting fixes, UI buttons working, look around image updated
 
 // Global variable definitions
 let modelIndex = 0;
@@ -317,10 +317,10 @@ function initializeMedia(mediaArray) {
         const lookImage = document.getElementById("look_1");
         const userAgent = navigator.userAgent.toLowerCase();
         if (userAgent.includes("iphone")) {
-            lookImage.setAttribute("src", "./assets/lookImage.png");
+            lookImage.setAttribute("src", "./assets/images/UI/look-for.svg");
             lookImage.setAttribute("material", "transparent: true; alphaTest: 0.5;");
         } else {
-            lookImage.setAttribute("src", "./assets/lookImage.png");
+            lookImage.setAttribute("src", "./assets/images/UI/look-for.svg");
         }
     }
 
@@ -337,7 +337,7 @@ function initializeMedia(mediaArray) {
             const lookZ = -currentZoom * Math.cos(radians);
 
             const lookImage = document.createElement("a-image");
-            lookImage.setAttribute("src", "./assets/lookImage.png");
+            lookImage.setAttribute("src", "./assets/images/UI/look-for.svg");
             lookImage.setAttribute("position", { x: lookX, y: 0, z: lookZ });
             lookImage.setAttribute("rotation", {
                 x: 0,
