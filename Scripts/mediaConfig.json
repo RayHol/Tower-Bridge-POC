@@ -27,7 +27,6 @@
             {
                 "type": "image",
                 "url": "./assets/images/02.jpg",
-                "secondImageUrl": "./assets/images/02 - TowerBridge - ColourP.jpg",
                 "scale": "10 7 1",
                 "rotation": "0 0 0",
                 "fixedAngleDegrees": 90,
@@ -51,7 +50,6 @@
             {
                 "type": "image",
                 "url": "./assets/images/03.jpg",
-                "secondImageUrl": "./assets/images/03 - TowerBridge - ColourP.jpg",
                 "scale": "10 7 1",
                 "rotation": "0 0 0",
                 "fixedAngleDegrees": 180,
@@ -74,7 +72,6 @@
             {
                 "type": "image",
                 "url": "./assets/images/04.jpg",
-                "secondImageUrl": "./assets/images/04.jpg",
                 "scale": "10 7 1",
                 "rotation": "0 0 0",
                 "fixedAngleDegrees": 270,
@@ -97,7 +94,6 @@
             {
                 "type": "image",
                 "url": "./assets/images/05.jpg",
-                "secondImageUrl": "./assets/images/05.jpg",
                 "scale": "10 7 1",
                 "rotation": "0 90 0",
                 "fixedAngleDegrees": 0,
@@ -120,7 +116,6 @@
             {
                 "type": "image",
                 "url": "./assets/images/06.jpg",
-                "secondImageUrl": "./assets/images/06 - TowerBridge - ColourP.jpg",
                 "scale": "10 7 1",
                 "rotation": "0 90 0",
                 "fixedAngleDegrees": 0,
@@ -143,7 +138,6 @@
             {
                 "type": "image",
                 "url": "./assets/images/07.jpg",
-                "secondImageUrl": "./assets/images/07.jpg",
                 "scale": "10 7 1",
                 "rotation": "0 90 0",
                 "fixedAngleDegrees": 0,
@@ -166,7 +160,6 @@
             {
                 "type": "image",
                 "url": "./assets/images/08.jpg",
-                "secondImageUrl": "./assets/images/08.jpg",
                 "scale": "10 7 1",
                 "rotation": "0 90 0",
                 "fixedAngleDegrees": 0,

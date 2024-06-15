@@ -10,6 +10,26 @@
 
 /* General styles */
 
+/* Styles for the change media button */
+button[data-action="change"] {
+    position: fixed;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    width: 60px; /* Adjust size  */
+    height: 60px; /* Adjust size  */
+}
+
+.change-media-icon {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
 
 .centered {
     height: 20%;
@@ -24,19 +44,6 @@
     right: 0;
 }
 
-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid white;
-    background-color: white;
-    width: 2em;
-    height: 2em;
-    border-radius: 100%;
-    font-size: 2em;
-    color: white;
-    outline: none;
-}
 
 .instructions {
     position: fixed;
@@ -244,7 +251,7 @@ button[data-action="change"] {
 
 #powered-by-welcome  {
     font-family: 'Poppins', sans-serif;
-    font-size: 10px;start-experience
+    font-size: 10px;start-experience; 
     font-weight: 400;
     line-height: 16px;
     letter-spacing: 1.5px;
@@ -468,53 +475,33 @@ button[data-action="change"] {
     background-color: #FFA500;
 }
 
-.a-dialog-allow-button {
-    font-family: 'Kapra-Condensed', sans-serif;
-    font-size: 24px;
-    font-weight: 400;
-    line-height: 20.88px;
-    letter-spacing: 0.03em;
-    padding: 0 16px;
-    background-color: #FFC734;
-    border: none;
-    border-radius: 4px;
-    color: black;
-    cursor: pointer;
-    display: inline-block;
-    text-transform: uppercase;
+/* Aframe dialoag formating overide*/
+
+html body .a-dialog,
+html body .a-dialog-content {
+    background-color: #FBD86F; /* Change the background color to yellow */
+    color: black; /* Ensure the text color inside the dialog is readable */
 }
 
-.a-dialog-deny-button {
+html body .a-dialog-allow-button,
+html body .a-dialog-deny-button,
+html body .a-dialog-ok-button {
     font-family: 'Kapra-Condensed', sans-serif;
     font-size: 24px;
     font-weight: 400;
     line-height: 20.88px;
     letter-spacing: 0.03em;
     padding: 0 16px;
-    background-color: #FFC734;
+    background-color: #1B1B1B;
     border: none;
     border-radius: 4px;
-    color: black;
+    color: white; /* Change the text color to white */
     cursor: pointer;
     display: inline-block;
     text-transform: uppercase;
+    box-shadow: none; /* Remove the shadow */
 }
 
-.a-dialog-ok-button {
-    font-family: 'Kapra-Condensed', sans-serif;
-    font-size: 24px;
-    font-weight: 400;
-    line-height: 20.88px;
-    letter-spacing: 0.03em;
-    padding: 0 16px;
-    background-color: #FFC734;
-    border: none;
-    border-radius: 4px;
-    color: black;
-    cursor: pointer;
-    display: inline-block;
-    text-transform: uppercase;
-}
 
 .icon-buttons {
     display: flex;
@@ -582,10 +569,15 @@ button[data-action="change"] {
 }
 
 #map-overlay .overlay-background {
-    background-image: url('../assets/images/UI/Map1.png');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
+/*     position: absolute; */
+/*     top: 0; */
+/*     left: 0; */
+    width: 100%;
+/*     height: 100%; */
+    background-image: url('../assets/images/UI/Map-placeholder.jpg');
+/*     background-size: cover; */
+/*     background-position: center; */
+/*     background-attachment: fixed; */
     z-index: 99;
     opacity: 1;
 }
@@ -632,11 +624,10 @@ button[data-action="change"] {
     margin: 0 auto;
 }
 
-/* Help overlay specific styles */
+/* Help overlay styles */
 #help-overlay {
-    background-color: rgba(0, 0, 0, 0.5); /* 50% transparent black background */
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* Ensures content stacks vertically */
     align-items: center;
     justify-content: center;
     position: fixed;
@@ -644,38 +635,41 @@ button[data-action="change"] {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 1000;
-    color: #FFFFFF; /* White text color */
-    font-family: 'Kapra-Condensed', sans-serif;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    z-index: 9999;
 }
 
 #help-overlay .overlay-content {
+    background: rgba(0, 0, 0, 0.8); /* Semi-transparent black background */
+    border-radius: 0; /* Remove border-radius to make it full screen */
+    padding: 20px;
+    text-align: center;
+    box-shadow: none; /* Remove shadow */
+    width: 100%; /* Ensure it takes the full width */
+    height: 100%; /* Ensure it takes the full height */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 80%;
-    max-width: 600px;
-    padding: 20px;
-    background-color: rgba(0, 0, 0, 0.5); /* 50% transparent black background */
-    border-radius: 8px;
+    color: white;
+    position: relative; /* Add position relative for z-index stacking */
 }
 
 #help-overlay .help-instruction {
     display: flex;
+    flex-direction: column;
     align-items: center;
     margin-bottom: 20px;
-    text-align: center;
-    width: 100%;
 }
 
 #help-overlay .help-icon {
     width: 48px;
     height: 48px;
-    margin-right: 20px;
+    margin-bottom: 10px;
 }
 
-#help-overlay .help-text h2 {
+#help-overlay .help-text h2,
+#help-overlay .help-instruction h2 {
     font-family: 'Kapra-Condensed', sans-serif;
     font-size: 40px;
     font-weight: 400;
@@ -684,7 +678,8 @@ button[data-action="change"] {
     margin: 0;
 }
 
-#help-overlay .help-text p {
+#help-overlay .help-text p,
+#help-overlay .help-instruction p {
     font-family: 'Caslons Egyptian', sans-serif;
     font-size: 16px;
     font-weight: 300;
@@ -694,25 +689,25 @@ button[data-action="change"] {
     text-align: center;
 }
 
-#help-overlay .overlay-button {
-    background-color: #FFC734;
-    color: #000000;
-    font-family: 'Kapra-Condensed', sans-serif;
-    font-size: 24px;
-    font-weight: 400;
-    line-height: 20.88px;
-    letter-spacing: 0.03em;
-    padding: 10px 20px;
+#close-help-overlay {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background: url('../assets/images/UI/Close.svg') no-repeat center center;
+    background-size: contain;
     border: none;
-    border-radius: 4px;
     cursor: pointer;
-    margin-top: 20px;
-    text-transform: uppercase;
+    z-index: 10000; 
 }
 
-#help-overlay .overlay-button:hover {
-    background-color: #FFA500;
+#close-help-overlay:hover {
+    background-color: #333333;
+    color: white;
 }
+
+
 
 /* Congratulations overlay styles */
 #congratulations-overlay {
