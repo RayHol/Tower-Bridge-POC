@@ -8,7 +8,8 @@
 // v0.19 delay to notification of the motion sensor pop up - some formatting fixes, UI buttons working, look around image updated, worked on the audio/mute/unmute, map and help button pops now showing.
 // v0.2 Congrats pop up timed after video plays. Next/previos locations added
 // v.021 Didn't work
-// v.022 Moved to next/previous locations - adding loading screen betweeem location to hide ovelays popping up again. Added the same function to the refresh button. Pich reversed and isPinching flag dragging is not allowed while a pinch-to-zoom gesture is in progress. Updated mediaConfig so all files are loaded in front of the user (for now) and the Dev landing page just shows images for Press launch with a button named to corresponding map locations, Frames removed (commented out if need to restore) button-text updated.
+// v.022 Moved to next/previous locations - adding loading screen betweeem location to hide ovelays popping up again.
+// v.23 Added the same function to the refresh button. Pinch reversed and isPinching flag dragging is not allowed while a pinch-to-zoom gesture is in progress. Updated mediaConfig so all files are loaded in front of the user (for now) and the Dev landing page just shows images for Press launch with a button named to corresponding map locations, Frames removed (commented out if need to restore) button-text updated.
 
 // Global variable definitions
 let modelIndex = 0;
