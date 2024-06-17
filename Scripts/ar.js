@@ -8,8 +8,8 @@
 // v0.19 delay to notification of the motion sensor pop up - some formatting fixes, UI buttons working, look around image updated, worked on the audio/mute/unmute, map and help button pops now showing.
 // v0.2 Congrats pop up timed after video plays. Next/previos locations added
 // v.021 Didn't work
-// v.022 Moved to next/previous locations - adding loading screen betweeem location to hide ovelays popping up again.
-// v.23 Added the same function to the refresh button. Pinch reversed and isPinching flag dragging is not allowed while a pinch-to-zoom gesture is in progress. Updated mediaConfig so all files are loaded in front of the user (for now) and the Dev landing page just shows images for Press launch with a button named to corresponding map locations, Frames removed (commented out if need to restore) button-text updated.
+// v.022 Moved to next/previous locations - adding loading screen between location to hide ovelays popping up again.
+// v.23 Added the same function to the refresh button. Pinch reversed and isPinching flag dragging is not allowed while a pinch-to-zoom gesture is in progress. Updated mediaConfig so all files are loaded in front of the user (for now) and the Dev landing page just shows images for Press launch with a button named to corresponding map locations, Frames removed (commented out if need to restore) button-text updated. Updated dragging calculations
 
 // Global variable definitions
 let modelIndex = 0;
@@ -34,7 +34,7 @@ const maxZoom = 50; // Maximum distance from the user
 const minY = -5; // Set minimum Y value
 const maxY = 10; // Set maximum Y value
 const zoomSpeed = 0.01; // Adjust the zoom speed as needed
-const dragSpeed = 0.01; // Adjust the drag speed as needed
+const dragSpeed = 0.001; // Adjust the drag speed as needed
 
 // Pinch-to-zoom variables
 let initialPinchDistance = null;
@@ -46,6 +46,10 @@ let initialTouchX = null;
 let initialTouchY = null;
 let initialFixedAngle = 0;
 let dragAxis = null; // 'x' for rotation, 'y' for vertical movement
+
+function getAdjustedDragSpeed() {
+    return dragSpeed * (currentZoom / minZoom); // Scale the drag speed based on the zoom level
+}
 
 function addToHomeScreen() {
     console.log("Add to home screen functionality is not yet implemented.");
@@ -374,6 +378,8 @@ function initializeMedia(mediaArray) {
                 const currentTouchY = e.touches[0].pageY;
                 const deltaX = currentTouchX - initialTouchX;
                 const deltaY = currentTouchY - initialTouchY;
+              
+                 const adjustedDragSpeed = getAdjustedDragSpeed(); // Calculate adjusted drag speed
 
                 if (dragAxis === null) {
                     // Determine drag axis based on initial touch movement
@@ -386,7 +392,7 @@ function initializeMedia(mediaArray) {
 
                 if (dragAxis === "x") {
                     // Adjust fixedAngleDegrees based on horizontal movement
-                    fixedAngleDegrees = initialFixedAngle + deltaX * dragSpeed; // Adjust the sensitivity as needed
+                    fixedAngleDegrees = initialFixedAngle + deltaX * adjustedDragSpeed; // Use adjusted drag speed
 
                     // Calculate the new position based on fixedAngleDegrees
                     const radians = (fixedAngleDegrees * Math.PI) / 180;
@@ -413,7 +419,7 @@ function initializeMedia(mediaArray) {
                     });
                 } else if (dragAxis === "y") {
                     // Calculate the new Y position
-                    const newY = currentY - deltaY * dragSpeed * 0.2; // Adjust the sensitivity as needed and invert the drag
+                    const newY = currentY - deltaY * adjustedDragSpeed * 0.2; // Use adjusted drag speed and invert the drag
                     const clampedY = Math.max(minY, Math.min(maxY, newY)); // Constrain the Y value within minY and maxY
 
                     // Update the media entity position
