@@ -95,9 +95,9 @@
                 There are eight photographs to find in locations across Tower Bridge - look for the QR codes on the exhibition displays on the pavements.<br>
                 Visit our website to find out more: <a href="https://heritage.towerbridge.org.uk" target="_blank">heritage.towerbridge.org.uk</a>
             </p>
-            <button id="continue-button">Continue to next image</button>
-            <button id="back-button">Go back to previous image</button>
-            <button id="close-congrats-overlay" class="close-button"></button>
+            <button id="continue-button" data-action="next">Continue to next image</button>
+            <button id="back-button" data-action="previous">Go back to previous image</button>
+            <button id="close-congrats-overlay " class="close-button"></button>
         </div>
     </div>
   
@@ -147,50 +147,93 @@
         
       
         document.addEventListener("DOMContentLoaded", function() {
-            const startExperienceButton = document.getElementById('start-experience');
-            const gotItButton = document.getElementById('got-it-button');
-            const overlay = document.getElementById('overlay');
-            const fullScreenOverlay = document.getElementById('full-screen-overlay');
-            const arScene = document.getElementById('ar-scene');
+              const startExperienceButton = document.getElementById('start-experience');
+              const gotItButton = document.getElementById('got-it-button');
+              const overlay = document.getElementById('overlay');
+              const fullScreenOverlay = document.getElementById('full-screen-overlay');
+              const arScene = document.getElementById('ar-scene');
 
-            startExperienceButton.addEventListener('click', function() {
-                overlay.style.display = 'none';
-                fullScreenOverlay.style.display = 'flex';
-            });
+              let locationsData = {}; // Variable to store mediaConfig data
 
-            gotItButton.addEventListener('click', function() {
-                fullScreenOverlay.style.display = 'none';
-                arScene.style.display = 'block';
-                requestPermissionsAndStartAR();
-            });
+              startExperienceButton.addEventListener('click', function() {
+                  overlay.style.display = 'none';
+                  fullScreenOverlay.style.display = 'flex';
+              });
 
-            function requestPermissionsAndStartAR() {
-                initializeAR();
-            }
+              gotItButton.addEventListener('click', function() {
+                  fullScreenOverlay.style.display = 'none';
+                  arScene.style.display = 'block';
+                  requestPermissionsAndStartAR();
+              });
 
-            function initializeAR() {
-                const urlParams = new URLSearchParams(window.location.search);
-                const locationId = urlParams.get("location");
-                if (!locationId) {
-                    console.error("No location specified in URL");
-                    return;
-                }
+              function requestPermissionsAndStartAR() {
+                  initializeAR();
+              }
 
-                fetch("./Scripts/mediaConfig.json")
-                    .then((response) => response.json())
-                    .then((data) => {
-                        locations = Object.keys(data);
-                        currentLocationIndex = locations.indexOf(locationId);
-                  
-                        if (!data[locationId]) {
-                            console.error("Invalid location specified");
-                            return;
-                        }
-                        initializeMedia(data[locationId].media);
-                    })
-                    .catch((error) => console.error("Error loading media config:", error));
-            }
-        });
+              function initializeAR() {
+                  const urlParams = new URLSearchParams(window.location.search);
+                  const locationId = urlParams.get("location");
+
+                  if (!locationId) {
+                      console.error("No location specified in URL");
+                      return;
+                  }
+
+                  fetch("./Scripts/mediaConfig.json")
+                      .then((response) => response.json())
+                      .then((data) => {
+                          locationsData = data; // Store data in the global variable
+                          locations = Object.keys(data);
+                          currentLocationIndex = locations.indexOf(locationId);
+
+                          if (!data[locationId]) {
+                              console.error("Invalid location specified");
+                              return;
+                          }
+                          initializeMedia(data[locationId].media);
+                      })
+                      .catch((error) => console.error("Error loading media config:", error));
+              }
+
+              // Navigation logic
+              const nextButton = document.querySelector('[data-action="next"]');
+              const backButton = document.querySelector('[data-action="previous"]');
+
+              if (nextButton) {
+                  nextButton.addEventListener('click', function() {
+                      navigateToLocation(1);
+                  });
+              }
+
+              if (backButton) {
+                  backButton.addEventListener('click', function() {
+                      navigateToLocation(-1);
+                  });
+              }
+
+              function navigateToLocation(direction) {
+                  const urlParams = new URLSearchParams(window.location.search);
+                  const locationId = urlParams.get("location");
+                  const locations = Object.keys(locationsData); // Use the global data
+                  const currentIndex = locations.indexOf(locationId);
+                  const nextIndex = (currentIndex + direction + locations.length) % locations.length;
+                  const nextLocation = locations[nextIndex];
+
+                  const baseUrl = window.location.origin;
+                  const newUrl = `${baseUrl}/ar.html?location=${nextLocation}&skipOverlays=true`;
+                  window.location.href = newUrl;
+              }
+
+              // Skip overlays if the parameter is present
+              const skipOverlays = urlParams.get("skipOverlays");
+              if (skipOverlays) {
+                  overlay.style.display = 'none';
+                  fullScreenOverlay.style.display = 'none';
+                  arScene.style.display = 'block';
+                  requestPermissionsAndStartAR();
+              }
+          });
+
     </script>
     <script src="./Scripts/ar.js"></script>
 </body>
