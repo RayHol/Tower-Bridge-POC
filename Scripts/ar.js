@@ -6,7 +6,9 @@
 // v0.16 IOS notification formating (motion sensors) and fixed the change displayMedia not persitstant location
 // v0.17 Added new overlay page for headphones, 4 onscreen buttons for Map (with ovelay on press) save to home (not working), mute/unmute, refresh the location (not working)
 // v0.19 delay to notification of the motion sensor pop up - some formatting fixes, UI buttons working, look around image updated, worked on the audio/mute/unmute, map and help button pops now showing.
-// v0.2 Congrats pop up timed after video plays.
+// v0.2 Congrats pop up timed after video plays. Next/previos locations added
+// v0.21 - didn't work
+// v0.22 Nav to next/back locations working, but not skipping the welcome and before you star pages.
 
 // Global variable definitions
 let modelIndex = 0;
@@ -21,7 +23,10 @@ let initialMediaState = {
     position: null,
     rotation: null
 };
-let hasPopupShown = false;
+let hasPopupShown = false; //congrats popup
+let currentLocationIndex = 0;
+let locations = []; // This will be filled with the keys from mediaConfig.json
+
 const minZoom = 10; // Minimum distance from the user
 const maxZoom = 50; // Maximum distance from the user
 const minY = -5; // Set minimum Y value
@@ -90,6 +95,37 @@ function addToHomeScreen() {
     }
 
     return true;
+}
+
+function loadNextLocation() {
+    currentLocationIndex = (currentLocationIndex + 1) % locations.length;
+    loadLocationMedia();
+}
+
+function loadPreviousLocation() {
+    currentLocationIndex = (currentLocationIndex - 1 + locations.length) % locations.length;
+    loadLocationMedia();
+}
+
+function loadLocationMedia() {
+    fetch("./Scripts/mediaConfig.json")
+        .then((response) => response.json())
+        .then((data) => {
+            hasPopupShown = false; // Reset popup shown status
+            const mediaArray = data[locations[currentLocationIndex]].media;
+            
+            // Find the index of the first image in the media array
+            modelIndex = 0; // Default to the first item
+            for (let i = 0; i < mediaArray.length; i++) {
+                if (mediaArray[i].type === "image") {
+                    modelIndex = i;
+                    break;
+                }
+            }
+
+            initializeMedia(mediaArray);
+        })
+        .catch((error) => console.error("Error loading media config:", error));
 }
 
 window.onload = () => {
@@ -202,6 +238,23 @@ window.onload = () => {
         });
     }
 
+    const nextButton = document.getElementById('continue-button');
+    const backButton = document.getElementById('back-button');
+
+    if (nextButton) {
+        nextButton.addEventListener('click', () => {
+            loadNextLocation();
+            document.getElementById('congratulations-overlay').style.display = 'none';
+        });
+    }
+
+    if (backButton) {
+        backButton.addEventListener('click', () => {
+            loadPreviousLocation();
+            document.getElementById('congratulations-overlay').style.display = 'none';
+        });
+    }
+  
     // Ensure background audio plays when 'Got It' button is clicked
     const gotItButton = document.getElementById('got-it-button');
     gotItButton.addEventListener('click', () => {
@@ -219,9 +272,17 @@ window.onload = () => {
 
 function initializeMedia(mediaArray) {
     const button = document.querySelector('button[data-action="change"]');
+
+    // Clear previous button text
+    const existingButtonText = document.querySelector('.button-text');
+    if (existingButtonText) {
+        existingButtonText.remove();
+    }
+
     const buttonText = document.createElement("div");
     buttonText.className = "button-text";
     button.insertAdjacentElement("beforebegin", buttonText);
+
     const isIPhone = /iphone|ipod/i.test(navigator.userAgent.toLowerCase());
 
     function getPinchDistance(e) {
@@ -229,6 +290,23 @@ function initializeMedia(mediaArray) {
         const dy = e.touches[0].pageY - e.touches[1].pageY;
         return Math.sqrt(dx * dx + dy * dy);
     }
+
+    // Event listener for changing media
+    button.addEventListener("click", () => {
+        changeMedia(); // Change to video on button click
+    });
+
+    const scene = document.querySelector("a-scene");
+    if (scene.hasLoaded) {
+        displayMedia(modelIndex); // Initial media display
+    } else {
+        scene.addEventListener("loaded", function () {
+            displayMedia(modelIndex); // Initial media display
+        });
+    }
+
+
+
 
     function updateZoom(currentPinchDistance) {
         if (mediaEntity) {
@@ -388,150 +466,133 @@ function initializeMedia(mediaArray) {
         });
     }
 
-    function changeMedia() {
-        modelIndex = (modelIndex + 1) % mediaArray.length;
-        displayMedia(modelIndex);
 
-        // Delay to show the congratulations pop-up
-        setTimeout(showCongratulationsPopup, 60000); // Show the pop-up after 60 seconds
+function displayMedia(index) {
+    let scene = document.querySelector("a-scene");
+    let mediaItem = mediaArray[index];
+
+    // Remove existing media (image or video)
+    let existingMedia = scene.querySelector('a-image:not([id^="look_"]) , a-video:not([visible=false])');
+    if (existingMedia) {
+        existingMedia.parentNode.removeChild(existingMedia);
     }
 
-    function displayMedia(index) {
-        let scene = document.querySelector("a-scene");
-        let mediaItem = mediaArray[index];
-
-        // Remove existing media (image or video)
-        let existingMedia = scene.querySelector(
-            'a-image:not([id^="look_"]) , a-video:not([visible=false])'
-        );
-        if (existingMedia) {
-            existingMedia.parentNode.removeChild(existingMedia);
-        }
-
-        // Remove existing frame if any
-        if (frameEntity) {
-            frameEntity.parentNode.removeChild(frameEntity);
-            frameEntity = null;
-        }
-
-        // Correct media element placement
-        fixedAngleDegrees = mediaItem.fixedAngleDegrees; // Ensure to use fixedAngleDegrees from mediaItem
-        const radians = (fixedAngleDegrees * Math.PI) / 180;
-        const defaultPosition = {
-            x: -currentZoom * Math.sin(radians),
-            y: currentY,
-            z: -currentZoom * Math.cos(radians),
-        };
-        const position = mediaEntity
-            ? mediaEntity.getAttribute("position")
-            : defaultPosition;
-        const rotation = mediaEntity
-            ? mediaEntity.getAttribute("rotation")
-            : { x: 0, y: fixedAngleDegrees, z: 0 };
-
-        // Store initial state
-        initialMediaState.position = { ...position };
-        initialMediaState.rotation = { ...rotation };
-
-        console.log(
-            `Setting initial position to x: ${position.x}, y: ${position.y}, z: ${position.z}`
-        );
-        console.log(`Setting initial rotation to 0, ${rotation.y}, 0`);
-
-        if (videoEntity) {
-            videoEntity.setAttribute("visible", "false");
-            videoEntity = null;
-        }
-
-        let entity;
-        if (mediaItem.type === "image") {
-            // Set up the image entity
-            entity = document.createElement("a-image");
-            entity.setAttribute("src", mediaItem.url);
-            entity.setAttribute("position", position); // Set initial position
-            entity.setAttribute("rotation", rotation); // Set initial rotation
-            entity.setAttribute("scale", mediaItem.scale);
-
-            scene.appendChild(entity);
-            document.getElementById("look_1").setAttribute("visible", "true"); // Ensure lookImage is visible
-            buttonText.innerText = isIPhone
-                ? "Tap to play"
-                : "Tap to play";
-
-            // Create lookImage copies at specific angles
-            createLookImages();
-        } else if (mediaItem.type === "video") {
-            if (videoEntity) {
-                videoEntity.setAttribute("visible", "true");
-            } else {
-                // Set up the video entity
-                entity = document.createElement("a-video");
-                entity.setAttribute("src", mediaItem.url);
-                entity.setAttribute("autoplay", "true");
-                entity.setAttribute("loop", "true");
-                entity.setAttribute("playsinline", "true");
-                entity.setAttribute("position", position); // Set initial position
-                entity.setAttribute("rotation", rotation); // Set initial rotation
-                entity.setAttribute("scale", mediaItem.scale);
-                entity.setAttribute("preload", "true");
-                scene.appendChild(entity);
-                videoEntity = entity;
-            }
-            document.getElementById("look_1").setAttribute("visible", "true"); // Ensure lookImage is visible
-            buttonText.innerText = "Go back";
-
-            // Create lookImage copies at specific angles
-            createLookImages();
-        }
-        mediaEntity = entity;
-
-        // Add the frame entity
-        if (mediaItem.frameUrl) {
-            frameEntity = document.createElement("a-image");
-            frameEntity.setAttribute("src", mediaItem.frameUrl);
-            frameEntity.setAttribute("position", position); // Ensure frame is slightly in front dynamically
-            frameEntity.setAttribute("rotation", rotation);
-            frameEntity.setAttribute("scale", mediaItem.scale);
-            scene.appendChild(frameEntity);
-        }
-
-        // Explicitly set initial position and update debug info
-        mediaEntity.setAttribute("position", position);
-
-        // Confirm attributes have been set correctly
-        const confirmedPosition = mediaEntity.getAttribute("position");
-        const confirmedRotation = mediaEntity.getAttribute("rotation");
-        console.log(
-            `Confirmed initial position: x: ${confirmedPosition.x}, y: ${confirmedPosition.y}, z: ${confirmedPosition.z}`
-        );
-        console.log(
-            `Confirmed initial rotation: x: ${confirmedRotation.x}, y: ${confirmedRotation.y}, z: ${confirmedRotation.z}`
-        );
-
-        // Ensure attributes are not overridden
-        setTimeout(() => {
-            const doubleCheckPosition = mediaEntity.getAttribute("position");
-            const doubleCheckRotation = mediaEntity.getAttribute("rotation");
-            console.log(
-                `Double-check position: x: ${doubleCheckPosition.x}, y: ${doubleCheckPosition.y}, z: ${doubleCheckPosition.z}`
-            );
-            console.log(
-                `Double-check rotation: x: ${doubleCheckRotation.x}, y: ${doubleCheckRotation.y}, z: ${doubleCheckRotation.z}`
-            );
-        }, 100);
+    // Remove existing frame if any
+    if (frameEntity) {
+        frameEntity.parentNode.removeChild(frameEntity);
+        frameEntity = null;
     }
 
-    setMediaSource();
-    button.addEventListener("click", () => {
-        changeMedia(); // Change to video on button click
+    // Remove any existing lookImages
+    lookImages.forEach((lookImage) => {
+        if (lookImage.parentNode) {
+            lookImage.parentNode.removeChild(lookImage);
+        }
     });
+    lookImages = []; // Clear the lookImages array
 
-    const scene = document.querySelector("a-scene");
-    if (scene.hasLoaded) {
-        displayMedia(modelIndex); // Initial media display
-    } else {
-        scene.addEventListener("loaded", function () {
-            displayMedia(modelIndex); // Initial media display
-        });
+    // Correct media element placement
+    fixedAngleDegrees = mediaItem.fixedAngleDegrees; // Ensure to use fixedAngleDegrees from mediaItem
+    const radians = (fixedAngleDegrees * Math.PI) / 180;
+    const defaultPosition = {
+        x: -currentZoom * Math.sin(radians),
+        y: currentY,
+        z: -currentZoom * Math.cos(radians),
+    };
+    const position = mediaEntity
+        ? mediaEntity.getAttribute("position")
+        : defaultPosition;
+    const rotation = mediaEntity
+        ? mediaEntity.getAttribute("rotation")
+        : { x: 0, y: fixedAngleDegrees, z: 0 };
+
+    // Store initial state
+    initialMediaState.position = { ...position };
+    initialMediaState.rotation = { ...rotation };
+
+    console.log(`Setting initial position to x: ${position.x}, y: ${position.y}, z: ${position.z}`);
+    console.log(`Setting initial rotation to 0, ${rotation.y}, 0`);
+
+    if (videoEntity) {
+        videoEntity.setAttribute("visible", "false");
+        videoEntity = null;
     }
+
+    let entity;
+    const buttonText = document.querySelector('.button-text');
+    if (mediaItem.type === "image") {
+        // Set up the image entity
+        entity = document.createElement("a-image");
+        entity.setAttribute("src", mediaItem.url);
+        entity.setAttribute("position", position); // Set initial position
+        entity.setAttribute("rotation", rotation); // Set initial rotation
+        entity.setAttribute("scale", mediaItem.scale);
+
+        scene.appendChild(entity);
+        document.getElementById("look_1").setAttribute("visible", "true"); // Ensure lookImage is visible
+        buttonText.innerText = "Tap to play";
+
+        // Create lookImage copies at specific angles
+        createLookImages();
+    } else if (mediaItem.type === "video") {
+        // Ensure the video element is reset and properly initialized
+        entity = document.createElement("a-video");
+        entity.setAttribute("src", mediaItem.url);
+        entity.setAttribute("autoplay", "true");
+        entity.setAttribute("loop", "true");
+        entity.setAttribute("playsinline", "true");
+        entity.setAttribute("position", position); // Set initial position
+        entity.setAttribute("rotation", rotation); // Set initial rotation
+        entity.setAttribute("scale", mediaItem.scale);
+        entity.setAttribute("preload", "auto"); // Ensure the video is preloaded
+        scene.appendChild(entity);
+        videoEntity = entity;
+
+        document.getElementById("look_1").setAttribute("visible", "true"); // Ensure lookImage is visible
+        buttonText.innerText = "Go back";
+
+        // Create lookImage copies at specific angles
+        createLookImages();
+    }
+    mediaEntity = entity;
+
+    // Add the frame entity
+    if (mediaItem.frameUrl) {
+        frameEntity = document.createElement("a-image");
+        frameEntity.setAttribute("src", mediaItem.frameUrl);
+        frameEntity.setAttribute("position", position); // Ensure frame is slightly in front dynamically
+        frameEntity.setAttribute("rotation", rotation);
+        frameEntity.setAttribute("scale", mediaItem.scale);
+        scene.appendChild(frameEntity);
+    }
+
+    // Explicitly set initial position and update debug info
+    mediaEntity.setAttribute("position", position);
+
+    // Confirm attributes have been set correctly
+    const confirmedPosition = mediaEntity.getAttribute("position");
+    const confirmedRotation = mediaEntity.getAttribute("rotation");
+    console.log(`Confirmed initial position: x: ${confirmedPosition.x}, y: ${confirmedPosition.y}, z: ${confirmedPosition.z}`);
+    console.log(`Confirmed initial rotation: x: ${confirmedRotation.x}, y: ${confirmedRotation.y}, z: ${confirmedRotation.z}`);
+
+    // Ensure attributes are not overridden
+    setTimeout(() => {
+        const doubleCheckPosition = mediaEntity.getAttribute("position");
+        const doubleCheckRotation = mediaEntity.getAttribute("rotation");
+        console.log(`Double-check position: x: ${doubleCheckPosition.x}, y: ${doubleCheckPosition.y}, z: ${doubleCheckPosition.z}`);
+        console.log(`Double-check rotation: x: ${doubleCheckRotation.x}, y: ${doubleCheckRotation.y}, z: ${doubleCheckRotation.z}`);
+    }, 100);
 }
+
+
+
+function changeMedia() {
+    modelIndex = (modelIndex + 1) % mediaArray.length;
+    displayMedia(modelIndex);
+
+    // Show the congratulations pop-up after a short delay for testing
+    setTimeout(showCongratulationsPopup, 5000); // Set to 0 for immediate testing
+}
+}
+
+
