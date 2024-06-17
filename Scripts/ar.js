@@ -7,8 +7,8 @@
 // v0.17 Added new overlay page for headphones, 4 onscreen buttons for Map (with ovelay on press) save to home (not working), mute/unmute, refresh the location (not working)
 // v0.19 delay to notification of the motion sensor pop up - some formatting fixes, UI buttons working, look around image updated, worked on the audio/mute/unmute, map and help button pops now showing.
 // v0.2 Congrats pop up timed after video plays. Next/previos locations added
-// v0.21 - didn't work
-// v0.22 Nav to next/back locations working, but not skipping the welcome and before you star pages.
+// v.021 Didn't work
+// v.022 Moved to next/previous locations - adding loading screen betweeem location to hide ovelays popping up again. Added same funtion to refresh button.
 
 // Global variable definitions
 let modelIndex = 0;
@@ -99,12 +99,12 @@ function addToHomeScreen() {
 
 function loadNextLocation() {
     currentLocationIndex = (currentLocationIndex + 1) % locations.length;
-    loadLocationMedia();
+    navigateToLocation(locations[currentLocationIndex]);
 }
 
 function loadPreviousLocation() {
     currentLocationIndex = (currentLocationIndex - 1 + locations.length) % locations.length;
-    loadLocationMedia();
+    navigateToLocation(locations[currentLocationIndex]);
 }
 
 function loadLocationMedia() {
@@ -126,6 +126,12 @@ function loadLocationMedia() {
             initializeMedia(mediaArray);
         })
         .catch((error) => console.error("Error loading media config:", error));
+}
+
+function navigateToLocation(locationId) {
+    const baseUrl = window.location.origin;
+    const newUrl = `${baseUrl}/ar.html?location=${locationId}&skipOverlays=true`;
+    window.location.href = newUrl;
 }
 
 window.onload = () => {
@@ -199,7 +205,11 @@ window.onload = () => {
 
     if (refreshButton) {
         refreshButton.addEventListener("click", () => {
-            refreshMediaPosition(); // Use the refreshMediaPosition function
+            const urlParams = new URLSearchParams(window.location.search);
+            const locationId = urlParams.get("location");
+            if (locationId) {
+                navigateToLocation(locationId);
+            }
         });
     }
 
@@ -304,9 +314,6 @@ function initializeMedia(mediaArray) {
             displayMedia(modelIndex); // Initial media display
         });
     }
-
-
-
 
     function updateZoom(currentPinchDistance) {
         if (mediaEntity) {
@@ -594,5 +601,3 @@ function changeMedia() {
     setTimeout(showCongratulationsPopup, 5000); // Set to 0 for immediate testing
 }
 }
-
-
