@@ -97,7 +97,7 @@
             </p>
             <button id="continue-button">Continue to next image</button>
             <button id="back-button">Go back to previous image</button>
-            <button id="close-congrats-overlay" class="close-button">X</button>
+            <button id="close-congrats-overlay" class="close-button"></button>
         </div>
     </div>
   
@@ -144,6 +144,8 @@
     </div>
 
     <script>
+        
+      
         document.addEventListener("DOMContentLoaded", function() {
             const startExperienceButton = document.getElementById('start-experience');
             const gotItButton = document.getElementById('got-it-button');
@@ -177,6 +179,9 @@
                 fetch("./Scripts/mediaConfig.json")
                     .then((response) => response.json())
                     .then((data) => {
+                        locations = Object.keys(data);
+                        currentLocationIndex = locations.indexOf(locationId);
+                  
                         if (!data[locationId]) {
                             console.error("Invalid location specified");
                             return;
