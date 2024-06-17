@@ -8,7 +8,7 @@
 // v0.19 delay to notification of the motion sensor pop up - some formatting fixes, UI buttons working, look around image updated, worked on the audio/mute/unmute, map and help button pops now showing.
 // v0.2 Congrats pop up timed after video plays. Next/previos locations added
 // v.021 Didn't work
-// v.022 Moved to next/previous locations - adding loading screen betweeem location to hide ovelays popping up again. Added same funtion to refresh button.
+// v.022 Moved to next/previous locations - adding loading screen betweeem location to hide ovelays popping up again. Added the same function to the refresh button. Pich reversed and isPinching flag dragging is not allowed while a pinch-to-zoom gesture is in progress. Updated mediaConfig so all files are loaded in front of the user (for now) and the Dev landing page just shows images for Press launch with a button named to corresponding map locations, Frames removed (commented out if need to restore) button-text updated.
 
 // Global variable definitions
 let modelIndex = 0;
@@ -24,6 +24,7 @@ let initialMediaState = {
     rotation: null
 };
 let hasPopupShown = false; //congrats popup
+let hasPopupClosed = false;
 let currentLocationIndex = 0;
 let locations = []; // This will be filled with the keys from mediaConfig.json
 
@@ -36,6 +37,7 @@ const dragSpeed = 0.01; // Adjust the drag speed as needed
 
 // Pinch-to-zoom variables
 let initialPinchDistance = null;
+let isPinching = false; // Flag to indicate if a pinch-to-zoom gesture is in progress
 
 // Drag functionality variables
 let isDragging = false;
@@ -43,6 +45,10 @@ let initialTouchX = null;
 let initialTouchY = null;
 let initialFixedAngle = 0;
 let dragAxis = null; // 'x' for rotation, 'y' for vertical movement
+
+function addToHomeScreen() {
+    console.log("Add to home screen functionality is not yet implemented.");
+}
 
 function refreshMediaPosition() {
     if (mediaEntity) {
@@ -58,43 +64,18 @@ function refreshMediaPosition() {
 
 // Congrats page pop up
 function showCongratulationsPopup() {
-    if (!hasPopupShown) {
+    if (!hasPopupShown && !hasPopupClosed) {
         const popup = document.getElementById('congratulations-overlay');
         popup.style.display = 'flex';
-
-        const closePopupButton = document.getElementById('close-congrats-overlay');
-        closePopupButton.addEventListener('click', () => {
-            popup.style.display = 'none';
-        });
-
         hasPopupShown = true; // Ensure the pop-up only shows once per location
     }
 }
 
-function addToHomeScreen() {
-    if (window.navigator.standalone === true) {
-        return false;
-    } else if (window.matchMedia("(display-mode: standalone)").matches) {
-        return false;
-    }
-
-    const prompt = window.deferredPrompt;
-
-    if (prompt) {
-        prompt.prompt();
-
-        prompt.userChoice.then(function (choiceResult) {
-            if (choiceResult.outcome === "accepted") {
-                console.log("User accepted the A2HS prompt");
-            } else {
-                console.log("User dismissed the A2HS prompt");
-            }
-
-            window.deferredPrompt = null;
-        });
-    }
-
-    return true;
+// Function to close the congratulations overlay and prevent it from showing again in the session
+function closeCongratsPopup() {
+    const popup = document.getElementById('congratulations-overlay');
+    popup.style.display = 'none';
+    hasPopupClosed = true; // Prevent the pop-up from showing again in the same session
 }
 
 function loadNextLocation() {
@@ -154,6 +135,11 @@ window.onload = () => {
                 audio.play();
             });
         }
+    }
+
+    const closePopupButton = document.getElementById('close-congrats-overlay');
+    if (closePopupButton) {
+        closePopupButton.addEventListener('click', closeCongratsPopup);
     }
 
     const viewMapButton = document.getElementById("view-map");
@@ -264,21 +250,40 @@ window.onload = () => {
             document.getElementById('congratulations-overlay').style.display = 'none';
         });
     }
-  
+
     // Ensure background audio plays when 'Got It' button is clicked
     const gotItButton = document.getElementById('got-it-button');
-    gotItButton.addEventListener('click', () => {
-        const audio = document.getElementById("background-audio");
-        if (!isMuted) {
-            audio.play();
-        }
-    });
+    if (gotItButton) {
+        gotItButton.addEventListener('click', () => {
+            const audio = document.getElementById("background-audio");
+            if (!isMuted) {
+                audio.play();
+            }
+        });
+    }
 
     // Apply unselectable class to relevant elements
     document
         .querySelectorAll(".button-text, h1-1, h1-2, h2, p, button")
         .forEach((el) => el.classList.add("unselectable"));
 };
+
+// Define the missing functions
+
+// function navigateToLocation(locationId) {
+//     console.log(`Navigating to location: ${locationId}`);
+//     // Implement the logic for navigating to the specified location
+// }
+
+// function loadNextLocation() {
+//     currentLocationIndex = (currentLocationIndex + 1) % locations.length;
+//     navigateToLocation(locations[currentLocationIndex]);
+// }
+
+// function loadPreviousLocation() {
+//     currentLocationIndex = (currentLocationIndex - 1 + locations.length) % locations.length;
+//     navigateToLocation(locations[currentLocationIndex]);
+// }
 
 function initializeMedia(mediaArray) {
     const button = document.querySelector('button[data-action="change"]');
@@ -320,7 +325,7 @@ function initializeMedia(mediaArray) {
             const directionX = -Math.sin((fixedAngleDegrees * Math.PI) / 180);
             const directionZ = -Math.cos((fixedAngleDegrees * Math.PI) / 180);
             let distanceChange =
-                (currentPinchDistance - initialPinchDistance) * zoomSpeed;
+                -(currentPinchDistance - initialPinchDistance) * zoomSpeed;
             let newZoom = currentZoom + distanceChange;
 
             // Constrain the zoom distance within minZoom and maxZoom
@@ -341,6 +346,7 @@ function initializeMedia(mediaArray) {
         e.preventDefault(); // Prevent default touch actions
         if (e.touches.length === 2) {
             initialPinchDistance = getPinchDistance(e);
+            isPinching = true; // Set the flag to indicate a pinch gesture
             console.log(
                 `Initial touch start. initialPinchDistance: ${initialPinchDistance}`
             );
@@ -361,7 +367,7 @@ function initializeMedia(mediaArray) {
                 e.preventDefault(); // Prevent default pinch-to-zoom behavior
                 const currentPinchDistance = getPinchDistance(e);
                 updateZoom(currentPinchDistance);
-            } else if (isDragging && e.touches.length === 1) {
+            } else if (isDragging && e.touches.length === 1 && !isPinching) {
                 e.preventDefault(); // Prevent default touch behavior
                 const currentTouchX = e.touches[0].pageX;
                 const currentTouchY = e.touches[0].pageY;
@@ -433,6 +439,7 @@ function initializeMedia(mediaArray) {
     document.addEventListener("touchend", function () {
         initialPinchDistance = null;
         isDragging = false;
+        isPinching = false; // Reset the pinch flag on touch end
         dragAxis = null; // Reset drag axis on touch end
     });
 
@@ -449,9 +456,9 @@ function initializeMedia(mediaArray) {
 
     function createLookImages() {
         let scene = document.querySelector("a-scene");
-        lookImages.forEach((lookImage) =>
-            lookImage.parentNode.removeChild(lookImage)
-        );
+        lookImages.forEach((lookImage) => {
+            lookImage.parentNode.removeChild(lookImage);
+        });
         lookImages = [];
         const angles = [90, 180, 270]; // Angles for lookImage
         angles.forEach((angle) => {
@@ -473,131 +480,128 @@ function initializeMedia(mediaArray) {
         });
     }
 
+    function displayMedia(index) {
+        let scene = document.querySelector("a-scene");
+        let mediaItem = mediaArray[index];
 
-function displayMedia(index) {
-    let scene = document.querySelector("a-scene");
-    let mediaItem = mediaArray[index];
-
-    // Remove existing media (image or video)
-    let existingMedia = scene.querySelector('a-image:not([id^="look_"]) , a-video:not([visible=false])');
-    if (existingMedia) {
-        existingMedia.parentNode.removeChild(existingMedia);
-    }
-
-    // Remove existing frame if any
-    if (frameEntity) {
-        frameEntity.parentNode.removeChild(frameEntity);
-        frameEntity = null;
-    }
-
-    // Remove any existing lookImages
-    lookImages.forEach((lookImage) => {
-        if (lookImage.parentNode) {
-            lookImage.parentNode.removeChild(lookImage);
+        // Remove existing media (image or video)
+        let existingMedia = scene.querySelector('a-image:not([id^="look_"]) , a-video:not([visible=false])');
+        if (existingMedia) {
+            existingMedia.parentNode.removeChild(existingMedia);
         }
-    });
-    lookImages = []; // Clear the lookImages array
 
-    // Correct media element placement
-    fixedAngleDegrees = mediaItem.fixedAngleDegrees; // Ensure to use fixedAngleDegrees from mediaItem
-    const radians = (fixedAngleDegrees * Math.PI) / 180;
-    const defaultPosition = {
-        x: -currentZoom * Math.sin(radians),
-        y: currentY,
-        z: -currentZoom * Math.cos(radians),
-    };
-    const position = mediaEntity
-        ? mediaEntity.getAttribute("position")
-        : defaultPosition;
-    const rotation = mediaEntity
-        ? mediaEntity.getAttribute("rotation")
-        : { x: 0, y: fixedAngleDegrees, z: 0 };
+        // Remove existing frame if any
+        if (frameEntity) {
+            frameEntity.parentNode.removeChild(frameEntity);
+            frameEntity = null;
+        }
 
-    // Store initial state
-    initialMediaState.position = { ...position };
-    initialMediaState.rotation = { ...rotation };
+        // Remove any existing lookImages
+        lookImages.forEach((lookImage) => {
+            if (lookImage.parentNode) {
+                lookImage.parentNode.removeChild(lookImage);
+            }
+        });
+        lookImages = []; // Clear the lookImages array
 
-    console.log(`Setting initial position to x: ${position.x}, y: ${position.y}, z: ${position.z}`);
-    console.log(`Setting initial rotation to 0, ${rotation.y}, 0`);
+        // Correct media element placement
+        fixedAngleDegrees = mediaItem.fixedAngleDegrees; // Ensure to use fixedAngleDegrees from mediaItem
+        const radians = (fixedAngleDegrees * Math.PI) / 180;
+        const defaultPosition = {
+            x: -currentZoom * Math.sin(radians),
+            y: currentY,
+            z: -currentZoom * Math.cos(radians),
+        };
+        const position = mediaEntity
+            ? mediaEntity.getAttribute("position")
+            : defaultPosition;
+        const rotation = mediaEntity
+            ? mediaEntity.getAttribute("rotation")
+            : { x: 0, y: fixedAngleDegrees, z: 0 };
 
-    if (videoEntity) {
-        videoEntity.setAttribute("visible", "false");
-        videoEntity = null;
+        // Store initial state
+        initialMediaState.position = { ...position };
+        initialMediaState.rotation = { ...rotation };
+
+        console.log(`Setting initial position to x: ${position.x}, y: ${position.y}, z: ${position.z}`);
+        console.log(`Setting initial rotation to 0, ${rotation.y}, 0`);
+
+        if (videoEntity) {
+            videoEntity.setAttribute("visible", "false");
+            videoEntity = null;
+        }
+
+        let entity;
+        const buttonText = document.querySelector('.button-text');
+        if (mediaItem.type === "image") {
+            // Set up the image entity
+            entity = document.createElement("a-image");
+            entity.setAttribute("src", mediaItem.url);
+            entity.setAttribute("position", position); // Set initial position
+            entity.setAttribute("rotation", rotation); // Set initial rotation
+            entity.setAttribute("scale", mediaItem.scale);
+
+            scene.appendChild(entity);
+            document.getElementById("look_1").setAttribute("visible", "true"); // Ensure lookImage is visible
+            buttonText.innerText = "Tap to play when the photo is in place";
+
+            // Create lookImage copies at specific angles
+            createLookImages();
+        } else if (mediaItem.type === "video") {
+            // Ensure the video element is reset and properly initialized
+            entity = document.createElement("a-video");
+            entity.setAttribute("src", mediaItem.url);
+            entity.setAttribute("autoplay", "true");
+            entity.setAttribute("loop", "true");
+            entity.setAttribute("playsinline", "true");
+            entity.setAttribute("position", position); // Set initial position
+            entity.setAttribute("rotation", rotation); // Set initial rotation
+            entity.setAttribute("scale", mediaItem.scale);
+            entity.setAttribute("preload", "auto"); // Ensure the video is preloaded
+            scene.appendChild(entity);
+            videoEntity = entity;
+
+            document.getElementById("look_1").setAttribute("visible", "true"); // Ensure lookImage is visible
+            buttonText.innerText = "Go back to the image";
+
+            // Create lookImage copies at specific angles
+            createLookImages();
+        }
+        mediaEntity = entity;
+
+        // Add the frame entity
+        // if (mediaItem.frameUrl) {
+        //     frameEntity = document.createElement("a-image");
+        //     frameEntity.setAttribute("src", mediaItem.frameUrl);
+        //     frameEntity.setAttribute("position", position); // Ensure frame is slightly in front dynamically
+        //     frameEntity.setAttribute("rotation", rotation);
+        //     frameEntity.setAttribute("scale", mediaItem.scale);
+        //     scene.appendChild(frameEntity);
+        // }
+
+        // Explicitly set initial position and update debug info
+        mediaEntity.setAttribute("position", position);
+
+        // Confirm attributes have been set correctly
+        const confirmedPosition = mediaEntity.getAttribute("position");
+        const confirmedRotation = mediaEntity.getAttribute("rotation");
+        console.log(`Confirmed initial position: x: ${confirmedPosition.x}, y: ${confirmedPosition.y}, z: ${confirmedPosition.z}`);
+        console.log(`Confirmed initial rotation: x: ${confirmedRotation.x}, y: ${confirmedRotation.y}, z: ${confirmedRotation.z}`);
+
+        // Ensure attributes are not overridden
+        setTimeout(() => {
+            const doubleCheckPosition = mediaEntity.getAttribute("position");
+            const doubleCheckRotation = mediaEntity.getAttribute("rotation");
+            console.log(`Double-check position: x: ${doubleCheckPosition.x}, y: ${doubleCheckPosition.y}, z: ${doubleCheckPosition.z}`);
+            console.log(`Double-check rotation: x: ${doubleCheckRotation.x}, y: ${doubleCheckRotation.y}, z: ${doubleCheckRotation.z}`);
+        }, 100);
     }
 
-    let entity;
-    const buttonText = document.querySelector('.button-text');
-    if (mediaItem.type === "image") {
-        // Set up the image entity
-        entity = document.createElement("a-image");
-        entity.setAttribute("src", mediaItem.url);
-        entity.setAttribute("position", position); // Set initial position
-        entity.setAttribute("rotation", rotation); // Set initial rotation
-        entity.setAttribute("scale", mediaItem.scale);
+    function changeMedia() {
+        modelIndex = (modelIndex + 1) % mediaArray.length;
+        displayMedia(modelIndex);
 
-        scene.appendChild(entity);
-        document.getElementById("look_1").setAttribute("visible", "true"); // Ensure lookImage is visible
-        buttonText.innerText = "Tap to play";
-
-        // Create lookImage copies at specific angles
-        createLookImages();
-    } else if (mediaItem.type === "video") {
-        // Ensure the video element is reset and properly initialized
-        entity = document.createElement("a-video");
-        entity.setAttribute("src", mediaItem.url);
-        entity.setAttribute("autoplay", "true");
-        entity.setAttribute("loop", "true");
-        entity.setAttribute("playsinline", "true");
-        entity.setAttribute("position", position); // Set initial position
-        entity.setAttribute("rotation", rotation); // Set initial rotation
-        entity.setAttribute("scale", mediaItem.scale);
-        entity.setAttribute("preload", "auto"); // Ensure the video is preloaded
-        scene.appendChild(entity);
-        videoEntity = entity;
-
-        document.getElementById("look_1").setAttribute("visible", "true"); // Ensure lookImage is visible
-        buttonText.innerText = "Go back";
-
-        // Create lookImage copies at specific angles
-        createLookImages();
+        // Show the congratulations pop-up after a short delay for testing
+        setTimeout(showCongratulationsPopup, 60000); // Set to 0 for immediate testing
     }
-    mediaEntity = entity;
-
-    // Add the frame entity
-    if (mediaItem.frameUrl) {
-        frameEntity = document.createElement("a-image");
-        frameEntity.setAttribute("src", mediaItem.frameUrl);
-        frameEntity.setAttribute("position", position); // Ensure frame is slightly in front dynamically
-        frameEntity.setAttribute("rotation", rotation);
-        frameEntity.setAttribute("scale", mediaItem.scale);
-        scene.appendChild(frameEntity);
-    }
-
-    // Explicitly set initial position and update debug info
-    mediaEntity.setAttribute("position", position);
-
-    // Confirm attributes have been set correctly
-    const confirmedPosition = mediaEntity.getAttribute("position");
-    const confirmedRotation = mediaEntity.getAttribute("rotation");
-    console.log(`Confirmed initial position: x: ${confirmedPosition.x}, y: ${confirmedPosition.y}, z: ${confirmedPosition.z}`);
-    console.log(`Confirmed initial rotation: x: ${confirmedRotation.x}, y: ${confirmedRotation.y}, z: ${confirmedRotation.z}`);
-
-    // Ensure attributes are not overridden
-    setTimeout(() => {
-        const doubleCheckPosition = mediaEntity.getAttribute("position");
-        const doubleCheckRotation = mediaEntity.getAttribute("rotation");
-        console.log(`Double-check position: x: ${doubleCheckPosition.x}, y: ${doubleCheckPosition.y}, z: ${doubleCheckPosition.z}`);
-        console.log(`Double-check rotation: x: ${doubleCheckRotation.x}, y: ${doubleCheckRotation.y}, z: ${doubleCheckRotation.z}`);
-    }, 100);
-}
-
-
-
-function changeMedia() {
-    modelIndex = (modelIndex + 1) % mediaArray.length;
-    displayMedia(modelIndex);
-
-    // Show the congratulations pop-up after a short delay for testing
-    setTimeout(showCongratulationsPopup, 5000); // Set to 0 for immediate testing
-}
 }
