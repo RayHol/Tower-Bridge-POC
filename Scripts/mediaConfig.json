@@ -29,7 +29,7 @@
                 "url": "./assets/images/02.jpg",
                 "scale": "10 7 1",
                 "rotation": "0 0 0",
-                "fixedAngleDegrees": 90,
+                "fixedAngleDegrees": 0,
                 "frameUrl": "./assets/frames/frame2.png",
                 "info": "Image 2"
             },
@@ -38,7 +38,7 @@
                 "url": "https://rayhol.github.io/TB_Videos/Videos/02.mp4",
                 "scale": "10 7 1",
                 "rotation": "0 0 0",
-                "fixedAngleDegrees": 90,
+                "fixedAngleDegrees": 0,
                 "frameUrl": "./assets/frames/frame2.png",
                 "info": "Video 2"
             }
@@ -52,7 +52,7 @@
                 "url": "./assets/images/03.jpg",
                 "scale": "10 7 1",
                 "rotation": "0 0 0",
-                "fixedAngleDegrees": 180,
+                "fixedAngleDegrees": 0,
                 "frameUrl": "./assets/frames/frame2.png",
                 "info": "Image 3"
             },
@@ -61,7 +61,7 @@
                 "url": "https://rayhol.github.io/TB_Videos/Videos/03.mp4",
                 "scale": "10 7 1",
                 "rotation": "0 0 0",
-                "fixedAngleDegrees": 180,
+                "fixedAngleDegrees": 0,
                 "frameUrl": "./assets/frames/frame2.png",
                 "info": "VIdeo 3"
             }
@@ -74,7 +74,7 @@
                 "url": "./assets/images/04.jpg",
                 "scale": "10 7 1",
                 "rotation": "0 0 0",
-                "fixedAngleDegrees": 270,
+                "fixedAngleDegrees": 0,
                 "frameUrl": "./assets/frames/frame2.png",
                 "info": "Image 4"
             },
@@ -83,7 +83,7 @@
                 "url": "https://rayhol.github.io/TB_Videos/Videos/04.mp4",
                 "scale": "10 7 1",
                 "rotation": "0 0 0",
-                "fixedAngleDegrees": 270,
+                "fixedAngleDegrees": 0,
                 "frameUrl": "./assets/frames/frame2.png",
                 "info": "Video 4"
             }
