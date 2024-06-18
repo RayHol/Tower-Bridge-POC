@@ -128,7 +128,7 @@ function loadLocationMedia() {
 
 function navigateToLocation(locationId) {
     const baseUrl = window.location.origin;
-    const newUrl = 'https://rayhol.github.io/Tower-Bridge-POC/ar.html?location=${locationId}&skipOverlays=true`;
+    const newUrl = '${baseUrl}/ar.html?location=${locationId}&skipOverlays=true`;
     window.location.href = newUrl;
 }
 
