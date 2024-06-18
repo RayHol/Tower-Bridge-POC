@@ -1,15 +1,3 @@
-// v.011 pinch to zoom
-// v.012 drag to rotate
-// v.013 background audio
-// v.014 look around images placed around the user
-// v0.15 Frames added
-// v0.16 IOS notification formating (motion sensors) and fixed the change displayMedia not persitstant location
-// v0.17 Added new overlay page for headphones, 4 onscreen buttons for Map (with ovelay on press) save to home (not working), mute/unmute, refresh the location (not working)
-// v0.19 delay to notification of the motion sensor pop up - some formatting fixes, UI buttons working, look around image updated, worked on the audio/mute/unmute, map and help button pops now showing.
-// v0.2 Congrats pop up timed after video plays. Next/previos locations added
-// v.021 Didn't work
-// v.022 Moved to next/previous locations - adding loading screen betweeem location to hide ovelays popping up again. Added the same function to the refresh button. Pich reversed and isPinching flag dragging is not allowed while a pinch-to-zoom gesture is in progress. Updated mediaConfig so all files are loaded in front of the user (for now) and the Dev landing page just shows images for Press launch with a button named to corresponding map locations, Frames removed (commented out if need to restore) button-text updated.
-
 // Global variable definitions
 let modelIndex = 0;
 let videoEntity = null;
@@ -33,7 +21,8 @@ const maxZoom = 50; // Maximum distance from the user
 const minY = -5; // Set minimum Y value
 const maxY = 10; // Set maximum Y value
 const zoomSpeed = 0.01; // Adjust the zoom speed as needed
-const dragSpeed = 0.1; // Adjust the drag speed as needed
+const dragSpeedX = 0.07; // Adjust the drag speed for the x-axis
+const dragSpeedY = 0.0015; // Adjust the drag speed for the y-axis
 
 // Pinch-to-zoom variables
 let initialPinchDistance = null;
@@ -385,7 +374,7 @@ function initializeMedia(mediaArray) {
 
                 if (dragAxis === "x") {
                     // Adjust fixedAngleDegrees based on horizontal movement
-                    fixedAngleDegrees = initialFixedAngle - deltaX * dragSpeed; // Adjust the sensitivity as needed
+                    fixedAngleDegrees = initialFixedAngle - deltaX * dragSpeedX; // Adjust the sensitivity as needed
 
                     // Calculate the new position based on fixedAngleDegrees
                     const radians = (fixedAngleDegrees * Math.PI) / 180;
@@ -412,7 +401,7 @@ function initializeMedia(mediaArray) {
                     });
                 } else if (dragAxis === "y") {
                     // Calculate the new Y position
-                    const newY = currentY - deltaY * dragSpeed * 0.2; // Adjust the sensitivity as needed and invert the drag
+                    const newY = currentY - deltaY * dragSpeedY; // Adjust the sensitivity as needed and invert the drag
                     const clampedY = Math.max(minY, Math.min(maxY, newY)); // Constrain the Y value within minY and maxY
 
                     // Update the media entity position
