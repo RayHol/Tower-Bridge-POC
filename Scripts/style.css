@@ -252,7 +252,7 @@ button[data-action="change"] {
 
 #powered-by-welcome  {
     font-family: 'Poppins', sans-serif;
-    font-size: 10px;start-experience; 
+    font-size: 10px; 
     font-weight: 400;
     line-height: 16px;
     letter-spacing: 1.5px;
@@ -510,6 +510,7 @@ html body .a-dialog-ok-button {
     position: fixed;
     top: 10px; /* Adjusted to top of page*/
     left: 50%;
+    padding: 0px 30px;
     transform: translateX(-50%);
     z-index: 10;
 }
@@ -518,8 +519,8 @@ html body .a-dialog-ok-button {
     background: rgba(255, 255, 255, 1);
     border: none;
     border-radius: 8px;
-    padding: 10px 20px;
-    margin: 0 5px;
+/*     padding: 0px 20px; */
+    margin: 0 10px;
     cursor: pointer;
     font-family: 'Kapra-Condensed', sans-serif;
     font-size: 18px;
@@ -529,27 +530,24 @@ html body .a-dialog-ok-button {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 100px;
+    min-width: 80px;
+    min-height: 36px;
     text-align: center;
 }
 
 .help-button {
     background: rgba(255, 255, 255, 1);
+/*     background-image: url("../assets/images/UI/help-icon.svg") no-repeat; */
     border: none;
     border-radius: 8px;
-    padding: 10px 20px;
-/*     margin: 0 5px; */
+    line-height: 1;
+    margin: 0 10px;
     cursor: pointer;
-    font-family: 'Kapra-Condensed', sans-serif;
-    font-size: 18px;
-    font-weight: 400;
-    color: #000000;
-    text-transform: uppercase;
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 10px;
-    text-align: center;
+    min-width: 36px;
+    min-height:36px;
 }
 
 .button-icon {
