@@ -314,7 +314,7 @@ function initializeMedia(mediaArray) {
             const directionX = -Math.sin((fixedAngleDegrees * Math.PI) / 180);
             const directionZ = -Math.cos((fixedAngleDegrees * Math.PI) / 180);
             let distanceChange =
-                -(currentPinchDistance - initialPinchDistance) * zoomSpeed;
+                (currentPinchDistance - initialPinchDistance) * zoomSpeed;
             let newZoom = currentZoom + distanceChange;
 
             // Constrain the zoom distance within minZoom and maxZoom
