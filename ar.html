@@ -11,12 +11,16 @@
     
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/jeromeetienne/AR.js/master/aframe/build/aframe-ar.min.js"></script>
-  
+
 </head>
+
 <body style="margin: 0; overflow: hidden;">
-  html, body {
-            touch-action: none;
-        }
+  <style>
+    html, body {
+      touch-action: none;
+    }
+  </style>
+
     <!-- Welcome overlay page -->
     <div class="overlay" id="overlay">
         <div class="overlay-background"></div>
@@ -121,9 +125,12 @@
     
     <div class="centered instructions"></div>
     <a-scene id="ar-scene" vr-mode-ui="enabled: false" embedded arjs="debugUIEnabled: false;" style="display:none;">
+<!--         <a-entity camera look-controls="true" position="0 1.6 0" touch-enabled="false" wasd-controls-enabled="false"></a-entity> -->
+<!--         <a-camera position="0 1.6 0" touchEnabled="false" wasd-controls-enabled="false" look-controls-enabled="true"></a-camera> -->
+        <a-camera id="camera" rotation-reader position="0 1.6 0" listener look-controls="touchEnabled: false">
+</a-camera>
         <a-light type="ambient" color="#ffffff"></a-light>
         <a-light type="directional" color="#ffffff" position="-2 4 5"></a-light>
-        <a-entity camera look-controls position="0 1.6 0"></a-entity>
         <a-image id="look_1" position="0 0 0" rotation="0 0 0" scale="14 4 1" visible="false"></a-image>
     </a-scene>
   
