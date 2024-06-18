@@ -3,13 +3,15 @@
 // v.013 background audio
 // v.014 look around images placed around the user
 // v0.15 Frames added
-// v0.16 IOS notification formating (motion sensors) and fixed the change displayMedia not persitstant location
-// v0.17 Added new overlay page for headphones, 4 onscreen buttons for Map (with ovelay on press) save to home (not working), mute/unmute, refresh the location (not working)
+// v0.16 IOS notification formatting (motion sensors) and fixed the change displayed not persistent location
+// v0.17 Added new overlay page for headphones, 4 onscreen buttons for Map (with overlay on press) save to home (not working), mute/unmute, refresh the location (not working)
 // v0.19 delay to notification of the motion sensor pop up - some formatting fixes, UI buttons working, look around image updated, worked on the audio/mute/unmute, map and help button pops now showing.
-// v0.2 Congrats pop up timed after video plays. Next/previos locations added
+// v0.2 Congrats pop-up timed after video plays. Next/previous locations added
 // v.021 Didn't work
-// v.022 Moved to next/previous locations - adding loading screen between location to hide ovelays popping up again.
+// v.022 Moved to next/previous locations - adding loading screen between locations to hide overlays popping up again.
 // v.23 Added the same function to the refresh button. Pinch reversed and isPinching flag dragging is not allowed while a pinch-to-zoom gesture is in progress. Updated mediaConfig so all files are loaded in front of the user (for now) and the Dev landing page just shows images for Press launch with a button named to corresponding map locations, Frames removed (commented out if need to restore) button-text updated. Updated dragging calculations
+// v.24  Improvement to the dragging and zooming functions
+
 
 // Global variable definitions
 let modelIndex = 0;
@@ -47,8 +49,18 @@ let initialTouchY = null;
 let initialFixedAngle = 0;
 let dragAxis = null; // 'x' for rotation, 'y' for vertical movement
 
-function getAdjustedDragSpeed() {
-    return dragSpeed * (currentZoom / minZoom); // Scale the drag speed based on the zoom level
+function getAdjustedDragSpeed(axis) {
+    // Using a logarithmic scale to adjust drag speed
+    const scale = Math.log(currentZoom / minZoom + 1) / Math.log(maxZoom / minZoom + 1);
+    const xScaleFactor = 0.7; // Adjust this value to slow down x-axis dragging
+    const yScaleFactor = 8.0; // Adjust this value to speed up y-axis dragging
+    
+    if (axis === 'x') {
+        return dragSpeed * scale * xScaleFactor;
+    } else if (axis === 'y') {
+        return dragSpeed * scale * yScaleFactor;
+    }
+    return dragSpeed * scale;
 }
 
 function addToHomeScreen() {
@@ -116,7 +128,7 @@ function loadLocationMedia() {
 
 function navigateToLocation(locationId) {
     const baseUrl = window.location.origin;
-    const newUrl = `${baseUrl}/ar.html?location=${locationId}&skipOverlays=true`;
+    const newUrl = 'https://rayhol.github.io/Tower-Bridge-POC/ar.html?location=${locationId}&skipOverlays=true`;
     window.location.href = newUrl;
 }
 
@@ -329,8 +341,12 @@ function initializeMedia(mediaArray) {
         if (mediaEntity) {
             const directionX = -Math.sin((fixedAngleDegrees * Math.PI) / 180);
             const directionZ = -Math.cos((fixedAngleDegrees * Math.PI) / 180);
-            let distanceChange =
-                -(currentPinchDistance - initialPinchDistance) * zoomSpeed;
+
+            // Calculate the distance change with a smoothing factor
+            let distanceChange = -(currentPinchDistance - initialPinchDistance) * zoomSpeed;
+            let smoothingFactor = 0.1; // Adjust this value to fine-tune the smoothness
+            distanceChange *= smoothingFactor;
+
             let newZoom = currentZoom + distanceChange;
 
             // Constrain the zoom distance within minZoom and maxZoom
@@ -347,119 +363,106 @@ function initializeMedia(mediaArray) {
         }
     }
 
-    document.addEventListener("touchstart", function (e) {
-        e.preventDefault(); // Prevent default touch actions
-        if (e.touches.length === 2) {
-            initialPinchDistance = getPinchDistance(e);
-            isPinching = true; // Set the flag to indicate a pinch gesture
-            console.log(
-                `Initial touch start. initialPinchDistance: ${initialPinchDistance}`
-            );
-        } else if (e.touches.length === 1) {
-            isDragging = true;
-            initialTouchX = e.touches[0].pageX;
-            initialTouchY = e.touches[0].pageY;
-            initialFixedAngle = fixedAngleDegrees;
-            currentY = mediaEntity.getAttribute("position").y;
-            dragAxis = null; // Reset drag axis
-        }
-    });
 
-    document.addEventListener(
-        "touchmove",
-        function (e) {
-            if (e.touches.length === 2 && initialPinchDistance !== null) {
-                e.preventDefault(); // Prevent default pinch-to-zoom behavior
-                const currentPinchDistance = getPinchDistance(e);
-                updateZoom(currentPinchDistance);
-            } else if (isDragging && e.touches.length === 1 && !isPinching) {
-                e.preventDefault(); // Prevent default touch behavior
-                const currentTouchX = e.touches[0].pageX;
-                const currentTouchY = e.touches[0].pageY;
-                const deltaX = currentTouchX - initialTouchX;
-                const deltaY = currentTouchY - initialTouchY;
-              
-                 const adjustedDragSpeed = getAdjustedDragSpeed(); // Calculate adjusted drag speed
+document.addEventListener("touchstart", function (e) {
+    e.preventDefault(); // Prevent default touch actions
+    if (e.touches.length === 2) {
+        initialPinchDistance = getPinchDistance(e);
+        isPinching = true; // Set the flag to indicate a pinch gesture
+        isDragging = false; // Ensure dragging is disabled during pinch-to-zoom
+        console.log(`Initial touch start. initialPinchDistance: ${initialPinchDistance}`);
+    } else if (e.touches.length === 1 && !isPinching) {
+        isDragging = true;
+        initialTouchX = e.touches[0].pageX;
+        initialTouchY = e.touches[0].pageY;
+        initialFixedAngle = fixedAngleDegrees;
+        currentY = mediaEntity.getAttribute("position").y;
+        dragAxis = null; // Reset drag axis
+    }
+});
 
-                if (dragAxis === null) {
-                    // Determine drag axis based on initial touch movement
-                    if (Math.abs(deltaX) > Math.abs(deltaY)) {
-                        dragAxis = "x"; // Horizontal drag
-                    } else {
-                        dragAxis = "y"; // Vertical drag
-                    }
-                }
+document.addEventListener("touchmove", function (e) {
+    if (e.touches.length === 2 && initialPinchDistance !== null) {
+        e.preventDefault(); // Prevent default pinch-to-zoom behavior
+        const currentPinchDistance = getPinchDistance(e);
+        updateZoom(currentPinchDistance);
+    } else if (isDragging && e.touches.length === 1 && !isPinching) {
+        e.preventDefault(); // Prevent default touch behavior
+        const currentTouchX = e.touches[0].pageX;
+        const currentTouchY = e.touches[0].pageY;
+        const deltaX = currentTouchX - initialTouchX;
+        const deltaY = currentTouchY - initialTouchY;
 
-                if (dragAxis === "x") {
-                    // Adjust fixedAngleDegrees based on horizontal movement
-                    fixedAngleDegrees = initialFixedAngle + deltaX * adjustedDragSpeed; // Use adjusted drag speed
-
-                    // Calculate the new position based on fixedAngleDegrees
-                    const radians = (fixedAngleDegrees * Math.PI) / 180;
-                    const x = -currentZoom * Math.sin(radians); // Adjust for current zoom level
-                    const z = -currentZoom * Math.cos(radians); // Adjust for current zoom level
-
-                    mediaEntity.setAttribute("position", { x, y: currentY, z });
-                    mediaEntity.setAttribute("rotation", `0 ${fixedAngleDegrees} 0`);
-                    if (frameEntity) {
-                        frameEntity.setAttribute("position", { x, y: currentY, z });
-                        frameEntity.setAttribute("rotation", `0 ${fixedAngleDegrees} 0`);
-                    }
-                    lookImages.forEach((lookImage, index) => {
-                        const angle = (index + 1) * 90;
-                        const lookRadians = ((fixedAngleDegrees + angle) * Math.PI) / 180;
-                        const lookX = -25 * Math.sin(lookRadians);
-                        const lookZ = -25 * Math.cos(lookRadians);
-                        lookImage.setAttribute("position", { x: lookX, y: 0, z: lookZ });
-                        lookImage.setAttribute("rotation", {
-                            x: 0,
-                            y: angle + fixedAngleDegrees,
-                            z: 0,
-                        });
-                    });
-                } else if (dragAxis === "y") {
-                    // Calculate the new Y position
-                    const newY = currentY - deltaY * adjustedDragSpeed * 0.2; // Use adjusted drag speed and invert the drag
-                    const clampedY = Math.max(minY, Math.min(maxY, newY)); // Constrain the Y value within minY and maxY
-
-                    // Update the media entity position
-                    const position = mediaEntity.getAttribute("position");
-                    mediaEntity.setAttribute("position", {
-                        x: position.x,
-                        y: clampedY,
-                        z: position.z,
-                    });
-                    if (frameEntity) {
-                        frameEntity.setAttribute("position", {
-                            x: position.x,
-                            y: clampedY,
-                            z: position.z,
-                        });
-                    }
-                    currentY = clampedY; // Store the current Y position
-                }
+        if (dragAxis === null) {
+            // Determine drag axis based on initial touch movement
+            if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                dragAxis = "x"; // Horizontal drag
+            } else {
+                dragAxis = "y"; // Vertical drag
             }
-        },
-        { passive: false }
-    );
+        }
 
-    document.addEventListener("touchend", function () {
-        initialPinchDistance = null;
-        isDragging = false;
-        isPinching = false; // Reset the pinch flag on touch end
-        dragAxis = null; // Reset drag axis on touch end
-    });
+        const adjustedDragSpeedX = getAdjustedDragSpeed('x'); // Calculate adjusted drag speed for x-axis
+        const adjustedDragSpeedY = getAdjustedDragSpeed('y'); // Calculate adjusted drag speed for y-axis
 
-    function setMediaSource() {
-        const lookImage = document.getElementById("look_1");
-        const userAgent = navigator.userAgent.toLowerCase();
-        if (userAgent.includes("iphone")) {
-            lookImage.setAttribute("src", "./assets/images/UI/look-for.svg");
-            lookImage.setAttribute("material", "transparent: true; alphaTest: 0.5;");
-        } else {
-            lookImage.setAttribute("src", "./assets/images/UI/look-for.svg");
+        if (dragAxis === "x") {
+            // Adjust fixedAngleDegrees based on horizontal movement
+            fixedAngleDegrees = initialFixedAngle + deltaX * adjustedDragSpeedX; // Use adjusted drag speed
+
+            // Calculate the new position based on fixedAngleDegrees
+            const radians = (fixedAngleDegrees * Math.PI) / 180;
+            const x = -currentZoom * Math.sin(radians); // Adjust for current zoom level
+            const z = -currentZoom * Math.cos(radians); // Adjust for current zoom level
+
+            mediaEntity.setAttribute("position", { x, y: currentY, z });
+            mediaEntity.setAttribute("rotation", `0 ${fixedAngleDegrees} 0`);
+            if (frameEntity) {
+                frameEntity.setAttribute("position", { x, y: currentY, z });
+                frameEntity.setAttribute("rotation", `0 ${fixedAngleDegrees} 0`);
+            }
+            lookImages.forEach((lookImage, index) => {
+                const angle = (index + 1) * 90;
+                const lookRadians = ((fixedAngleDegrees + angle) * Math.PI) / 180;
+                const lookX = -25 * Math.sin(lookRadians);
+                const lookZ = -25 * Math.cos(lookRadians);
+                lookImage.setAttribute("position", { x: lookX, y: 0, z: lookZ });
+                lookImage.setAttribute("rotation", {
+                    x: 0,
+                    y: angle + fixedAngleDegrees,
+                    z: 0,
+                });
+            });
+        } else if (dragAxis === "y") {
+            // Calculate the new Y position
+            const newY = currentY - deltaY * adjustedDragSpeedY * 0.2; // Use adjusted drag speed and invert the drag
+            const clampedY = Math.max(minY, Math.min(maxY, newY)); // Constrain the Y value within minY and maxY
+
+            // Update the media entity position
+            const position = mediaEntity.getAttribute("position");
+            mediaEntity.setAttribute("position", {
+                x: position.x,
+                y: clampedY,
+                z: position.z,
+            });
+            if (frameEntity) {
+                frameEntity.setAttribute("position", {
+                    x: position.x,
+                    y: clampedY,
+                    z: position.z,
+                });
+            }
+            currentY = clampedY; // Store the current Y position
         }
     }
+}, { passive: false });
+
+document.addEventListener("touchend", function () {
+    initialPinchDistance = null;
+    isDragging = false;
+    isPinching = false; // Reset the pinch flag on touch end
+    dragAxis = null; // Reset drag axis on touch end
+});
+
 
     function createLookImages() {
         let scene = document.querySelector("a-scene");
