@@ -382,6 +382,7 @@ document.addEventListener("touchstart", function (e) {
 });
 
 document.addEventListener("touchmove", function (e) {
+    e.preventDefault(); // Prevent default pinch-to-zoom behavior
     if (e.touches.length === 2 && initialPinchDistance !== null) {
         e.preventDefault(); // Prevent default pinch-to-zoom behavior
         const currentPinchDistance = getPinchDistance(e);
