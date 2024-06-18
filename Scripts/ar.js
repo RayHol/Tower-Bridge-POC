@@ -12,7 +12,6 @@
 // v.23 Added the same function to the refresh button. Pinch reversed and isPinching flag dragging is not allowed while a pinch-to-zoom gesture is in progress. Updated mediaConfig so all files are loaded in front of the user (for now) and the Dev landing page just shows images for Press launch with a button named to corresponding map locations, Frames removed (commented out if need to restore) button-text updated. Updated dragging calculations
 // v.24  Improvement to the dragging and zooming functions
 
-
 // Global variable definitions
 let modelIndex = 0;
 let videoEntity = null;
@@ -53,7 +52,7 @@ function getAdjustedDragSpeed(axis) {
     // Using a logarithmic scale to adjust drag speed
     const scale = Math.log(currentZoom / minZoom + 1) / Math.log(maxZoom / minZoom + 1);
     const xScaleFactor = 1; // Adjust this value to slow down x-axis dragging
-    const yScaleFactor = 0.1; // Adjust this value to speed up y-axis dragging
+    const yScaleFactor = 0.3; // Adjust this value to speed up y-axis dragging
     
     if (axis === 'x') {
         return dragSpeed * scale * xScaleFactor;
@@ -356,46 +355,37 @@ function initializeMedia(mediaArray) {
             const z = newZoom * directionZ;
 
             mediaEntity.setAttribute("position", { x, y: currentY, z });
-            // if (frameEntity) {
-            //     frameEntity.setAttribute("position", { x, y: currentY, z }); // Ensure frame is slightly in front dynamically
-            // }
+            if (frameEntity) {
+                frameEntity.setAttribute("position", { x, y: currentY, z }); // Ensure frame is slightly in front dynamically
+            }
             currentZoom = newZoom; // Update current zoom level
         }
     }
 
+// Helper function to check if the touch event is on a UI element
+function isTouchOnUIElement(e) {
+    const uiElements = ['BUTTON', 'A', 'DIV', 'IMG'];
+    for (let i = 0; i < e.touches.length; i++) {
+        if (uiElements.includes(e.touches[i].target.tagName.toUpperCase())) {
+            return true;
+        }
+    }
+    return false;
+}
 
 document.addEventListener("touchstart", function (e) {
-    e.preventDefault(); // Prevent default touch actions
+    if (isTouchOnUIElement(e)) {
+        return; // Allow the touch event to propagate for UI elements
+    }
+
     if (e.touches.length === 2) {
+        e.preventDefault(); // Prevent default touch actions early
         initialPinchDistance = getPinchDistance(e);
         isPinching = true; // Set the flag to indicate a pinch gesture
         isDragging = false; // Ensure dragging is disabled during pinch-to-zoom
         console.log(`Initial touch start. initialPinchDistance: ${initialPinchDistance}`);
     } else if (e.touches.length === 1 && !isPinching) {
-        isDragging = true;
-        initialTouchX = e.touches[0].pageX;
-        initialTouchY = e.touches[0].pageY;
-        initialFixedAngle = fixedAngleDegrees;
-        currentY = mediaEntity.getAttribute("position").y;
-        dragAxis = null; // Reset drag axis
-    }
-});
-
-let initialPinchDistance = null;
-let isPinching = false; // Flag to indicate a pinch-to-zoom gesture
-let isDragging = false; // Flag to indicate a dragging gesture
-let dragAxis = null;
-
-document.addEventListener("touchstart", function (e) {
-    if (e.touches.length === 2) {
         e.preventDefault(); // Prevent default touch actions early
-        initialPinchDistance = getPinchDistance(e);
-        isPinching = true; // Set the flag to indicate a pinch gesture
-        isDragging = false; // Ensure dragging is disabled during pinch-to-zoom
-        console.log(`Initial touch start. initialPinchDistance: ${initialPinchDistance}`);
-    } else if (e.touches.length === 1) {
-        e.preventDefault(); // Prevent default touch actions early
-        isPinching = false; // Ensure pinch flag is reset
         isDragging = true; // Set the flag to indicate a drag gesture
         initialTouchX = e.touches[0].pageX;
         initialTouchY = e.touches[0].pageY;
@@ -406,6 +396,10 @@ document.addEventListener("touchstart", function (e) {
 }, { passive: false });
 
 document.addEventListener("touchmove", function (e) {
+    if (isTouchOnUIElement(e)) {
+        return; // Allow the touch event to propagate for UI elements
+    }
+
     if (e.touches.length === 2 && initialPinchDistance !== null) {
         e.preventDefault(); // Prevent default pinch-to-zoom behavior
         const currentPinchDistance = getPinchDistance(e);
@@ -429,7 +423,7 @@ document.addEventListener("touchmove", function (e) {
         if (dragAxis === "x") {
             // Adjust fixedAngleDegrees based on horizontal movement
             const adjustedDragSpeed = getAdjustedDragSpeed('x'); // Calculate adjusted drag speed for x-axis
-            fixedAngleDegrees = initialFixedAngle - deltaX * adjustedDragSpeed; // Use adjusted drag speed
+            fixedAngleDegrees = initialFixedAngle - deltaX * adjustedDragSpeed; // Invert the deltaX direction
 
             // Calculate the new position based on fixedAngleDegrees
             const radians = (fixedAngleDegrees * Math.PI) / 180;
@@ -479,8 +473,12 @@ document.addEventListener("touchmove", function (e) {
     }
 }, { passive: false });
 
-
-
+document.addEventListener("touchend", function () {
+    initialPinchDistance = null;
+    isDragging = false;
+    isPinching = false; // Reset the pinch flag on touch end
+    dragAxis = null; // Reset drag axis on touch end
+});
 
 
     function createLookImages() {
@@ -520,10 +518,10 @@ document.addEventListener("touchmove", function (e) {
         }
 
         // Remove existing frame if any
-        // if (frameEntity) {
-        //     frameEntity.parentNode.removeChild(frameEntity);
-        //     frameEntity = null;
-        // }
+        if (frameEntity) {
+            frameEntity.parentNode.removeChild(frameEntity);
+            frameEntity = null;
+        }
 
         // Remove any existing lookImages
         lookImages.forEach((lookImage) => {
