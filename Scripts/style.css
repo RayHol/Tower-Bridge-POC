@@ -1,185 +1,849 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap">
-    <link rel="stylesheet" href="./Scripts/style.css"/>
-    <title>Smartify Tower Bridge AR Experience</title>
-    
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://raw.githack.com/jeromeetienne/AR.js/master/aframe/build/aframe-ar.min.js"></script>
-    <style>
-        #overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #FBD86F;
-            z-index: 9999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            color: #000;
-            text-align: center;
-        }
-    </style>
-</head>
-<body style="margin: 0; overflow: hidden;">
-    <!-- Yellow overlay for motion sensor permission -->
-<!--     <div id="overlay"></div> -->
-    
-    <!-- Help overlay page -->
-    <div id="help-overlay" class="overlay" style="display: none;">
-        <div class="overlay-content">
-            <div class="help-instruction">
-                <img src="./assets/images/UI/move-icon.png" alt="Move Icon" class="help-icon">
-                <div class="help-text">
-                    <h2>Move Around</h2>
-                    <p>Use your camera to find the photograph</p>
-                </div>
-            </div>
-            <div class="help-instruction">
-                <img src="./assets/images/UI/zoom-icon.png" alt="Zoom Icon" class="help-icon">
-                <div class="help-text">
-                    <h2>Zoom</h2>
-                    <p>Touch and pinch your screen</p>
-                </div>
-            </div>
-            <div class="help-instruction">
-                <img src="./assets/images/UI/pan-icon.png" alt="Pan Icon" class="help-icon">
-                <div class="help-text">
-                    <h2>Pan</h2>
-                    <p>Touch and drag with your finger</p>
-                </div>
-            </div>
-            <button id="close-help-overlay" class="overlay-button"></button>
-        </div>
-    </div>
+@font-face {
+    font-family: 'Kapra-Condensed';
+    src: url('../assets/fonts/Kapra-Condensed.otf');
+}
 
-    <!-- Congratulations overlay page -->
-    <div class="overlay" id="congratulations-overlay" style="display: none;">
-        <div class="popup-content">
-            <img src="./assets/images/UI/congrats-icon.svg" class="congrats-image" alt="Congratulations Icon">
-            <h2 class="pop-up-header">Continue exploring</h2>
-            <p class="congrats-text">
-                There are eight photographs to find in locations across Tower Bridge - look for the QR codes on the exhibition displays on the pavements.<br>
-                Visit our website to find out more: <a href="https://heritage.towerbridge.org.uk" target="_blank">heritage.towerbridge.org.uk</a>
-            </p>
-<!--             <button id="continue-button" data-action="next">Continue to next image</button>
-            <button id="back-button" data-action="previous">Go back to previous image</button> -->
-            <button id="close-congrats-overlay" class="close-button"></button>
-        </div>
-    </div>
+@font-face {
+    font-family: 'Caslons Egyptian';
+    src: url('../assets/fonts/Caslons Egyptian Light.otf');
+}
+
+/* General styles */
+
+/* Styles for the change media button */
+button[data-action="change"] {
+    position: fixed;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    width: 60px; /* Adjust size  */
+    height: 60px; /* Adjust size  */
+}
+
+.change-media-icon {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.centered {
+    height: 20%;
+    justify-content: center;
+    position: fixed;
+    bottom: 0;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+}
+
+
+.instructions {
+    position: fixed;
+    top: 5%;
+    font-size: 24px;
+    color: white;
+    font-family: 'Kapra-Condensed', sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.15px;
+    text-align: justify;
+    text-transform: uppercase;
+    z-index: 1;
+}
+
+#backButton {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 93px;
+    height: 44px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 11;
+    background: url("../assets/Back-button.svg") no-repeat center center;
+    background-size: contain;
+    background-color: transparent;
+}
+
+.unselectable {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.button-text {
+    position: fixed;
+    bottom: 120px; /* Adjusted to be just above the button */
+    left: 50%;
+    width: 100%;
+    transform: translateX(-50%);
+    z-index: 10;
+    font-family: 'Kapra-Condensed', sans-serif;
+    font-size: 24px;
+    font-weight: 400;
+/*     line-height: 40.02px; */
+    letter-spacing: 0.15px;
+    text-align: center;
+    color: #FFFFFF;
+    text-transform: uppercase;
+}
+
+button[data-action="change"] {
+    position: fixed;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+}
+
+.action-button {
+    position: fixed;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 100;
+    color: white;
+    font-family: 'Kapra-Condensed', sans-serif;
+    text-align: center;
+}
+
+.overlay-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../assets/images/UI/background2.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    z-index: 99;
+    opacity: 1;
+}
+
+.overlay-content {
+    position: relative;
+    z-index: 100;
+    max-width: 100%;
+    padding: 10px;
+    text-align: center;
+}
+
+.logo {
+    max-width: 55.08px;
+    max-height: 48.2px;
+    margin-bottom: 5px; 
+    margin-top: 30%;
+}
+
+/* Overlay specific styles */
+.overlay-content .overlay-header1 {
+    font-family: 'Kapra-Condensed', sans-serif;
+    font-size: 31.75px;
+    font-weight: 400;
+    line-height: 27.63px;
+    letter-spacing: 0.15px;
+    text-align: justify;
+    width: 100%;
+    margin: 0px;
+    padding: 0;
+    color: #FFFFFF;
+    text-transform: uppercase;
+}
+
+.overlay-content .overlay-header1-v2 {
+    font-family: 'Kapra-Condensed', sans-serif;
+    font-size: 27.5px;
+    font-weight: 400;
+    line-height: 27.63px;
+    letter-spacing: 0.15px;
+    text-align: justify;
+    width: 100%;
+    margin: 0px;
+    padding: 0;
+    color: #FDB0D4;
+    text-transform: uppercase;
+}
+
+.overlay-line {
+    width: 185px;
+    height: 3.45px;
+    background-color: #FDB0D4;
+    margin: 10px auto;
+}
+
+.overlay-content .overlay-header2 {
+    font-family: 'Kapra-Condensed', sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 17.4px;
+    text-align: center;
+    width: 100%;
+    margin: 10px 0;
+    margin-top: 10px;
+    padding: 0;
+    color: #FFFFFF;
+    text-transform: uppercase;
+}
+
+.overlay-content .overlay-text {
+    position: fixed;
+    bottom: 22.5%;
+    left: 10%;
+    font-family: 'Caslons Egyptian', sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 19.2px;
+    text-align: center;
+    width: 80%;
+    max-width: 327px;
+    margin: 10px 0;
+    padding: 0;
+    align-items: center;
+    color: #FAFAFA;
+}
+
+.overlay-content button {
+    position: fixed;
+    bottom: 12%;
+    left: 10%;
+    font-family: 'Kapra-Condensed', sans-serif;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 20.88px;
+    letter-spacing: 0.03em;
+    padding: 0 16px;
+    background-color: #FFC734;
+    border: none;
+    border-radius: 4px;
+    color: black;
+    cursor: pointer;
+    display: inline-block;
+    text-transform: uppercase;
+    width: 80%;
+    max-width: 327px;
+    height: 44px;
+}
+
+.overlay-content button:hover {
+    background-color: #FFA500;
+}
+
+#powered-by-welcome  {
+    font-family: 'Poppins', sans-serif;
+    font-size: 10px; 
+    font-weight: 400;
+    line-height: 16px;
+    letter-spacing: 1.5px;
+    color: #ffffff;
+    text-transform: uppercase;
+    margin: 0;
+    padding: 0;
+}
+
+#smartify-logo-welcome {
+    width: 75px;
+    height: 34px;
+    margin-left: 20px; 
+}
+
+.powered-by-container {
+    position: fixed;
+    bottom: 3%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* Specific styles for welcome overlay */
+#overlay .powered-by-container #smartify-logo-welcome {
+    display: block;
+}
+
+#full-screen-overlay .powered-by-container #smartify-logo-fullscreen {
+    display: block;
+}
+
+/* Full-screen overlay specific styles */
+#full-screen-overlay {
+    background-color: #FBD86F; /* Ensure the background is solid yellow */
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    color: #1B1B1B;
+    font-family: 'Kapra-Condensed', sans-serif;
+}
+
+#full-screen-overlay .overlay-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; 
+    width: 80%;
+    max-width: 600px;
+    padding: 20px;
+    margin-top: 20%;
+}
+
+#full-screen-overlay .fsinstructions-h1 {
+    font-size: 56px;
+    font-weight: 400;
+    margin-bottom: 40px;
+    color: #1B1B1B;
+    text-align: center;
+}
+
+#full-screen-overlay .fsinstructions-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; 
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+#full-screen-overlay .fsinstruction {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    width: 100%; 
+    text-align: left; 
+}
+
+#full-screen-overlay .fsinstruction .fsinstruction-icon {
+    width: 50px;
+    height: 50px;
+    margin-right: 20px;
+}
+
+#full-screen-overlay .fsinstruction .fsinstruction-text {
+    font-size: 32px;
+    margin: 0;
+    font-family: 'Kapra-Condensed', sans-serif;
+    color: #1B1B1B;
+    text-align: left; 
+}
+
+
+#full-screen-overlay #got-it-button {
+    background-color: #1B1B1B;
+    color: #FAFAFA;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 20.88px;
+    letter-spacing: 0.03em;
+    padding: 0px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    bottom: 12%;
+    text-transform: uppercase;
+    font-family: 'Kapra-Condensed', sans-serif; 
+}
+
+#full-screen-overlay #got-it-button:hover {
+    background-color: #333333;
+}
+
+#full-screen-overlay #powered-by-fullscreen {
+    font-family: 'Poppins', sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+    line-height: 16px;
+    letter-spacing: 1.5px;
+    color: #1B1B1B; /* Text color */
+    text-transform: uppercase;
+    margin: 0;
+    padding: 0;
+}
+
+#full-screen-overlay #smartify-logo-fullscreen {
+    width: 75px;
+    height: 34px;
+    margin-left: 20px; 
+}
+
+#full-screen-overlay .powered-by-container {
+    position: fixed;
+    bottom: 3%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* styles for headphone overlay */
+.headphone-image {
+    width: 100px;
+    height: auto;
+    margin: 20px 0;
+}
+
+#headphone-overlay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    z-index: 9999;
+}
+
+#headphone-overlay .popup-content {
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 80%;
+}
+
+#headphone-overlay .popup-content .pop-up-header {
+    font-family: 'Kapra-Condensed', sans-serif;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 27.84px;
+    text-align: center;
+    width: 100%;
+    margin: 10px 0;
+    padding: 0;
+    color: #000000;
+    text-transform: uppercase;
+}
+
+#headphone-overlay .popup-content img {
+    width: 100px;
+    height: auto;
+    margin: 20px 0;
+}
+
+#headphone-overlay .popup-content button {
+    margin-top: 20px;
+    width: auto;
+    font-family: 'Kapra-Condensed', sans-serif;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 20.88px;
+    letter-spacing: 0.03em;
+    padding: 10px 20px;
+    background-color: #FFC734;
+    border: none;
+    border-radius: 4px;
+    color: black;
+    cursor: pointer;
+    display: inline-block;
+    text-transform: uppercase;
+    max-width: 327px;
+    height: 44px;
+}
+
+#headphone-overlay .popup-content button:hover {
+    background-color: #FFA500;
+}
+
+/* Aframe dialoag formating overide*/
+
+
+html body .a-dialog,
+html body .a-dialog-content {
+    font-family: 'Caslons Egyptian', sans-serif;
+    border-radius: 10px;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 19.2px;
+    background-color: #FBD86F;
+    color: black;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 100%;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    padding: 0 10%; /* Adds padding to make the content 80% wide */
+    box-sizing: border-box; 
   
-    <!-- Map overlay -->
-    <div id="map-overlay" class="overlay" style="display: none;">
-        <div class="overlay-background"></div>
-        <div class="overlay-content">
-            <img src="./assets/images/UI/Map-placeholder.jpg" alt="Map Image" class="map-image">
-            <button id="close-map-overlay" class="overlay-button">Close</button>
-        </div>
-    </div>
-  
-    <!-- Background audio -->
-    <audio id="background-audio" preload="auto" loop crossorigin="anonymous">
-        <source src="./assets/audio/background2.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
+}
 
-    <div class="centered instructions"></div>
-    <a-scene id="ar-scene" vr-mode-ui="enabled: false" embedded arjs="debugUIEnabled: false;">
-        <a-camera id="camera" rotation-reader position="0 1.6 0" listener look-controls="touchEnabled: false"></a-camera>
-        <a-light type="ambient" color="#ffffff"></a-light>
-        <a-light type="directional" color="#ffffff" position="-2 4 5"></a-light>
-        <a-image id="look_1" position="0 0 0" rotation="0 0 0" scale="14 4 1" visible="false"></a-image>
-    </a-scene>
 
-    <div class="icon-buttons">
-<!--         <button id="view-map" class="icon-button">
-            <img src="./assets/images/UI/map-icon.svg" alt="Map button" class="button-icon"> Map
-        </button> -->
-        <button id="mute" class="icon-button">
-            <img src="./assets/mute-icon.svg" alt="Mute button" class="button-icon"> Mute
-        </button>
-        <button id="refresh" class="icon-button">
-            <img src="./assets/images/UI/refresh-icon.svg" alt="Refresh button" class="button-icon"> Refresh
-        </button>
-        <button id="help" class="help-button">
-            <img src="./assets/images/UI/help-icon.svg" alt="help button" class="button-icon">
-        </button>
-    </div>
-    <div class="centered">
-        <button data-action="change">
-            <img src="./assets/images/UI/Button.svg" alt="Change Media Button" class="change-media-icon">      
-        </button>
-    </div>
-    
-    <div id="loading-overlay" class="loading-overlay">Loading...</div>
+html body .a-dialog-allow-button,
+html body .a-dialog-deny-button,
+html body .a-dialog-ok-button {
+    font-family: 'Kapra-Condensed', sans-serif;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 20.88px;
+    letter-spacing: 0.03em;
+    padding: 0 16px;
+    background-color: #1B1B1B;
+    border: none;
+    border-radius: 4px;
+    height:44px;
+    color: white;
+    cursor: pointer;
+    display: inline-block;
+    text-transform: uppercase;
+    box-shadow: none;
+    z-index: 10000;
+}
 
-    <script src="./Scripts/ar.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-          
-            // Function to insert the image into the A-Frame dialog
-        function insertImageIntoDialog() {
-            const dialogContent = document.querySelector('.a-dialog-content');
-            if (dialogContent && !dialogContent.querySelector('img')) {
-                const img = document.createElement('img');
-                img.src = 'https://cdn.glitch.global/66ef7b44-9cf8-4888-98a4-d08d41a6287d/all-set.svg?v=1718812038177';
-                img.alt = 'Motion Sensor Notification';
-                dialogContent.insertBefore(img, dialogContent.firstChild);
-            }
-        }
-          
-            const overlay = document.getElementById('overlay');
 
-            function removeOverlay() {
-                if (overlay) {
-                    overlay.style.display = 'none';
-                }
-            }
+.icon-buttons {
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    top: 10px; /* Adjusted to top of page*/
+    left: 50%;
+    padding: 0px 30px;
+    transform: translateX(-50%);
+    z-index: 10;
+}
 
-//             // Remove overlay after 3 seconds
-//             setTimeout(removeOverlay, 4000);
+.icon-button {
+    background: rgba(255, 255, 255, 1);
+    border: none;
+    border-radius: 8px;
+/*     padding: 0px 20px; */
+    margin: 0 10px;
+    cursor: pointer;
+    font-family: 'Kapra-Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: #000000;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 80px;
+    min-height: 36px;
+    text-align: center;
+}
 
-//             // Listen for A-Frame's 'enter-vr' event
-//             document.querySelector('a-scene').addEventListener('enter-vr', function () {
-//                 removeOverlay();
-//             });
+.help-button {
+    background: rgba(255, 255, 255, 1);
+/*     background-image: url("../assets/images/UI/help-icon.svg") no-repeat; */
+    border: none;
+    border-radius: 8px;
+    line-height: 1;
+    margin: 0 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    min-height:36px;
+}
 
-//             // Listen for AR.js' 'arReady' event
-//             document.querySelector('a-scene').addEventListener('arReady', function () {
-//                 removeOverlay();
-//             });
+.button-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+}
 
-//             // Check if DeviceMotionEvent is available
-//             if (typeof DeviceMotionEvent.requestPermission === 'function') {
-//                 // iOS 13+ device
-//                 DeviceMotionEvent.requestPermission()
-//                     .then(response => {
-//                         if (response === 'granted') {
-//                             removeOverlay();
-//                         } else {
-//                             console.error("Permission to access motion sensors was denied.");
-//                         }
-//                     })
-//                     .catch(error => {
-//                         console.error("Error requesting permission to access motion sensors:", error);
-//                     });
-//             } else {
-//                 // Non-iOS device, or iOS version < 13
-//                 window.addEventListener('devicemotion', function(event) {
-//                     if (event.rotationRate.alpha || event.rotationRate.beta || event.rotationRate.gamma) {
-//                         removeOverlay();
-//                     }
-//                 }, { once: true });
-//             }
-        });
-    </script>
-</body>
-</html>
+
+#map-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999; /* High z-index to overlay everything */
+}
+
+#map-overlay .overlay-background {
+/*     position: absolute; */
+/*     top: 0; */
+/*     left: 0; */
+    width: 100%;
+/*     height: 100%; */
+    background-image: url('../assets/images/UI/Map-placeholder.jpg');
+/*     background-size: cover; */
+/*     background-position: center; */
+/*     background-attachment: fixed; */
+    z-index: 99;
+    opacity: 1;
+}
+
+#map-overlay .overlay-content {
+    position: relative;
+    z-index: 100;
+    max-width: 100%;
+    padding: 10px;
+    text-align: center;
+}
+
+#close-map-overlay {
+    position: fixed;
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Kapra-Condensed', sans-serif;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 20.88px;
+    letter-spacing: 0.03em;
+    padding: 0 16px;
+    background-color: #FFC734;
+    border: none;
+    border-radius: 4px;
+    color: black;
+    cursor: pointer;
+    display: inline-block;
+    text-transform: uppercase;
+    width: 80%;
+    max-width: 327px;
+    height: 44px;
+}
+
+#close-map-overlay:hover {
+    background-color: #FFA500;
+}
+
+.map-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Help overlay styles */
+#help-overlay {
+    display: flex;
+    flex-direction: column; /* Ensures content stacks vertically */
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    z-index: 9999;
+}
+
+#help-overlay .overlay-content {
+    background: rgba(0, 0, 0, 0.8); /* Semi-transparent black background */
+    border-radius: 0; /* Remove border-radius to make it full screen */
+    padding: 20px;
+    text-align: center;
+    box-shadow: none; /* Remove shadow */
+    width: 100%; /* Ensure it takes the full width */
+    height: 100%; /* Ensure it takes the full height */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    position: relative; /* Add position relative for z-index stacking */
+}
+
+#help-overlay .help-instruction {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+#help-overlay .help-icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 10px;
+}
+
+#help-overlay .help-text h2,
+#help-overlay .help-instruction h2 {
+    font-family: 'Kapra-Condensed', sans-serif;
+    font-size: 40px;
+    font-weight: 400;
+    line-height: 56px;
+    letter-spacing: 0.15px;
+    margin: 0;
+}
+
+#help-overlay .help-text p,
+#help-overlay .help-instruction p {
+    font-family: 'Caslons Egyptian', sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 24px;
+    margin: 0;
+    padding-top: 8px;
+    text-align: center;
+}
+
+#close-help-overlay {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background: url('../assets/images/UI/Close.svg') no-repeat center center;
+    background-size: contain;
+    border: none;
+    cursor: pointer;
+    z-index: 10000; 
+}
+
+#close-help-overlay:hover {
+    background-color: #333333;
+    color: white;
+}
+
+
+
+/* Congratulations overlay styles */
+#congratulations-overlay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    z-index: 9999;
+}
+
+#congratulations-overlay .popup-content {
+    background: #FBD86F; /* Yellow background */
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 80%;
+    position: relative; 
+}
+
+#congratulations-overlay .congrats-image {
+    width: 96px;
+    height: 96px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+#congratulations-overlay .pop-up-header {
+    font-family: 'Kapra-Condensed', sans-serif;
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 35.2px;
+    letter-spacing: 0.15px;
+    color: black;
+/*     text-transform: uppercase; */
+    margin-bottom: 20px;
+}
+
+#congratulations-overlay .congrats-text {
+    font-family: 'Caslons Egyptian', sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 19.2px;
+    color: black;
+    margin-bottom: 20px;
+}
+
+#congratulations-overlay .congrats-text a {
+    color: black;
+    text-decoration: underline;
+}
+
+#congratulations-overlay button {
+    background-color: #1B1B1B;
+    color: #FAFAFA;
+    font-family: 'Kapra-Condensed', sans-serif;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0.03em;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    width: 95%;
+    cursor: pointer;
+    display: block;
+    margin: 10px auto;
+    text-transform: uppercase;
+}
+
+#congratulations-overlay button:hover {
+    background-color: #333333;
+}
+
+#congratulations-overlay .close-button {
+    position: absolute;
+    top: -20px;
+    right: -15px;
+    width: 32px;
+    height: 32px;
+    background: url('../assets/images/UI/Close.svg') no-repeat center center;
+    background-size: contain;
+    border: none;
+    cursor: pointer;
+   content: "";
+}
+
+.overlay.prehide {
+    display: none;
+}
+
+.loading-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(251, 216, 111, 1);
+    font-family: 'Kapra-Condensed', sans-serif;
+    font-size: 34px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0.03em;
+    z-index: 10000;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    color: #000;
+}
+
+.loading-overlay.show {
+    display: flex;
+}
+
+
