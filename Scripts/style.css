@@ -478,12 +478,26 @@ button[data-action="change"] {
 
 /* Aframe dialoag formating overide*/
 
+
 html body .a-dialog,
 html body .a-dialog-content {
+    font-family: 'Caslons Egyptian', sans-serif;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 19.2px;
     background-color: #FBD86F; /* Change the background color to yellow */
     color: black; /* Ensure the text color inside the dialog is readable */
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 80%;
+    height: 40%;
+    position: relative; 
   
 }
+
+
 
 html body .a-dialog-allow-button,
 html body .a-dialog-deny-button,
@@ -497,12 +511,20 @@ html body .a-dialog-ok-button {
     background-color: #1B1B1B;
     border: none;
     border-radius: 4px;
+    height:44px;
     color: white; /* Change the text color to white */
     cursor: pointer;
     display: inline-block;
     text-transform: uppercase;
     box-shadow: none; /* Remove the shadow */
     z-index: 10000;
+}
+
+html body .a-dialog img {
+    width: 96px;
+    height: 96px;
+    margin-top: 20px;
+    margin-bottom: 10px;
 }
 
 
