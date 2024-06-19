@@ -100,31 +100,43 @@ function loadLocationMedia() {
 
 function navigateToLocation(locationId) {
     const baseUrl = window.location.origin;
-    const newUrl = `${baseUrl}/ar.html?location=${locationId}&skipOverlays=true`;
+    const newUrl = `${baseUrl}/ar.html?location=${locationId}`;
     window.location.href = newUrl;
 }
 
-window.onload = () => {
-    // Ensure all elements exist before adding event listeners
-    const headphoneOverlay = document.getElementById("headphone-overlay");
-    if (headphoneOverlay) {
-        const addToHomeButton = document.getElementById("add-to-home");
-        const closeHeadphoneOverlayButton = document.getElementById("close-headphone-overlay");
+function initializeAR() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const locationId = urlParams.get("location");
 
-        if (addToHomeButton) {
-            addToHomeButton.addEventListener("click", () => {
-                addToHomeScreen(); // Call the addToHomeScreen function
-            });
-        }
-
-        if (closeHeadphoneOverlayButton) {
-            closeHeadphoneOverlayButton.addEventListener("click", () => {
-                headphoneOverlay.style.display = "none";
-                const audio = document.getElementById("background-audio");
-                audio.play();
-            });
-        }
+    if (!locationId) {
+        console.error("No location specified in URL");
+        return;
     }
+
+    fetch("./Scripts/mediaConfig.json")
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            return response.json();
+        })
+        .then((data) => {
+            const locationsData = data; // Store data in the global variable
+            const locations = Object.keys(data);
+            const currentLocationIndex = locations.indexOf(locationId);
+
+            if (!data[locationId]) {
+                console.error("Invalid location specified");
+                return;
+            }
+            initializeMedia(data[locationId].media);
+        })
+        .catch((error) => console.error("Error loading media config:", error));
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    const arScene = document.getElementById('ar-scene');
+    initializeAR(); // Initialize AR on page load
 
     const closePopupButton = document.getElementById('close-congrats-overlay');
     if (closePopupButton) {
@@ -255,24 +267,9 @@ window.onload = () => {
     document
         .querySelectorAll(".button-text, h1-1, h1-2, h2, p, button")
         .forEach((el) => el.classList.add("unselectable"));
-};
+});
 
 // Define the missing functions
-
-// function navigateToLocation(locationId) {
-//     console.log(`Navigating to location: ${locationId}`);
-//     // Implement the logic for navigating to the specified location
-// }
-
-// function loadNextLocation() {
-//     currentLocationIndex = (currentLocationIndex + 1) % locations.length;
-//     navigateToLocation(locations[currentLocationIndex]);
-// }
-
-// function loadPreviousLocation() {
-//     currentLocationIndex = (currentLocationIndex - 1 + locations.length) % locations.length;
-//     navigateToLocation(locations[currentLocationIndex]);
-// }
 
 function initializeMedia(mediaArray) {
     const button = document.querySelector('button[data-action="change"]');
@@ -314,7 +311,7 @@ function initializeMedia(mediaArray) {
             const directionX = -Math.sin((fixedAngleDegrees * Math.PI) / 180);
             const directionZ = -Math.cos((fixedAngleDegrees * Math.PI) / 180);
             let distanceChange =
-                -(currentPinchDistance - initialPinchDistance) * zoomSpeed;
+                (currentPinchDistance - initialPinchDistance) * zoomSpeed;
             let newZoom = currentZoom + distanceChange;
 
             // Constrain the zoom distance within minZoom and maxZoom
