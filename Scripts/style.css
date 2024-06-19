@@ -209,7 +209,7 @@ button[data-action="change"] {
 
 .overlay-content .overlay-text {
     position: fixed;
-    bottom: 20%;
+    bottom: 35%;
     left: 10%;
     font-family: 'Caslons Egyptian', sans-serif;
     font-size: 16px;
@@ -365,7 +365,7 @@ button[data-action="change"] {
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    margin-bottom: 40px;
+    bottom: 12%;
     text-transform: uppercase;
     font-family: 'Kapra-Condensed', sans-serif; 
 }
@@ -394,7 +394,7 @@ button[data-action="change"] {
 
 #full-screen-overlay .powered-by-container {
     position: fixed;
-    bottom: 10%;
+    bottom: 3%;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -482,6 +482,7 @@ html body .a-dialog,
 html body .a-dialog-content {
     background-color: #FBD86F; /* Change the background color to yellow */
     color: black; /* Ensure the text color inside the dialog is readable */
+  
 }
 
 html body .a-dialog-allow-button,
@@ -501,6 +502,7 @@ html body .a-dialog-ok-button {
     display: inline-block;
     text-transform: uppercase;
     box-shadow: none; /* Remove the shadow */
+    z-index: 10000;
 }
 
 
