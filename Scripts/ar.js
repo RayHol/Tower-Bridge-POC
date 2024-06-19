@@ -412,6 +412,7 @@ function displayMedia(mediaArray, index) {
         audio.setAttribute('id', 'audio-' + index);
         audio.setAttribute('preload', 'auto');
         audio.setAttribute('muted', 'true'); // Start muted
+        audio.setAttribute('loop', 'true'); // Set audio to loop
         document.body.appendChild(audio);
         currentAudio = audio; // Update current audio reference
     }
