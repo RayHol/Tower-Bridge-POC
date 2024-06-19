@@ -11,7 +11,7 @@ let initialMediaState = {
     position: null,
     rotation: null
 };
-let hasPopupShown = false; //congrats popup
+let hasPopupShown = false; // congrats popup
 let hasPopupClosed = false;
 let currentLocationIndex = 0;
 let locations = []; // This will be filled with the keys from mediaConfig.json
@@ -34,6 +34,8 @@ let initialTouchX = null;
 let initialTouchY = null;
 let initialFixedAngle = 0;
 let dragAxis = null; // 'x' for rotation, 'y' for vertical movement
+
+let currentAudio = null; // Keep track of the current playing audio
 
 function addToHomeScreen() {
     console.log("Add to home screen functionality is not yet implemented.");
@@ -149,7 +151,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const helpButton = document.getElementById("help");
     const muteButton = document.getElementById("mute");
     const refreshButton = document.getElementById("refresh");
-    let isMuted = false;
+    let isMuted = true; // Start with audio muted
 
     if (viewMapButton) {
         viewMapButton.addEventListener("click", () => {
@@ -168,7 +170,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function toggleMuteButton(isMuted) {
-        const muteButton = document.getElementById("mute");
         const buttonText = isMuted ? "Unmute" : "Mute";
         const buttonIcon = isMuted ? "./assets/images/UI/unmute-icon.svg" : "./assets/mute-icon.svg";
 
@@ -177,19 +178,25 @@ document.addEventListener("DOMContentLoaded", function() {
 
     if (muteButton) {
         muteButton.addEventListener("click", () => {
-            const audio = document.getElementById("background-audio");
-            if (isMuted) {
-                audio.play();
-                isMuted = false;
+            if (currentAudio) {
+                if (isMuted) {
+                    currentAudio.play(); // Play the audio if it's muted
+                }
+                isMuted = !isMuted;
+                currentAudio.muted = isMuted; // Toggle the muted state of the audio
+                console.log(`Audio muted state: ${currentAudio.muted}`); // Debug statement
+                toggleMuteButton(isMuted); // Update the button appearance
             } else {
-                audio.pause();
-                isMuted = true;
+                console.log("No audio entity found."); // Debug statement
             }
-            toggleMuteButton(isMuted); // Update the button appearance
         });
 
         // Set initial state
-        toggleMuteButton(isMuted);
+        if (currentAudio) {
+            toggleMuteButton(currentAudio.muted);
+        } else {
+            toggleMuteButton(true); // Start with mute button indicating muted state
+        }
     }
 
     if (refreshButton) {
@@ -251,17 +258,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // Ensure background audio plays when 'Got It' button is clicked
-    const gotItButton = document.getElementById('got-it-button');
-    if (gotItButton) {
-        gotItButton.addEventListener('click', () => {
-            const audio = document.getElementById("background-audio");
-            if (!isMuted) {
-                audio.play();
-            }
-        });
-    }
-
+    // Remove 'Got It' button audio play handler as it's no longer needed
     // Apply unselectable class to relevant elements
     document
         .querySelectorAll(".button-text, h1-1, h1-2, h2, p, button")
@@ -378,12 +375,24 @@ function displayMedia(mediaArray, index) {
         entity.setAttribute("autoplay", "true");
         entity.setAttribute("loop", "true");
         entity.setAttribute("playsinline", "true");
+        entity.setAttribute("muted", "true"); // Always muted
         entity.setAttribute("position", position); // Set initial position
         entity.setAttribute("rotation", rotation); // Set initial rotation
         entity.setAttribute("scale", mediaItem.scale);
         entity.setAttribute("preload", "auto"); // Ensure the video is preloaded
+
+        entity.addEventListener('loadeddata', () => {
+            console.log('Video entity loaded and ready'); // Debug statement
+        });
+
+        entity.addEventListener('canplay', () => {
+            console.log('Video entity can play'); // Debug statement
+        });
+
         scene.appendChild(entity);
-        videoEntity = entity;
+        videoEntity = entity; // Ensure videoEntity is set
+
+        console.log('Video entity created', videoEntity); // Debug statement
 
         document.getElementById("look_1").setAttribute("visible", "true"); // Ensure lookImage is visible
         buttonText.innerText = "Go back to the image";
@@ -391,6 +400,22 @@ function displayMedia(mediaArray, index) {
         // Create lookImage copies at specific angles
         createLookImages();
     }
+
+    // Handle audio
+    if (mediaItem.audioUrl) {
+        if (currentAudio) {
+            currentAudio.pause();
+            document.body.removeChild(currentAudio);
+        }
+        const audio = document.createElement('audio');
+        audio.setAttribute('src', mediaItem.audioUrl);
+        audio.setAttribute('id', 'audio-' + index);
+        audio.setAttribute('preload', 'auto');
+        audio.setAttribute('muted', 'true'); // Start muted
+        document.body.appendChild(audio);
+        currentAudio = audio; // Update current audio reference
+    }
+
     mediaEntity = entity;
 
     // Explicitly set initial position and update debug info
@@ -440,6 +465,16 @@ function createLookImages() {
 function changeMedia(mediaArray) {
     modelIndex = (modelIndex + 1) % mediaArray.length;
     displayMedia(mediaArray, modelIndex);
+
+    // Unmute the video if the new media is a video
+    if (mediaArray[modelIndex].type === "video") {
+        setTimeout(() => {
+            if (videoEntity) {
+                videoEntity.muted = false;
+                console.log('Video entity unmuted', videoEntity); // Debug statement
+            }
+        }, 100); // Small delay to ensure the video element is loaded
+    }
 
     // Show the congratulations pop-up after a short delay for testing
     setTimeout(showCongratulationsPopup, 60000); // Set to 0 for immediate testing

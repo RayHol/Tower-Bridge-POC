@@ -82,6 +82,23 @@
                 }
             });
         });
+      
+        // store the audio state for got it button
+          document.addEventListener("DOMContentLoaded", function() {
+              const gotItButton = document.getElementById('got-it-button');
+              if (gotItButton) {
+                  gotItButton.addEventListener('click', () => {
+                      localStorage.setItem('playAudio', 'true');
+                      // Navigate to the AR page
+                      const urlParams = new URLSearchParams(window.location.search);
+                      const locationId = urlParams.get("location");
+                      if (locationId) {
+                          window.location.href = `ar.html?location=${locationId}`;
+                      }
+                  });
+              }
+          });
+
     </script>
 </body>
 </html>
