@@ -14,13 +14,13 @@
             },
             {
                 "type": "video",
-                "url": "https://rayhol.github.io/TB_Videos/Videos2/01.mp4",
+                "url": "https://ar.smartify.org/Tower-Bridge/Videos2/01.mp4",
                 "scale": "10 7 1",
                 "rotation": "0 0 0",
                 "fixedAngleDegrees": 0,
                 "frameUrl": "./assets/frames/frame2.png",
                 "info": "Tap the button to switch back",
-                "audioUrl": "https://rayhol.github.io/TB_Videos/Audio/01.mp3"
+                "audioUrl": "https://ar.smartify.org/Tower-Bridge/Audio/01.mp3"
             }
         ]
     },
@@ -30,7 +30,7 @@
             {
                 "type": "image",
                 "url": "./assets/images/02.jpg",
-                "audioUrl": "https://cdn.glitch.global/d0ae2c1e-ffcf-4381-bb65-5fce24e1ccd5/01%20-%20TowerBridge%20-%20Start2.jpg.png?v=1716990007789",
+                "audioUrl": "",
                 "scale": "10 7 1",
                 "rotation": "0 0 0",
                 "fixedAngleDegrees": 0,
@@ -40,13 +40,13 @@
             },
             {
                 "type": "video",
-                "url": "https://rayhol.github.io/TB_Videos/Videos2/02.mp4",
+                "url": "https://ar.smartify.org/Tower-Bridge/Videos2/02.mp4",
                 "scale": "10 7 1",
                 "rotation": "0 0 0",
                 "fixedAngleDegrees": 0,
                 "frameUrl": "./assets/frames/frame2.png",
                 "info": "Video 2",
-                "audioUrl": "https://rayhol.github.io/TB_Videos/Audio/02.mp3"
+                "audioUrl": "https://ar.smartify.org/Tower-Bridge/Audio/02.mp3"
             }
         ]
     },
@@ -65,13 +65,13 @@
             },
             {
                 "type": "video",
-                "url": "https://rayhol.github.io/TB_Videos/Videos2/03.mp4",
+                "url": "https://ar.smartify.org/Tower-Bridge/Videos2/03.mp4",
                 "scale": "10 7 1",
                 "rotation": "0 0 0",
                 "fixedAngleDegrees": 0,
                 "frameUrl": "./assets/frames/frame2.png",
                 "info": "VIdeo 3",
-                "audioUrl": "https://rayhol.github.io/TB_Videos/Audio/03.mp3"
+                "audioUrl": "https://ar.smartify.org/Tower-Bridge/Audio/03.mp3"
             }
         ]
     },
@@ -89,13 +89,13 @@
             },
             {
                 "type": "video",
-                "url": "https://rayhol.github.io/TB_Videos/Videos2/04.mp4",
+                "url": "https://ar.smartify.org/Tower-Bridge/Videos2/04.mp4",
                 "scale": "10 7 1",
                 "rotation": "0 0 0",
                 "fixedAngleDegrees": 0,
                 "frameUrl": "./assets/frames/frame2.png",
                 "info": "Video 4",
-                "audioUrl": "https://rayhol.github.io/TB_Videos/Audio/04.mp3"
+                "audioUrl": "https://ar.smartify.org/Tower-Bridge/Audio/04.mp3"
             }
         ]
     },
@@ -113,13 +113,13 @@
             },
             {
                 "type": "video",
-                "url": "https://rayhol.github.io/TB_Videos/Videos2/05.mp4",
+                "url": "https://ar.smartify.org/Tower-Bridge/Videos2/05.mp4",
                 "scale": "10 7 1",
                 "rotation": "0 90 0",
                 "fixedAngleDegrees": 0,
                 "frameUrl": "./assets/frames/frame2.png",
                 "info": "Tap the button to switch back",
-                "audioUrl": "https://rayhol.github.io/TB_Videos/Audio/05.mp3"
+                "audioUrl": "https://ar.smartify.org/Tower-Bridge/Audio/05.mp3"
             }
         ]
     },
@@ -137,13 +137,13 @@
             },
             {
                 "type": "video",
-                "url": "https://rayhol.github.io/TB_Videos/Videos2/06.mp4",
+                "url": "https://ar.smartify.org/Tower-Bridge/Videos2/06.mp4",
                 "scale": "10 7 1",
                 "rotation": "0 90 0",
                 "fixedAngleDegrees": 0,
                 "frameUrl": "./assets/frames/frame2.png",
                 "info": "Tap the button to switch back",
-                "audioUrl": "https://rayhol.github.io/TB_Videos/Audio/06.mp3"
+                "audioUrl": "https://ar.smartify.org/Tower-Bridge/Audio/06.mp3"
             }
         ]
     },
@@ -161,13 +161,13 @@
             },
             {
                 "type": "video",
-                "url": "https://rayhol.github.io/TB_Videos/Videos2/07.mp4",
+                "url": "https://ar.smartify.org/Tower-Bridge/Videos2/07.mp4",
                 "scale": "10 7 1",
                 "rotation": "0 90 0",
                 "fixedAngleDegrees": 0,
                 "frameUrl": "./assets/frames/frame2.png",
                 "info": "Tap the button to switch back",
-                "audioUrl": "https://rayhol.github.io/TB_Videos/Audio/07.mp3"
+                "audioUrl": "https://ar.smartify.org/Tower-Bridge/Audio/07.mp3"
             }
         ]
     },
@@ -185,13 +185,13 @@
             },
             {
                 "type": "video",
-                "url": "https://rayhol.github.io/TB_Videos/Videos2/08.mp4",
+                "url": "https://ar.smartify.org/Tower-Bridge/Videos2/08.mp4",
                 "scale": "10 7 1",
                 "rotation": "0 90 0",
                 "fixedAngleDegrees": 0,
                 "frameUrl": "./assets/frames/frame2.png",
                 "info": "Tap the button to switch back",
-                "audioUrl": "https://rayhol.github.io/TB_Videos/Audio/08.mp3"
+                "audioUrl": "https://ar.smartify.org/Tower-Bridge/Audio/08.mp3"
             }
         ]
     }
