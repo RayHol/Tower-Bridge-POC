@@ -1,4 +1,4 @@
-{
+.{
     "location1": {
         "media": [
             {
@@ -14,7 +14,7 @@
             },
             {
                 "type": "video",
-                "url": "./Videos2/01.mp4",
+                "url": "../Videos2/01.mp4",
                 "scale": "10 7 1",
                 "rotation": "0 0 0",
                 "fixedAngleDegrees": 0,
