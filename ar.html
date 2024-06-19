@@ -11,8 +11,28 @@
     
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/jeromeetienne/AR.js/master/aframe/build/aframe-ar.min.js"></script>
+    <style>
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #FBD86F;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            color: #000;
+            text-align: center;
+        }
+    </style>
 </head>
 <body style="margin: 0; overflow: hidden;">
+    <!-- Yellow overlay for motion sensor permission -->
+<!--     <div id="overlay"></div> -->
+    
     <!-- Help overlay page -->
     <div id="help-overlay" class="overlay" style="display: none;">
         <div class="overlay-content">
@@ -50,8 +70,8 @@
                 There are eight photographs to find in locations across Tower Bridge - look for the QR codes on the exhibition displays on the pavements.<br>
                 Visit our website to find out more: <a href="https://heritage.towerbridge.org.uk" target="_blank">heritage.towerbridge.org.uk</a>
             </p>
-            <button id="continue-button" data-action="next">Continue to next image</button>
-            <button id="back-button" data-action="previous">Go back to previous image</button>
+<!--             <button id="continue-button" data-action="next">Continue to next image</button>
+            <button id="back-button" data-action="previous">Go back to previous image</button> -->
             <button id="close-congrats-overlay" class="close-button"></button>
         </div>
     </div>
@@ -80,9 +100,9 @@
     </a-scene>
 
     <div class="icon-buttons">
-        <button id="view-map" class="icon-button">
+<!--         <button id="view-map" class="icon-button">
             <img src="./assets/images/UI/map-icon.svg" alt="Map button" class="button-icon"> Map
-        </button>
+        </button> -->
         <button id="mute" class="icon-button">
             <img src="./assets/mute-icon.svg" alt="Mute button" class="button-icon"> Mute
         </button>
@@ -102,5 +122,64 @@
     <div id="loading-overlay" class="loading-overlay">Loading...</div>
 
     <script src="./Scripts/ar.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          
+            // Function to insert the image into the A-Frame dialog
+        function insertImageIntoDialog() {
+            const dialogContent = document.querySelector('.a-dialog-content');
+            if (dialogContent && !dialogContent.querySelector('img')) {
+                const img = document.createElement('img');
+                img.src = 'https://cdn.glitch.global/66ef7b44-9cf8-4888-98a4-d08d41a6287d/all-set.svg?v=1718812038177';
+                img.alt = 'Motion Sensor Notification';
+                dialogContent.insertBefore(img, dialogContent.firstChild);
+            }
+        }
+          
+            const overlay = document.getElementById('overlay');
+
+            function removeOverlay() {
+                if (overlay) {
+                    overlay.style.display = 'none';
+                }
+            }
+
+//             // Remove overlay after 3 seconds
+//             setTimeout(removeOverlay, 4000);
+
+//             // Listen for A-Frame's 'enter-vr' event
+//             document.querySelector('a-scene').addEventListener('enter-vr', function () {
+//                 removeOverlay();
+//             });
+
+//             // Listen for AR.js' 'arReady' event
+//             document.querySelector('a-scene').addEventListener('arReady', function () {
+//                 removeOverlay();
+//             });
+
+//             // Check if DeviceMotionEvent is available
+//             if (typeof DeviceMotionEvent.requestPermission === 'function') {
+//                 // iOS 13+ device
+//                 DeviceMotionEvent.requestPermission()
+//                     .then(response => {
+//                         if (response === 'granted') {
+//                             removeOverlay();
+//                         } else {
+//                             console.error("Permission to access motion sensors was denied.");
+//                         }
+//                     })
+//                     .catch(error => {
+//                         console.error("Error requesting permission to access motion sensors:", error);
+//                     });
+//             } else {
+//                 // Non-iOS device, or iOS version < 13
+//                 window.addEventListener('devicemotion', function(event) {
+//                     if (event.rotationRate.alpha || event.rotationRate.beta || event.rotationRate.gamma) {
+//                         removeOverlay();
+//                     }
+//                 }, { once: true });
+//             }
+        });
+    </script>
 </body>
 </html>
