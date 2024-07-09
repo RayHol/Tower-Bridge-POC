@@ -1,6 +1,3 @@
-// v.31 Adjusted audio handling to play/pause and manage mute state directly within the changeMedia function, ensuring compatibility with iOS.
-
-
 // Global variable definitions
 let modelIndex = 0;
 let videoEntity = null;
@@ -424,7 +421,7 @@ function displayMedia(mediaArray, index) {
 
         scene.appendChild(entity);
         entity.flushToDOM(); // Force update
-        buttonText.innerText = "Tap to play when the photo is in place";
+        buttonText.innerText = "Tap to play";
 
         createLookImages();
     } else if (mediaItem.type === "video") {
@@ -445,12 +442,16 @@ function displayMedia(mediaArray, index) {
         // Add event listeners to ensure the video is visible and plays
         entity.addEventListener('loadeddata', () => {
             console.log('Video entity loadeddata event triggered');
-            entity.play(); // Ensure the video plays
+            if (!isIOS() && !isAndroid()) {
+                entity.play(); // Ensure the video plays
+            }
         });
 
         entity.addEventListener('canplay', () => {
             console.log('Video entity canplay event triggered');
-            entity.play(); // Ensure the video plays
+            if (!isIOS() && !isAndroid()) {
+                entity.play(); // Ensure the video plays
+            }
         });
 
         scene.appendChild(entity);
@@ -458,7 +459,7 @@ function displayMedia(mediaArray, index) {
         videoEntity = entity;
 
         console.log('Video entity created', videoEntity);
-        buttonText.innerText = "Go back to the image";
+        buttonText.innerText = "Pause Animation";
 
         createLookImages();
     }
@@ -478,8 +479,9 @@ function displayMedia(mediaArray, index) {
         document.body.appendChild(audio);
         currentAudio = audio;
 
-        if (!isIOS()) {
-            currentAudio.play(); // Ensure the audio plays if not on iOS
+        // Ensure the audio plays if not on iOS or Android
+        if (!isIOS() && !isAndroid()) {
+            currentAudio.play();
         }
     }
 
@@ -497,14 +499,13 @@ function displayMedia(mediaArray, index) {
         const doubleCheckRotation = mediaEntity.getAttribute("rotation");
         console.log(`Double-check position: x: ${doubleCheckPosition.x}, y: ${doubleCheckPosition.y}, z: ${doubleCheckPosition.z}`);
         console.log(`Double-check rotation: x: ${doubleCheckRotation.x}, y: ${doubleCheckRotation.y}, z: ${doubleCheckRotation.z}`);
-    }, 100);
+    }, 10);
 
     // Force scene update
     setTimeout(() => {
         scene.flushToDOM(); // Ensure the scene updates
     }, 200);
 }
-
 
 function createLookImages() {
     let scene = document.querySelector("a-scene");
@@ -558,10 +559,13 @@ function changeMedia(mediaArray) {
     // Unmute and play/pause the audio if the new media has audio
     if (currentAudio) {
         if (currentAudio.paused) {
-            // iOS requires a user interaction to unmute audio
-            if (isIOS()) {
+            // Ensure the audio is unmuted and played on user interaction
+            if (isIOS() || isAndroid()) {
                 currentAudio.muted = false; // Ensure the audio is unmuted
-                currentAudio.play();
+                currentAudio.play().catch(error => {
+                    console.log("Error playing audio:", error);
+                    // Handle the error (optional)
+                });
             } else {
                 currentAudio.play();
             }
@@ -581,10 +585,13 @@ function changeMedia(mediaArray) {
     }, 1000); // Adjust the timeout as needed
 }
 
-
-// Helper function to detect iOS
+// Helper functions to detect iOS and Android
 function isIOS() {
     return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+}
+
+function isAndroid() {
+    return /Android/.test(navigator.userAgent);
 }
 
 // Existing touch and drag event handlers
@@ -726,5 +733,4 @@ document.querySelectorAll('a-entity, a-image, a-video').forEach(el => {
         console.log(`Element at origin: ${el.tagName}, id: ${el.getAttribute('id')}`);
     }
 });
-
 
