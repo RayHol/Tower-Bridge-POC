@@ -1,3 +1,6 @@
+// v.31 Adjusted audio handling to play/pause and manage mute state directly within the changeMedia function, ensuring compatibility with iOS.
+
+
 // Global variable definitions
 let modelIndex = 0;
 let videoEntity = null;
@@ -68,7 +71,13 @@ function refreshMediaPosition() {
     loadLocationMedia();
 }
 
+function toggleMuteButton(isMuted) {
+    const buttonText = isMuted ? "Unmute" : "Mute";
+    const buttonIcon = isMuted ? "./assets/images/UI/unmute-icon.svg" : "./assets/images/UI/mute-icon.svg";
+    const muteButton = document.getElementById("mute");
 
+    muteButton.innerHTML = `<img src="${buttonIcon}" alt="${buttonText} button" class="button-icon"> ${buttonText}`;
+}
 
 
 // Congrats page pop up
@@ -158,6 +167,7 @@ function initializeAR() {
 
 document.addEventListener("DOMContentLoaded", function() {
     const arScene = document.getElementById('ar-scene');
+    // const muteButton = document.getElementById("mute"); // Ensure this is defined before any usage
     initializeAR(); // Initialize AR on page load
 
     const closePopupButton = document.getElementById('close-congrats-overlay');
@@ -167,9 +177,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const viewMapButton = document.getElementById("view-map");
     const helpButton = document.getElementById("help");
-    const muteButton = document.getElementById("mute");
     const refreshButton = document.getElementById("refresh");
-    let isMuted = true; // Start with audio muted
+    // let isMuted = true; // Start with audio muted
 
     if (viewMapButton) {
         viewMapButton.addEventListener("click", () => {
@@ -187,35 +196,33 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    function toggleMuteButton(isMuted) {
-        const buttonText = isMuted ? "Unmute" : "Mute";
-        const buttonIcon = isMuted ? "./assets/images/UI/unmute-icon.svg" : "./assets/mute-icon.svg";
+//     function toggleMuteButton(isMuted) {
+//         const buttonText = isMuted ? "Unmute" : "Mute";
+//         const buttonIcon = isMuted ? "./assets/images/UI/unmute-icon.svg" : "./assets/images/UI/mute-icon.svg";
 
-        muteButton.innerHTML = `<img src="${buttonIcon}" alt="${buttonText} button" class="button-icon"> ${buttonText}`;
-    }
+//         muteButton.innerHTML = `<img src="${buttonIcon}" alt="${buttonText} button" class="button-icon"> ${buttonText}`;
+//     }
 
-    if (muteButton) {
-        muteButton.addEventListener("click", () => {
-            if (currentAudio) {
-                if (isMuted) {
-                    currentAudio.play(); // Play the audio if it's muted
-                }
-                isMuted = !isMuted;
-                currentAudio.muted = isMuted; // Toggle the muted state of the audio
-                console.log(`Audio muted state: ${currentAudio.muted}`); // Debug statement
-                toggleMuteButton(isMuted); // Update the button appearance
-            } else {
-                console.log("No audio entity found."); // Debug statement
-            }
-        });
+//     if (muteButton) {
+//     muteButton.addEventListener("click", () => {
+//         if (currentAudio) {
+//             isMuted = !isMuted;
+//             currentAudio.muted = isMuted; // Toggle the muted state of the audio
+//             console.log(`Audio muted state: ${currentAudio.muted}`); // Debug statement
+//             toggleMuteButton(isMuted); // Update the button appearance
+//         } else {
+//             console.log("No audio entity found."); // Debug statement
+//         }
+//     });
 
-        // Set initial state
-        if (currentAudio) {
-            toggleMuteButton(currentAudio.muted);
-        } else {
-            toggleMuteButton(true); // Start with mute button indicating muted state
-        }
-    }
+//     // Set initial state
+//     if (currentAudio) {
+//         toggleMuteButton(currentAudio.muted);
+//     } else {
+//         toggleMuteButton(true); // Start with mute button indicating muted state
+//     }
+// }
+
 
     if (refreshButton) {
         refreshButton.addEventListener("click", () => {
@@ -422,12 +429,16 @@ function displayMedia(mediaArray, index) {
         // Add event listeners to ensure the video is visible and plays
         entity.addEventListener('loadeddata', () => {
             console.log('Video entity loadeddata event triggered');
-            entity.play(); // Ensure the video plays
+            if (!isIOS()) {
+                entity.play(); // Ensure the video plays
+            }
         });
 
         entity.addEventListener('canplay', () => {
             console.log('Video entity canplay event triggered');
-            entity.play(); // Ensure the video plays
+            if (!isIOS()) {
+                entity.play(); // Ensure the video plays
+            }
         });
 
         scene.appendChild(entity);
@@ -455,6 +466,10 @@ function displayMedia(mediaArray, index) {
         audio.setAttribute('loop', 'true');
         document.body.appendChild(audio);
         currentAudio = audio;
+
+        if (!isIOS()) {
+            currentAudio.play(); // Ensure the audio plays if not on iOS
+        }
     }
 
     mediaEntity = entity;
@@ -478,8 +493,6 @@ function displayMedia(mediaArray, index) {
         scene.flushToDOM(); // Ensure the scene updates
     }, 200);
 }
-
-
 
 
 function createLookImages() {
@@ -521,31 +534,21 @@ function changeMedia(mediaArray) {
     modelIndex = (modelIndex + 1) % mediaArray.length;
     displayMedia(mediaArray, modelIndex);
 
-    // Unmute and play the video if the new media is a video
-    if (mediaArray[modelIndex].type === "video") {
-        setTimeout(() => {
-            if (videoEntity) {
-                console.log("Unmuting and attempting to play video entity");
-                videoEntity.muted = false;
-                videoEntity.setAttribute('visible', 'true'); // Ensure the video is visible
-
-                // Add event listener to ensure video is played when ready
-                videoEntity.addEventListener('canplay', () => {
-                    console.log("Video entity canplay event triggered");
-                    videoEntity.play();
-                });
-
-                // Fallback for browsers that might not trigger canplay
-                setTimeout(() => {
-                    if (videoEntity.paused) {
-                        console.log("Video entity fallback play triggered");
-                        videoEntity.play();
-                    }
-                }, 500); // Adjust the timeout as needed
+    // Unmute and play/pause the audio if the new media has audio
+    if (currentAudio) {
+        if (currentAudio.paused) {
+            // iOS requires a user interaction to unmute audio
+            if (isIOS()) {
+                currentAudio.muted = false; // Ensure the audio is unmuted
+                currentAudio.play();
             } else {
-                console.log("No video entity found");
+                currentAudio.play();
             }
-        }, 100); // Small delay to ensure the video element is loaded
+            console.log("Audio is playing");
+        } else {
+            currentAudio.pause();
+            console.log("Audio is paused");
+        }
     }
 
     // Show the congratulations pop-up after a short delay for testing
@@ -555,6 +558,12 @@ function changeMedia(mediaArray) {
     setTimeout(() => {
         isChangingMedia = false;
     }, 1000); // Adjust the timeout as needed
+}
+
+
+// Helper function to detect iOS
+function isIOS() {
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 }
 
 // Existing touch and drag event handlers
