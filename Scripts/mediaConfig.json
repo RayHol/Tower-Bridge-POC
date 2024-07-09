@@ -8,7 +8,7 @@
                 "rotation": "0 0 0",
                 "fixedAngleDegrees": 0,
                 "frameUrl": "./assets/frames/frame2.png",
-                "info": "Tap the button to play the animation",
+                "info": "Tap to play when the photo is in place",
                 "audioUrl": ""
             },
             {
@@ -18,7 +18,7 @@
                 "rotation": "0 0 0",
                 "fixedAngleDegrees": 0,
                 "frameUrl": "./assets/frames/frame2.png",
-                "info": "Tap the button to switch back",
+                "info": "Pause Animation",
                 "audioUrl": "https://rayhol.github.io/TB_Videos/Audio/01-1.mp3"
             }
         ]
