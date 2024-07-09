@@ -50,8 +50,19 @@ function refreshMediaPosition() {
             frameEntity.setAttribute("rotation", initialMediaState.rotation);
         }
         console.log(`Media position reset to initial values`);
+
+        // Reset the initialMediaState to ensure it reflects the reset position
+        initialMediaState.position = { ...mediaEntity.getAttribute("position") };
+        initialMediaState.rotation = { ...mediaEntity.getAttribute("rotation") };
     }
+
+    // Remove all current media elements before reloading
+    removeAllMedia();
+
+    // Reload the current media elements
+    loadLocationMedia();
 }
+
 
 // Congrats page pop up
 function showCongratulationsPopup() {
@@ -202,7 +213,6 @@ document.addEventListener("DOMContentLoaded", function() {
     if (refreshButton) {
         refreshButton.addEventListener("click", () => {
             refreshMediaPosition();
-            loadLocationMedia();
         });
     }
 
@@ -266,11 +276,13 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function removeAllMedia() {
+    console.log("removeAllMedia called");
     let scene = document.querySelector("a-scene");
 
     // Remove existing media elements (images, videos, audio)
     let mediaElements = scene.querySelectorAll('a-image:not([id^="look_"]), a-video:not([visible=false]), a-audio');
     mediaElements.forEach(element => {
+        console.log(`Removing media element: ${element.tagName}, src: ${element.getAttribute('src')}`);
         element.parentNode.removeChild(element);
     });
 
@@ -289,10 +301,17 @@ function removeAllMedia() {
     lookImages = []; // Clear the lookImages array
 
     // Stop any playing audio
-    if (videoEntity) {
-        videoEntity.setAttribute("visible", "false");
-        videoEntity = null;
+    if (currentAudio) {
+        currentAudio.pause();
+        document.body.removeChild(currentAudio);
+        currentAudio = null;
     }
+
+    // Reset media references
+    mediaEntity = null;
+    videoEntity = null;
+
+    console.log("Media elements removed");
 }
 
 function initializeMedia(mediaArray) {
@@ -326,24 +345,30 @@ function initializeMedia(mediaArray) {
 function displayMedia(mediaArray, index) {
     let scene = document.querySelector("a-scene");
     let mediaItem = mediaArray[index];
+    console.log("displayMedia called with media item:", mediaItem);
 
-    // Remove all existing media elements
-    removeAllMedia();
+    // Store the current position before removing the media entity
+    let currentPosition = { x: 0, y: 0, z: -25 }; // Default position
+    if (mediaEntity) {
+        currentPosition = mediaEntity.getAttribute("position");
+        console.log(`Storing current position: x: ${currentPosition.x}, y: ${currentPosition.y}, z: ${currentPosition.z}`);
+    }
+
+    // Remove all existing media elements if necessary
+    if (mediaEntity && mediaEntity.parentNode) {
+        console.log(`Removing existing media entity: ${mediaEntity.tagName}`);
+        mediaEntity.parentNode.removeChild(mediaEntity);
+    }
 
     // Correct media element placement
-    fixedAngleDegrees = mediaItem.fixedAngleDegrees; // Ensure to use fixedAngleDegrees from mediaItem
+    fixedAngleDegrees = mediaItem.fixedAngleDegrees || 0;
     const radians = (fixedAngleDegrees * Math.PI) / 180;
-    const defaultPosition = {
-        x: -currentZoom * Math.sin(radians),
-        y: currentY,
-        z: -currentZoom * Math.cos(radians),
+    const position = {
+        x: currentPosition.x, // Use stored x position
+        y: currentPosition.y, // Use stored y position
+        z: currentPosition.z  // Use stored z position
     };
-    const position = mediaEntity
-        ? mediaEntity.getAttribute("position")
-        : defaultPosition;
-    const rotation = mediaEntity
-        ? mediaEntity.getAttribute("rotation")
-        : { x: 0, y: fixedAngleDegrees, z: 0 };
+    const rotation = { x: 0, y: fixedAngleDegrees, z: 0 };
 
     // Store initial state
     initialMediaState.position = { ...position };
@@ -358,46 +383,51 @@ function displayMedia(mediaArray, index) {
         // Set up the image entity
         entity = document.createElement("a-image");
         entity.setAttribute("src", mediaItem.url);
-        entity.setAttribute("position", position); // Set initial position
-        entity.setAttribute("rotation", rotation); // Set initial rotation
+        entity.setAttribute("position", position);
+        entity.setAttribute("rotation", rotation);
         entity.setAttribute("scale", mediaItem.scale);
+        entity.setAttribute("visible", "true"); // Ensure the entity is visible
 
         scene.appendChild(entity);
-        document.getElementById("look_1").setAttribute("visible", "true"); // Ensure lookImage is visible
+        entity.flushToDOM(); // Force update
+        document.getElementById("look_1").setAttribute("visible", "true");
         buttonText.innerText = "Tap to play when the photo is in place";
 
-        // Create lookImage copies at specific angles
         createLookImages();
     } else if (mediaItem.type === "video") {
         // Ensure the video element is reset and properly initialized
+        console.log("Creating video entity");
         entity = document.createElement("a-video");
         entity.setAttribute("src", mediaItem.url);
         entity.setAttribute("autoplay", "true");
         entity.setAttribute("loop", "true");
         entity.setAttribute("playsinline", "true");
-        entity.setAttribute("muted", "true"); // Always muted
-        entity.setAttribute("position", position); // Set initial position
-        entity.setAttribute("rotation", rotation); // Set initial rotation
+        entity.setAttribute("muted", "true");
+        entity.setAttribute("position", position);
+        entity.setAttribute("rotation", rotation);
         entity.setAttribute("scale", mediaItem.scale);
-        entity.setAttribute("preload", "auto"); // Ensure the video is preloaded
+        entity.setAttribute("preload", "auto");
+        entity.setAttribute("visible", "true"); // Ensure the entity is visible
 
+        // Add event listeners to ensure the video is visible and plays
         entity.addEventListener('loadeddata', () => {
-            console.log('Video entity loaded and ready'); // Debug statement
+            console.log('Video entity loadeddata event triggered');
+            entity.play(); // Ensure the video plays
         });
 
         entity.addEventListener('canplay', () => {
-            console.log('Video entity can play'); // Debug statement
+            console.log('Video entity canplay event triggered');
+            entity.play(); // Ensure the video plays
         });
 
         scene.appendChild(entity);
-        videoEntity = entity; // Ensure videoEntity is set
+        entity.flushToDOM(); // Force update
+        videoEntity = entity;
 
-        console.log('Video entity created', videoEntity); // Debug statement
-
-        document.getElementById("look_1").setAttribute("visible", "true"); // Ensure lookImage is visible
+        console.log('Video entity created', videoEntity);
+        document.getElementById("look_1").setAttribute("visible", "true");
         buttonText.innerText = "Go back to the image";
 
-        // Create lookImage copies at specific angles
         createLookImages();
     }
 
@@ -411,31 +441,34 @@ function displayMedia(mediaArray, index) {
         audio.setAttribute('src', mediaItem.audioUrl);
         audio.setAttribute('id', 'audio-' + index);
         audio.setAttribute('preload', 'auto');
-        audio.setAttribute('muted', 'true'); // Start muted
-        audio.setAttribute('loop', 'true'); // Set audio to loop
+        audio.setAttribute('muted', 'true');
+        audio.setAttribute('loop', 'true');
         document.body.appendChild(audio);
-        currentAudio = audio; // Update current audio reference
+        currentAudio = audio;
     }
 
     mediaEntity = entity;
 
-    // Explicitly set initial position and update debug info
     mediaEntity.setAttribute("position", position);
 
-    // Confirm attributes have been set correctly
     const confirmedPosition = mediaEntity.getAttribute("position");
     const confirmedRotation = mediaEntity.getAttribute("rotation");
     console.log(`Confirmed initial position: x: ${confirmedPosition.x}, y: ${confirmedPosition.y}, z: ${confirmedPosition.z}`);
     console.log(`Confirmed initial rotation: x: ${confirmedRotation.x}, y: ${confirmedRotation.y}, z: ${confirmedRotation.z}`);
 
-    // Ensure attributes are not overridden
     setTimeout(() => {
         const doubleCheckPosition = mediaEntity.getAttribute("position");
         const doubleCheckRotation = mediaEntity.getAttribute("rotation");
         console.log(`Double-check position: x: ${doubleCheckPosition.x}, y: ${doubleCheckPosition.y}, z: ${doubleCheckPosition.z}`);
         console.log(`Double-check rotation: x: ${doubleCheckRotation.x}, y: ${doubleCheckRotation.y}, z: ${doubleCheckRotation.z}`);
     }, 100);
+
+    // Force scene update
+    setTimeout(() => {
+        scene.flushToDOM(); // Ensure the scene updates
+    }, 200);
 }
+
 
 function createLookImages() {
     let scene = document.querySelector("a-scene");
@@ -463,22 +496,53 @@ function createLookImages() {
     });
 }
 
+let isChangingMedia = false; // Flag to prevent repeated calls
+
 function changeMedia(mediaArray) {
+    if (isChangingMedia) {
+        console.log("changeMedia called, but media is already changing");
+        return;
+    }
+    isChangingMedia = true;
+    console.log("changeMedia called");
+
     modelIndex = (modelIndex + 1) % mediaArray.length;
     displayMedia(mediaArray, modelIndex);
 
-    // Unmute the video if the new media is a video
+    // Unmute and play the video if the new media is a video
     if (mediaArray[modelIndex].type === "video") {
         setTimeout(() => {
             if (videoEntity) {
+                console.log("Unmuting and attempting to play video entity");
                 videoEntity.muted = false;
-                console.log('Video entity unmuted', videoEntity); // Debug statement
+                videoEntity.setAttribute('visible', 'true'); // Ensure the video is visible
+
+                // Add event listener to ensure video is played when ready
+                videoEntity.addEventListener('canplay', () => {
+                    console.log("Video entity canplay event triggered");
+                    videoEntity.play();
+                });
+
+                // Fallback for browsers that might not trigger canplay
+                setTimeout(() => {
+                    if (videoEntity.paused) {
+                        console.log("Video entity fallback play triggered");
+                        videoEntity.play();
+                    }
+                }, 500); // Adjust the timeout as needed
+            } else {
+                console.log("No video entity found");
             }
         }, 100); // Small delay to ensure the video element is loaded
     }
 
     // Show the congratulations pop-up after a short delay for testing
     setTimeout(showCongratulationsPopup, 60000); // Set to 0 for immediate testing
+
+    // Reset the flag after a delay to allow further media changes
+    setTimeout(() => {
+        isChangingMedia = false;
+    }, 1000); // Adjust the timeout as needed
 }
 
 // Existing touch and drag event handlers
