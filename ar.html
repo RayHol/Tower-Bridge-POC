@@ -128,6 +128,13 @@
         </div>
     </div>
   
+    <div id="orientation-overlay" style="display: none;">
+      <div class="orientation-popup">
+        <p>Please switch to portrait mode to continue using the app.</p>
+      </div>
+    </div>
+
+  
     <!--Background audio -->
     <audio id="background-audio" preload="auto" loop crossorigin="anonymous">
         <source src="./assets/audio/background2.mp3" type="audio/mpeg">
@@ -139,7 +146,7 @@
         <a-light type="ambient" color="#ffffff"></a-light>
         <a-light type="directional" color="#ffffff" position="-2 4 5"></a-light>
         <a-entity camera rotation-reader look-controls="touchEnabled: false" position="0 1.6 0"></a-entity>
-        <a-image id="look_1" position="0 0 0" rotation="0 0 0" scale="14 4 1" visible="false"></a-image>
+<!--         <a-image id="look_1" position="0 0 0" rotation="0 0 0" scale="14 4 1" visible="false"></a-image> -->
     </a-scene>
   
     <div class="icon-buttons">
