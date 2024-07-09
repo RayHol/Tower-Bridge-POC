@@ -51,9 +51,14 @@ function refreshMediaPosition() {
         }
         console.log(`Media position reset to initial values`);
 
+        // Reset currentZoom based on the initial position
+        const initialPosition = initialMediaState.position;
+        currentZoom = Math.sqrt(initialPosition.x ** 2 + initialPosition.z ** 2);
+
         // Reset the initialMediaState to ensure it reflects the reset position
         initialMediaState.position = { ...mediaEntity.getAttribute("position") };
         initialMediaState.rotation = { ...mediaEntity.getAttribute("rotation") };
+        console.log(`Initial media state reset to: position ${JSON.stringify(initialMediaState.position)}, rotation ${JSON.stringify(initialMediaState.rotation)}`);
     }
 
     // Remove all current media elements before reloading
@@ -62,6 +67,8 @@ function refreshMediaPosition() {
     // Reload the current media elements
     loadLocationMedia();
 }
+
+
 
 
 // Congrats page pop up
@@ -374,6 +381,9 @@ function displayMedia(mediaArray, index) {
     initialMediaState.position = { ...position };
     initialMediaState.rotation = { ...rotation };
 
+    // Update currentZoom based on the initial position
+    currentZoom = Math.sqrt(position.x ** 2 + position.z ** 2);
+
     console.log(`Setting initial position to x: ${position.x}, y: ${position.y}, z: ${position.z}`);
     console.log(`Setting initial rotation to 0, ${rotation.y}, 0`);
 
@@ -468,6 +478,8 @@ function displayMedia(mediaArray, index) {
         scene.flushToDOM(); // Ensure the scene updates
     }, 200);
 }
+
+
 
 
 function createLookImages() {
@@ -605,8 +617,8 @@ document.addEventListener(
                 lookImages.forEach((lookImage, index) => {
                     const angle = (index + 1) * 90;
                     const lookRadians = ((fixedAngleDegrees + angle) * Math.PI) / 180;
-                    const lookX = -25 * Math.sin(lookRadians);
-                    const lookZ = -25 * Math.cos(lookRadians);
+                    const lookX = -currentZoom * Math.sin(lookRadians);
+                    const lookZ = -currentZoom * Math.cos(lookRadians);
                     lookImage.setAttribute("position", { x: lookX, y: 0, z: lookZ });
                     lookImage.setAttribute("rotation", {
                         x: 0,
@@ -672,5 +684,8 @@ function updateZoom(currentPinchDistance) {
             frameEntity.setAttribute("position", { x, y: currentY, z }); // Ensure frame is slightly in front dynamically
         }
         currentZoom = newZoom; // Update current zoom level
+
+        // Also update the initialMediaState with the new zoom value
+        initialMediaState.position = { x, y: currentY, z };
     }
 }
