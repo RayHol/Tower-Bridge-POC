@@ -423,12 +423,12 @@ function displayMedia(mediaArray, index) {
 
         scene.appendChild(entity);
         entity.flushToDOM(); // Force update
-        buttonText.innerText = "Tap to play";
+        buttonText.innerText = "Tap to play when the photo is in place";
 
         createLookImages();
     } else if (mediaItem.type === "video") {
-        // Ensure the video element is reset and properly initialized
         console.log("Creating video entity");
+
         entity = document.createElement("a-video");
         entity.setAttribute("src", mediaItem.url);
         entity.setAttribute("autoplay", "true");
@@ -441,19 +441,16 @@ function displayMedia(mediaArray, index) {
         entity.setAttribute("preload", "auto");
         entity.setAttribute("visible", "true"); // Ensure the entity is visible
 
-        // Add event listeners to ensure the video is visible and plays
-        entity.addEventListener('loadeddata', () => {
-            console.log('Video entity loadeddata event triggered');
-            if (!isIOS() && !isAndroid()) {
-                entity.play(); // Ensure the video plays
-            }
+        entity.addEventListener('loadedmetadata', () => {
+            console.log('Video entity loadedmetadata event triggered');
         });
 
-        entity.addEventListener('canplay', () => {
-            console.log('Video entity canplay event triggered');
-            if (!isIOS() && !isAndroid()) {
-                entity.play(); // Ensure the video plays
-            }
+        entity.addEventListener('playing', () => {
+            console.log('Video entity playing event triggered');
+            setTimeout(() => {
+                console.log('Fading out the image now');
+                fadeOutElement(mediaEntity); // Fade out the existing image
+            }, 1000); // Adjust this time if needed to ensure the video has started playing smoothly
         });
 
         scene.appendChild(entity);
@@ -461,7 +458,7 @@ function displayMedia(mediaArray, index) {
         videoEntity = entity;
 
         console.log('Video entity created', videoEntity);
-        buttonText.innerText = "Pause Animation";
+        buttonText.innerText = "Go back to the image";
 
         createLookImages();
     }
@@ -501,13 +498,33 @@ function displayMedia(mediaArray, index) {
         const doubleCheckRotation = mediaEntity.getAttribute("rotation");
         console.log(`Double-check position: x: ${doubleCheckPosition.x}, y: ${doubleCheckPosition.y}, z: ${doubleCheckPosition.z}`);
         console.log(`Double-check rotation: x: ${doubleCheckRotation.x}, y: ${doubleCheckRotation.y}, z: ${doubleCheckRotation.z}`);
-    }, 10);
+    }, 100);
 
     // Force scene update
     setTimeout(() => {
         scene.flushToDOM(); // Ensure the scene updates
     }, 200);
 }
+
+function fadeOutElement(element) {
+    console.log(`Starting fade out animation for element: ${element.tagName}`);
+    element.setAttribute("animation", {
+        property: "opacity",
+        to: 0,
+        dur: 1000,
+        easing: "easeInOutQuad",
+        startEvents: "startFadeOut",
+    });
+
+    element.addEventListener("animationcomplete", () => {
+        console.log(`Fade out animation completed for element: ${element.tagName}`);
+        element.parentNode.removeChild(element);
+        console.log(`Element removed from DOM: ${element.tagName}`);
+    });
+
+    element.emit("startFadeOut");
+}
+
 
 function createLookImages() {
     let scene = document.querySelector("a-scene");
@@ -595,6 +612,7 @@ function isIOS() {
 function isAndroid() {
     return /Android/.test(navigator.userAgent);
 }
+
 
 // Existing touch and drag event handlers
 document.addEventListener("touchstart", function (e) {
