@@ -13,13 +13,13 @@
             },
             {
                 "type": "video",
-                "url": "https://rayhol.github.io/TB_Videos/Videos2/01.mp4",
+                "url": "https://rayhol.github.io/TB_Videos/Videos2/01-1.mp4",
                 "scale": "10 7 1",
                 "rotation": "0 0 0",
                 "fixedAngleDegrees": 0,
                 "frameUrl": "./assets/frames/frame2.png",
                 "info": "Tap the button to switch back",
-                "audioUrl": "https://rayhol.github.io/TB_Videos/Audio/01.mp3"
+                "audioUrl": "https://rayhol.github.io/TB_Videos/Audio/01-1.mp3"
             }
         ]
     },
