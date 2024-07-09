@@ -328,6 +328,23 @@ function removeAllMedia() {
     console.log("Media elements removed");
 }
 
+function checkOrientation() {
+    const orientationOverlay = document.getElementById('orientation-overlay');
+    if (window.innerHeight < window.innerWidth) {
+        // Landscape mode
+        orientationOverlay.style.display = 'flex';
+    } else {
+        // Portrait mode
+        orientationOverlay.style.display = 'none';
+    }
+}
+
+window.addEventListener('resize', checkOrientation);
+window.addEventListener('orientationchange', checkOrientation);
+window.addEventListener('DOMContentLoaded', checkOrientation);
+
+
+
 function initializeMedia(mediaArray) {
     const button = document.querySelector('button[data-action="change"]');
 
@@ -407,7 +424,6 @@ function displayMedia(mediaArray, index) {
 
         scene.appendChild(entity);
         entity.flushToDOM(); // Force update
-        document.getElementById("look_1").setAttribute("visible", "true");
         buttonText.innerText = "Tap to play when the photo is in place";
 
         createLookImages();
@@ -429,16 +445,12 @@ function displayMedia(mediaArray, index) {
         // Add event listeners to ensure the video is visible and plays
         entity.addEventListener('loadeddata', () => {
             console.log('Video entity loadeddata event triggered');
-            if (!isIOS()) {
-                entity.play(); // Ensure the video plays
-            }
+            entity.play(); // Ensure the video plays
         });
 
         entity.addEventListener('canplay', () => {
             console.log('Video entity canplay event triggered');
-            if (!isIOS()) {
-                entity.play(); // Ensure the video plays
-            }
+            entity.play(); // Ensure the video plays
         });
 
         scene.appendChild(entity);
@@ -446,7 +458,6 @@ function displayMedia(mediaArray, index) {
         videoEntity = entity;
 
         console.log('Video entity created', videoEntity);
-        document.getElementById("look_1").setAttribute("visible", "true");
         buttonText.innerText = "Go back to the image";
 
         createLookImages();
@@ -497,29 +508,39 @@ function displayMedia(mediaArray, index) {
 
 function createLookImages() {
     let scene = document.querySelector("a-scene");
+
+    // Remove any existing lookImages
     lookImages.forEach((lookImage) => {
-        lookImage.parentNode.removeChild(lookImage);
+        if (lookImage.parentNode) {
+            lookImage.parentNode.removeChild(lookImage);
+        }
     });
     lookImages = [];
+
     const angles = [90, 180, 270]; // Angles for lookImage
-    angles.forEach((angle) => {
+    angles.forEach((angle, index) => {
         const radians = ((fixedAngleDegrees + angle) * Math.PI) / 180;
         const lookX = -currentZoom * Math.sin(radians);
         const lookZ = -currentZoom * Math.cos(radians);
 
-        const lookImage = document.createElement("a-image");
-        lookImage.setAttribute("src", "./assets/images/UI/look-for.svg");
-        lookImage.setAttribute("position", { x: lookX, y: 0, z: lookZ });
-        lookImage.setAttribute("rotation", {
-            x: 0,
-            y: angle + fixedAngleDegrees,
-            z: 0,
-        });
-        lookImage.setAttribute("scale", "14 4 1");
-        scene.appendChild(lookImage);
-        lookImages.push(lookImage);
+        if (lookX !== 0 || lookZ !== 0) { // Ensure the position is not (0, 0, 0)
+            const lookImage = document.createElement("a-image");
+            lookImage.setAttribute("src", "./assets/images/UI/look-for.svg");
+            lookImage.setAttribute("position", { x: lookX, y: 0, z: lookZ });
+            lookImage.setAttribute("rotation", {
+                x: 0,
+                y: angle + fixedAngleDegrees,
+                z: 0,
+            });
+            lookImage.setAttribute("scale", "14 4 1");
+            lookImage.setAttribute("id", `look_${index + 1}`); // Ensure unique ID
+            lookImage.setAttribute("visible", "true"); // Make it visible
+            scene.appendChild(lookImage);
+            lookImages.push(lookImage);
+        }
     });
 }
+
 
 let isChangingMedia = false; // Flag to prevent repeated calls
 
@@ -698,3 +719,12 @@ function updateZoom(currentPinchDistance) {
         initialMediaState.position = { x, y: currentY, z };
     }
 }
+
+document.querySelectorAll('a-entity, a-image, a-video').forEach(el => {
+    const position = el.getAttribute('position');
+    if (position.x === 0 && position.y === 0 && position.z === 0) {
+        console.log(`Element at origin: ${el.tagName}, id: ${el.getAttribute('id')}`);
+    }
+});
+
+
