@@ -1,3 +1,5 @@
+// v.31 Adjusted audio handling to play/pause and manage mute state directly within the changeMedia function, ensuring compatibility with iOS and Andriod.
+
 // Global variable definitions
 let modelIndex = 0;
 let videoEntity = null;
