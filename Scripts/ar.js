@@ -1,3 +1,5 @@
+// v.31 Adjusted audio handling to play/pause and manage mute state directly within the changeMedia function, ensuring compatibility with iOS and Andriod.
+
 // Global variable definitions
 let modelIndex = 0;
 let videoEntity = null;
@@ -50,8 +52,32 @@ function refreshMediaPosition() {
             frameEntity.setAttribute("rotation", initialMediaState.rotation);
         }
         console.log(`Media position reset to initial values`);
+
+        // Reset currentZoom based on the initial position
+        const initialPosition = initialMediaState.position;
+        currentZoom = Math.sqrt(initialPosition.x ** 2 + initialPosition.z ** 2);
+
+        // Reset the initialMediaState to ensure it reflects the reset position
+        initialMediaState.position = { ...mediaEntity.getAttribute("position") };
+        initialMediaState.rotation = { ...mediaEntity.getAttribute("rotation") };
+        console.log(`Initial media state reset to: position ${JSON.stringify(initialMediaState.position)}, rotation ${JSON.stringify(initialMediaState.rotation)}`);
     }
+
+    // Remove all current media elements before reloading
+    removeAllMedia();
+
+    // Reload the current media elements
+    loadLocationMedia();
 }
+
+function toggleMuteButton(isMuted) {
+    const buttonText = isMuted ? "Unmute" : "Mute";
+    const buttonIcon = isMuted ? "./assets/images/UI/unmute-icon.svg" : "./assets/images/UI/mute-icon.svg";
+    const muteButton = document.getElementById("mute");
+
+    muteButton.innerHTML = `<img src="${buttonIcon}" alt="${buttonText} button" class="button-icon"> ${buttonText}`;
+}
+
 
 // Congrats page pop up
 function showCongratulationsPopup() {
@@ -140,6 +166,7 @@ function initializeAR() {
 
 document.addEventListener("DOMContentLoaded", function() {
     const arScene = document.getElementById('ar-scene');
+    // const muteButton = document.getElementById("mute"); // Ensure this is defined before any usage
     initializeAR(); // Initialize AR on page load
 
     const closePopupButton = document.getElementById('close-congrats-overlay');
@@ -149,9 +176,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const viewMapButton = document.getElementById("view-map");
     const helpButton = document.getElementById("help");
-    const muteButton = document.getElementById("mute");
     const refreshButton = document.getElementById("refresh");
-    let isMuted = true; // Start with audio muted
+    // let isMuted = true; // Start with audio muted
 
     if (viewMapButton) {
         viewMapButton.addEventListener("click", () => {
@@ -169,40 +195,37 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    function toggleMuteButton(isMuted) {
-        const buttonText = isMuted ? "Unmute" : "Mute";
-        const buttonIcon = isMuted ? "./assets/images/UI/unmute-icon.svg" : "./assets/mute-icon.svg";
+//     function toggleMuteButton(isMuted) {
+//         const buttonText = isMuted ? "Unmute" : "Mute";
+//         const buttonIcon = isMuted ? "./assets/images/UI/unmute-icon.svg" : "./assets/images/UI/mute-icon.svg";
 
-        muteButton.innerHTML = `<img src="${buttonIcon}" alt="${buttonText} button" class="button-icon"> ${buttonText}`;
-    }
+//         muteButton.innerHTML = `<img src="${buttonIcon}" alt="${buttonText} button" class="button-icon"> ${buttonText}`;
+//     }
 
-    if (muteButton) {
-        muteButton.addEventListener("click", () => {
-            if (currentAudio) {
-                if (isMuted) {
-                    currentAudio.play(); // Play the audio if it's muted
-                }
-                isMuted = !isMuted;
-                currentAudio.muted = isMuted; // Toggle the muted state of the audio
-                console.log(`Audio muted state: ${currentAudio.muted}`); // Debug statement
-                toggleMuteButton(isMuted); // Update the button appearance
-            } else {
-                console.log("No audio entity found."); // Debug statement
-            }
-        });
+//     if (muteButton) {
+//     muteButton.addEventListener("click", () => {
+//         if (currentAudio) {
+//             isMuted = !isMuted;
+//             currentAudio.muted = isMuted; // Toggle the muted state of the audio
+//             console.log(`Audio muted state: ${currentAudio.muted}`); // Debug statement
+//             toggleMuteButton(isMuted); // Update the button appearance
+//         } else {
+//             console.log("No audio entity found."); // Debug statement
+//         }
+//     });
 
-        // Set initial state
-        if (currentAudio) {
-            toggleMuteButton(currentAudio.muted);
-        } else {
-            toggleMuteButton(true); // Start with mute button indicating muted state
-        }
-    }
+//     // Set initial state
+//     if (currentAudio) {
+//         toggleMuteButton(currentAudio.muted);
+//     } else {
+//         toggleMuteButton(true); // Start with mute button indicating muted state
+//     }
+// }
+
 
     if (refreshButton) {
         refreshButton.addEventListener("click", () => {
             refreshMediaPosition();
-            loadLocationMedia();
         });
     }
 
@@ -266,11 +289,13 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function removeAllMedia() {
+    console.log("removeAllMedia called");
     let scene = document.querySelector("a-scene");
 
     // Remove existing media elements (images, videos, audio)
     let mediaElements = scene.querySelectorAll('a-image:not([id^="look_"]), a-video:not([visible=false]), a-audio');
     mediaElements.forEach(element => {
+        console.log(`Removing media element: ${element.tagName}, src: ${element.getAttribute('src')}`);
         element.parentNode.removeChild(element);
     });
 
@@ -289,11 +314,35 @@ function removeAllMedia() {
     lookImages = []; // Clear the lookImages array
 
     // Stop any playing audio
-    if (videoEntity) {
-        videoEntity.setAttribute("visible", "false");
-        videoEntity = null;
+    if (currentAudio) {
+        currentAudio.pause();
+        document.body.removeChild(currentAudio);
+        currentAudio = null;
+    }
+
+    // Reset media references
+    mediaEntity = null;
+    videoEntity = null;
+
+    console.log("Media elements removed");
+}
+
+function checkOrientation() {
+    const orientationOverlay = document.getElementById('orientation-overlay');
+    if (window.innerHeight < window.innerWidth) {
+        // Landscape mode
+        orientationOverlay.style.display = 'flex';
+    } else {
+        // Portrait mode
+        orientationOverlay.style.display = 'none';
     }
 }
+
+window.addEventListener('resize', checkOrientation);
+window.addEventListener('orientationchange', checkOrientation);
+window.addEventListener('DOMContentLoaded', checkOrientation);
+
+
 
 function initializeMedia(mediaArray) {
     const button = document.querySelector('button[data-action="change"]');
@@ -326,28 +375,37 @@ function initializeMedia(mediaArray) {
 function displayMedia(mediaArray, index) {
     let scene = document.querySelector("a-scene");
     let mediaItem = mediaArray[index];
+    console.log("displayMedia called with media item:", mediaItem);
 
-    // Remove all existing media elements
-    removeAllMedia();
+    // Store the current position before removing the media entity
+    let currentPosition = { x: 0, y: 0, z: -25 }; // Default position
+    if (mediaEntity) {
+        currentPosition = mediaEntity.getAttribute("position");
+        console.log(`Storing current position: x: ${currentPosition.x}, y: ${currentPosition.y}, z: ${currentPosition.z}`);
+    }
+
+    // Remove all existing media elements if necessary
+    if (mediaEntity && mediaEntity.parentNode) {
+        console.log(`Removing existing media entity: ${mediaEntity.tagName}`);
+        mediaEntity.parentNode.removeChild(mediaEntity);
+    }
 
     // Correct media element placement
-    fixedAngleDegrees = mediaItem.fixedAngleDegrees; // Ensure to use fixedAngleDegrees from mediaItem
+    fixedAngleDegrees = mediaItem.fixedAngleDegrees || 0;
     const radians = (fixedAngleDegrees * Math.PI) / 180;
-    const defaultPosition = {
-        x: -currentZoom * Math.sin(radians),
-        y: currentY,
-        z: -currentZoom * Math.cos(radians),
+    const position = {
+        x: currentPosition.x, // Use stored x position
+        y: currentPosition.y, // Use stored y position
+        z: currentPosition.z  // Use stored z position
     };
-    const position = mediaEntity
-        ? mediaEntity.getAttribute("position")
-        : defaultPosition;
-    const rotation = mediaEntity
-        ? mediaEntity.getAttribute("rotation")
-        : { x: 0, y: fixedAngleDegrees, z: 0 };
+    const rotation = { x: 0, y: fixedAngleDegrees, z: 0 };
 
     // Store initial state
     initialMediaState.position = { ...position };
     initialMediaState.rotation = { ...rotation };
+
+    // Update currentZoom based on the initial position
+    currentZoom = Math.sqrt(position.x ** 2 + position.z ** 2);
 
     console.log(`Setting initial position to x: ${position.x}, y: ${position.y}, z: ${position.z}`);
     console.log(`Setting initial rotation to 0, ${rotation.y}, 0`);
@@ -358,46 +416,50 @@ function displayMedia(mediaArray, index) {
         // Set up the image entity
         entity = document.createElement("a-image");
         entity.setAttribute("src", mediaItem.url);
-        entity.setAttribute("position", position); // Set initial position
-        entity.setAttribute("rotation", rotation); // Set initial rotation
+        entity.setAttribute("position", position);
+        entity.setAttribute("rotation", rotation);
         entity.setAttribute("scale", mediaItem.scale);
+        entity.setAttribute("visible", "true"); // Ensure the entity is visible
 
         scene.appendChild(entity);
-        document.getElementById("look_1").setAttribute("visible", "true"); // Ensure lookImage is visible
+        entity.flushToDOM(); // Force update
         buttonText.innerText = "Tap to play when the photo is in place";
 
-        // Create lookImage copies at specific angles
         createLookImages();
     } else if (mediaItem.type === "video") {
-        // Ensure the video element is reset and properly initialized
+        console.log("Creating video entity");
+
         entity = document.createElement("a-video");
         entity.setAttribute("src", mediaItem.url);
         entity.setAttribute("autoplay", "true");
         entity.setAttribute("loop", "true");
         entity.setAttribute("playsinline", "true");
-        entity.setAttribute("muted", "true"); // Always muted
-        entity.setAttribute("position", position); // Set initial position
-        entity.setAttribute("rotation", rotation); // Set initial rotation
+        entity.setAttribute("muted", "true");
+        entity.setAttribute("position", position);
+        entity.setAttribute("rotation", rotation);
         entity.setAttribute("scale", mediaItem.scale);
-        entity.setAttribute("preload", "auto"); // Ensure the video is preloaded
+        entity.setAttribute("preload", "auto");
+        entity.setAttribute("visible", "true"); // Ensure the entity is visible
 
-        entity.addEventListener('loadeddata', () => {
-            console.log('Video entity loaded and ready'); // Debug statement
+        entity.addEventListener('loadedmetadata', () => {
+            console.log('Video entity loadedmetadata event triggered');
         });
 
-        entity.addEventListener('canplay', () => {
-            console.log('Video entity can play'); // Debug statement
+        entity.addEventListener('playing', () => {
+            console.log('Video entity playing event triggered');
+            setTimeout(() => {
+                console.log('Fading out the image now');
+                fadeOutElement(mediaEntity); // Fade out the existing image
+            }, 1000); // Adjust this time if needed to ensure the video has started playing smoothly
         });
 
         scene.appendChild(entity);
-        videoEntity = entity; // Ensure videoEntity is set
+        entity.flushToDOM(); // Force update
+        videoEntity = entity;
 
-        console.log('Video entity created', videoEntity); // Debug statement
+        console.log('Video entity created', videoEntity);
+        buttonText.innerText = "Pause Animation";
 
-        document.getElementById("look_1").setAttribute("visible", "true"); // Ensure lookImage is visible
-        buttonText.innerText = "Go back to the image";
-
-        // Create lookImage copies at specific angles
         createLookImages();
     }
 
@@ -411,75 +473,146 @@ function displayMedia(mediaArray, index) {
         audio.setAttribute('src', mediaItem.audioUrl);
         audio.setAttribute('id', 'audio-' + index);
         audio.setAttribute('preload', 'auto');
-        audio.setAttribute('muted', 'true'); // Start muted
-        audio.setAttribute('loop', 'true'); // Set audio to loop
+        audio.setAttribute('muted', 'true');
+        audio.setAttribute('loop', 'true');
         document.body.appendChild(audio);
-        currentAudio = audio; // Update current audio reference
+        currentAudio = audio;
+
+        // Ensure the audio plays if not on iOS or Android
+        if (!isIOS() && !isAndroid()) {
+            currentAudio.play();
+        }
     }
 
     mediaEntity = entity;
 
-    // Explicitly set initial position and update debug info
     mediaEntity.setAttribute("position", position);
 
-    // Confirm attributes have been set correctly
     const confirmedPosition = mediaEntity.getAttribute("position");
     const confirmedRotation = mediaEntity.getAttribute("rotation");
     console.log(`Confirmed initial position: x: ${confirmedPosition.x}, y: ${confirmedPosition.y}, z: ${confirmedPosition.z}`);
     console.log(`Confirmed initial rotation: x: ${confirmedRotation.x}, y: ${confirmedRotation.y}, z: ${confirmedRotation.z}`);
 
-    // Ensure attributes are not overridden
     setTimeout(() => {
         const doubleCheckPosition = mediaEntity.getAttribute("position");
         const doubleCheckRotation = mediaEntity.getAttribute("rotation");
         console.log(`Double-check position: x: ${doubleCheckPosition.x}, y: ${doubleCheckPosition.y}, z: ${doubleCheckPosition.z}`);
         console.log(`Double-check rotation: x: ${doubleCheckRotation.x}, y: ${doubleCheckRotation.y}, z: ${doubleCheckRotation.z}`);
     }, 100);
+
+    // Force scene update
+    setTimeout(() => {
+        scene.flushToDOM(); // Ensure the scene updates
+    }, 200);
 }
+
+function fadeOutElement(element) {
+    console.log(`Starting fade out animation for element: ${element.tagName}`);
+    element.setAttribute("animation", {
+        property: "opacity",
+        to: 0,
+        dur: 1000,
+        easing: "easeInOutQuad",
+        startEvents: "startFadeOut",
+    });
+
+    element.addEventListener("animationcomplete", () => {
+        console.log(`Fade out animation completed for element: ${element.tagName}`);
+        element.parentNode.removeChild(element);
+        console.log(`Element removed from DOM: ${element.tagName}`);
+    });
+
+    element.emit("startFadeOut");
+}
+
 
 function createLookImages() {
     let scene = document.querySelector("a-scene");
+
+    // Remove any existing lookImages
     lookImages.forEach((lookImage) => {
-        lookImage.parentNode.removeChild(lookImage);
+        if (lookImage.parentNode) {
+            lookImage.parentNode.removeChild(lookImage);
+        }
     });
     lookImages = [];
+
     const angles = [90, 180, 270]; // Angles for lookImage
-    angles.forEach((angle) => {
+    angles.forEach((angle, index) => {
         const radians = ((fixedAngleDegrees + angle) * Math.PI) / 180;
         const lookX = -currentZoom * Math.sin(radians);
         const lookZ = -currentZoom * Math.cos(radians);
 
-        const lookImage = document.createElement("a-image");
-        lookImage.setAttribute("src", "./assets/images/UI/look-for.svg");
-        lookImage.setAttribute("position", { x: lookX, y: 0, z: lookZ });
-        lookImage.setAttribute("rotation", {
-            x: 0,
-            y: angle + fixedAngleDegrees,
-            z: 0,
-        });
-        lookImage.setAttribute("scale", "14 4 1");
-        scene.appendChild(lookImage);
-        lookImages.push(lookImage);
+        if (lookX !== 0 || lookZ !== 0) { // Ensure the position is not (0, 0, 0)
+            const lookImage = document.createElement("a-image");
+            lookImage.setAttribute("src", "./assets/images/UI/look-for.svg");
+            lookImage.setAttribute("position", { x: lookX, y: 0, z: lookZ });
+            lookImage.setAttribute("rotation", {
+                x: 0,
+                y: angle + fixedAngleDegrees,
+                z: 0,
+            });
+            lookImage.setAttribute("scale", "14 4 1");
+            lookImage.setAttribute("id", `look_${index + 1}`); // Ensure unique ID
+            lookImage.setAttribute("visible", "true"); // Make it visible
+            scene.appendChild(lookImage);
+            lookImages.push(lookImage);
+        }
     });
 }
 
+
+let isChangingMedia = false; // Flag to prevent repeated calls
+
 function changeMedia(mediaArray) {
+    if (isChangingMedia) {
+        console.log("changeMedia called, but media is already changing");
+        return;
+    }
+    isChangingMedia = true;
+    console.log("changeMedia called");
+
     modelIndex = (modelIndex + 1) % mediaArray.length;
     displayMedia(mediaArray, modelIndex);
 
-    // Unmute the video if the new media is a video
-    if (mediaArray[modelIndex].type === "video") {
-        setTimeout(() => {
-            if (videoEntity) {
-                videoEntity.muted = false;
-                console.log('Video entity unmuted', videoEntity); // Debug statement
+    // Unmute and play/pause the audio if the new media has audio
+    if (currentAudio) {
+        if (currentAudio.paused) {
+            // Ensure the audio is unmuted and played on user interaction
+            if (isIOS() || isAndroid()) {
+                currentAudio.muted = false; // Ensure the audio is unmuted
+                currentAudio.play().catch(error => {
+                    console.log("Error playing audio:", error);
+                    // Handle the error (optional)
+                });
+            } else {
+                currentAudio.play();
             }
-        }, 100); // Small delay to ensure the video element is loaded
+            console.log("Audio is playing");
+        } else {
+            currentAudio.pause();
+            console.log("Audio is paused");
+        }
     }
 
     // Show the congratulations pop-up after a short delay for testing
     setTimeout(showCongratulationsPopup, 60000); // Set to 0 for immediate testing
+
+    // Reset the flag after a delay to allow further media changes
+    setTimeout(() => {
+        isChangingMedia = false;
+    }, 1000); // Adjust the timeout as needed
 }
+
+// Helper functions to detect iOS and Android
+function isIOS() {
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+}
+
+function isAndroid() {
+    return /Android/.test(navigator.userAgent);
+}
+
 
 // Existing touch and drag event handlers
 document.addEventListener("touchstart", function (e) {
@@ -541,8 +674,8 @@ document.addEventListener(
                 lookImages.forEach((lookImage, index) => {
                     const angle = (index + 1) * 90;
                     const lookRadians = ((fixedAngleDegrees + angle) * Math.PI) / 180;
-                    const lookX = -25 * Math.sin(lookRadians);
-                    const lookZ = -25 * Math.cos(lookRadians);
+                    const lookX = -currentZoom * Math.sin(lookRadians);
+                    const lookZ = -currentZoom * Math.cos(lookRadians);
                     lookImage.setAttribute("position", { x: lookX, y: 0, z: lookZ });
                     lookImage.setAttribute("rotation", {
                         x: 0,
@@ -608,5 +741,16 @@ function updateZoom(currentPinchDistance) {
             frameEntity.setAttribute("position", { x, y: currentY, z }); // Ensure frame is slightly in front dynamically
         }
         currentZoom = newZoom; // Update current zoom level
+
+        // Also update the initialMediaState with the new zoom value
+        initialMediaState.position = { x, y: currentY, z };
     }
 }
+
+document.querySelectorAll('a-entity, a-image, a-video').forEach(el => {
+    const position = el.getAttribute('position');
+    if (position.x === 0 && position.y === 0 && position.z === 0) {
+        console.log(`Element at origin: ${el.tagName}, id: ${el.getAttribute('id')}`);
+    }
+});
+
