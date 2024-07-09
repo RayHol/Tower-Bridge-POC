@@ -458,7 +458,7 @@ function displayMedia(mediaArray, index) {
         videoEntity = entity;
 
         console.log('Video entity created', videoEntity);
-        buttonText.innerText = "Go back to the image";
+        buttonText.innerText = "Pause Animation";
 
         createLookImages();
     }
