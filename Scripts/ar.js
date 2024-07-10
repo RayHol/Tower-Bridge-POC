@@ -54,30 +54,34 @@ function addToHomeScreen() {
 
 function refreshMediaPosition() {
     if (mediaEntity) {
+        // Reset currentZoom, currentY, and fixedAngleDegrees to their initial values
+        currentZoom = 25; // Adjust if needed
+        currentY = 0; // Adjust if needed
+        fixedAngleDegrees = 0; // Adjust if needed
+
+        // Reset the initialMediaState to its initial position and rotation
+        initialMediaState.position = { x: 0, y: 0, z: -currentZoom };
+        initialMediaState.rotation = { x: 0, y: fixedAngleDegrees, z: 0 };
+
+        // Apply the reset position and rotation to the media entity
         mediaEntity.setAttribute("position", initialMediaState.position);
         mediaEntity.setAttribute("rotation", initialMediaState.rotation);
+
         if (frameEntity) {
             frameEntity.setAttribute("position", initialMediaState.position);
             frameEntity.setAttribute("rotation", initialMediaState.rotation);
         }
+
         console.log(`Media position reset to initial values`);
 
-        // Reset currentZoom based on the initial position
-        const initialPosition = initialMediaState.position;
-        currentZoom = Math.sqrt(initialPosition.x ** 2 + initialPosition.z ** 2);
+        // Remove all current media elements before reloading
+        removeAllMedia();
 
-        // Reset the initialMediaState to ensure it reflects the reset position
-        initialMediaState.position = { ...mediaEntity.getAttribute("position") };
-        initialMediaState.rotation = { ...mediaEntity.getAttribute("rotation") };
-        console.log(`Initial media state reset to: position ${JSON.stringify(initialMediaState.position)}, rotation ${JSON.stringify(initialMediaState.rotation)}`);
+        // Reload the current media elements
+        loadLocationMedia();
     }
-
-    // Remove all current media elements before reloading
-    removeAllMedia();
-
-    // Reload the current media elements
-    loadLocationMedia();
 }
+
 
 function toggleMuteButton(isMuted) {
     const buttonText = isMuted ? "Unmute" : "Mute";
@@ -340,21 +344,8 @@ function displayMedia(mediaArray, index) {
     let mediaItem = mediaArray[index];
     console.log("displayMedia called with media item:", mediaItem);
 
-    fixedAngleDegrees = mediaItem.fixedAngleDegrees || 0;
-    const position = {
-        x: 0,
-        y: 0,
-        z: -currentZoom
-    };
-    const rotation = { x: 0, y: fixedAngleDegrees, z: 0 };
-
-    initialMediaState.position = { ...position };
-    initialMediaState.rotation = { ...rotation };
-
-    currentZoom = Math.sqrt(position.x ** 2 + position.z ** 2);
-
-    console.log(`Setting initial position to x: ${position.x}, y: ${position.y}, z: ${position.z}`);
-    console.log(`Setting initial rotation to 0, ${rotation.y}, 0`);
+    const position = initialMediaState.position || { x: 0, y: 0, z: -currentZoom };
+    const rotation = initialMediaState.rotation || { x: 0, y: fixedAngleDegrees, z: 0 };
 
     let entity;
     const buttonText = document.querySelector('.button-text');
@@ -409,10 +400,10 @@ function displayMedia(mediaArray, index) {
             console.log('Setting video visibility to true');
             entity.setAttribute("visible", "true");
 
-            // Delay video playback for 1 second
+            // Delay video playback for 2 seconds
             setTimeout(() => {
                 entity.play().catch((error) => console.error("Error playing video:", error));
-            }, 2000); // 1 second delay
+            }, 2000); // 2 second delay
 
             fadeOutElement(imageEntity);  // Fade out the image
         }, 2000); // Adjust the initial delay as needed
@@ -443,23 +434,25 @@ function displayMedia(mediaArray, index) {
     mediaEntity = entity;
 
     mediaEntity.setAttribute("position", position);
+    mediaEntity.setAttribute("rotation", rotation);
 
     const confirmedPosition = mediaEntity.getAttribute("position");
     const confirmedRotation = mediaEntity.getAttribute("rotation");
-    // console.log(`Confirmed initial position: x: ${confirmedPosition.x}, y: ${confirmedPosition.y}, z: ${confirmedPosition.z}`);
-    // console.log(`Confirmed initial rotation: x: ${confirmedRotation.x}, y: ${confirmedRotation.y}, z: ${confirmedRotation.z}`);
+    console.log(`Confirmed initial position: x: ${confirmedPosition.x}, y: ${confirmedPosition.y}, z: ${confirmedPosition.z}`);
+    console.log(`Confirmed initial rotation: x: ${confirmedRotation.x}, y: ${confirmedRotation.y}, z: ${confirmedRotation.z}`);
 
     setTimeout(() => {
         const doubleCheckPosition = mediaEntity.getAttribute("position");
         const doubleCheckRotation = mediaEntity.getAttribute("rotation");
-        // console.log(`Double-check position: x: ${doubleCheckPosition.x}, y: ${doubleCheckPosition.y}, z: ${doubleCheckPosition.z}`);
-        // console.log(`Double-check rotation: x: ${doubleCheckRotation.x}, y: ${doubleCheckRotation.y}, z: ${doubleCheckRotation.z}`);
+        console.log(`Double-check position: x: ${doubleCheckPosition.x}, y: ${doubleCheckPosition.y}, z: ${doubleCheckPosition.z}`);
+        console.log(`Double-check rotation: x: ${doubleCheckRotation.x}, y: ${doubleCheckRotation.y}, z: ${doubleCheckRotation.z}`);
     }, 100);
 
     setTimeout(() => {
         scene.flushToDOM();
     }, 200);
 }
+
 
 function fadeOutElement(element) {
     console.log(`Starting fade out animation for element: ${element.tagName}`);
