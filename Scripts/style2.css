@@ -8,10 +8,13 @@
     src: url('../assets/fonts/Caslons Egyptian Light.otf');
 }
 
+
+
 body {
     margin: 0;
     overflow: hidden;
 }
+
 
 /* Aframe dialoag formating overide*/
 html body .a-dialog,
