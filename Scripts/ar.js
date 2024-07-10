@@ -28,7 +28,7 @@ const minY = -5; // Set minimum Y value
 const maxY = 10; // Set maximum Y value
 const zoomSpeed = 0.01; // Adjust the zoom speed as needed
 const dragSpeedX = 0.07; // Adjust the drag speed for the x-axis
-const dragSpeedY = 0.0015; // Adjust the drag speed for the y-axis
+const dragSpeedY = 0.005; // Adjust the drag speed for the y-axis
 
 // Pinch-to-zoom variables
 let initialPinchDistance = null;
@@ -593,6 +593,7 @@ document.addEventListener("touchstart", function (e) {
     }
 });
 
+// Adjustments to the Y-axis dragging implementation
 document.addEventListener(
     "touchmove",
     function (e) {
@@ -615,6 +616,8 @@ document.addEventListener(
                     dragAxis = "y"; // Vertical drag
                 }
             }
+
+            let position = mediaEntity.getAttribute("position");
 
             if (dragAxis === "x") {
                 // Adjust fixedAngleDegrees based on horizontal movement
@@ -644,30 +647,31 @@ document.addEventListener(
                     });
                 });
             } else if (dragAxis === "y") {
-                // Calculate the new Y position
-                const newY = currentY - deltaY * dragSpeedY; // Adjust the sensitivity as needed and invert the drag
+                // Dynamically adjust the drag speed based on the current zoom level
+                const adjustedDragSpeedY = dragSpeedY * (currentZoom / 45);
+
+                // Calculate the new Y position with adjusted drag speed
+                const newY = currentY - deltaY * adjustedDragSpeedY;
                 const clampedY = Math.max(minY, Math.min(maxY, newY)); // Constrain the Y value within minY and maxY
 
                 // Update the media entity position
-                const position = mediaEntity.getAttribute("position");
-                mediaEntity.setAttribute("position", {
-                    x: position.x,
-                    y: clampedY,
-                    z: position.z,
-                });
+                position = { ...position, y: clampedY };
+                mediaEntity.setAttribute("position", position);
                 if (frameEntity) {
-                    frameEntity.setAttribute("position", {
-                        x: position.x,
-                        y: clampedY,
-                        z: position.z,
-                    });
+                    frameEntity.setAttribute("position", position);
                 }
                 currentY = clampedY; // Store the current Y position
             }
+
+            // Update the initialMediaState with the current position and rotation
+            initialMediaState.position = { ...mediaEntity.getAttribute("position") };
+            initialMediaState.rotation = { ...mediaEntity.getAttribute("rotation") };
         }
     },
     { passive: false }
 );
+
+
 
 document.addEventListener("touchend", function () {
     initialPinchDistance = null;
@@ -675,6 +679,7 @@ document.addEventListener("touchend", function () {
     isPinching = false; // Reset the pinch flag on touch end
     dragAxis = null; // Reset drag axis on touch end
 });
+
 
 function getPinchDistance(e) {
     const dx = e.touches[0].pageX - e.touches[1].pageX;
