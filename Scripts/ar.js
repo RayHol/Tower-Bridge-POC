@@ -49,29 +49,32 @@ function addToHomeScreen() {
 
 function refreshMediaPosition() {
     if (mediaEntity) {
+        // Reset currentZoom, currentY, and fixedAngleDegrees to their initial values
+        currentZoom = 25; // Adjust if needed
+        currentY = 0; // Adjust if needed
+        fixedAngleDegrees = 0; // Adjust if needed
+
+        // Reset the initialMediaState to its initial position and rotation
+        initialMediaState.position = { x: 0, y: 0, z: -currentZoom };
+        initialMediaState.rotation = { x: 0, y: fixedAngleDegrees, z: 0 };
+
+        // Apply the reset position and rotation to the media entity
         mediaEntity.setAttribute("position", initialMediaState.position);
         mediaEntity.setAttribute("rotation", initialMediaState.rotation);
+
         if (frameEntity) {
             frameEntity.setAttribute("position", initialMediaState.position);
             frameEntity.setAttribute("rotation", initialMediaState.rotation);
         }
+
         console.log(`Media position reset to initial values`);
 
-        // Reset currentZoom based on the initial position
-        const initialPosition = initialMediaState.position;
-        currentZoom = Math.sqrt(initialPosition.x ** 2 + initialPosition.z ** 2);
+        // Remove all current media elements before reloading
+        removeAllMedia();
 
-        // Reset the initialMediaState to ensure it reflects the reset position
-        initialMediaState.position = { ...mediaEntity.getAttribute("position") };
-        initialMediaState.rotation = { ...mediaEntity.getAttribute("rotation") };
-        console.log(`Initial media state reset to: position ${JSON.stringify(initialMediaState.position)}, rotation ${JSON.stringify(initialMediaState.rotation)}`);
+        // Reload the current media elements
+        loadLocationMedia();
     }
-
-    // Remove all current media elements before reloading
-    removeAllMedia();
-
-    // Reload the current media elements
-    loadLocationMedia();
 }
 
 function toggleMuteButton(isMuted) {
