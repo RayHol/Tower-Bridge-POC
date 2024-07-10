@@ -370,7 +370,7 @@ function displayMedia(mediaArray, index) {
 
         // Create and append image entity first as a placeholder
         imageEntity = document.createElement("a-image");
-        imageEntity.setAttribute("src", './assets/images/01.jpg'); // Set the valid path for your placeholder image
+        imageEntity.setAttribute("src", mediaItem.url); // Set the valid path for your placeholder image
         imageEntity.setAttribute("position", position);
         imageEntity.setAttribute("rotation", rotation);
         imageEntity.setAttribute("scale", mediaItem.scale);
@@ -486,15 +486,7 @@ function changeMedia() {
     modelIndex = (modelIndex + 1) % mediaArray.length;
     displayMedia(mediaArray, modelIndex);
 
-    // Polling mechanism to ensure the video is ready before changing media again
-    const checkVideoReady = setInterval(() => {
-        if (videoEntity && videoEntity.readyState >= 3) { // readyState 3 means the video is ready to play
-            console.log('Video is ready to play, allowing media change');
-            clearInterval(checkVideoReady);
-            isChangingMedia = false;
-        }
-    }, 100); // Check every 100ms
-
+   
     // Unmute and play/pause the audio if the new media has audio
     if (currentAudio) {
         if (currentAudio.paused) {
