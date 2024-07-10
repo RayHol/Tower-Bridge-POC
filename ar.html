@@ -128,14 +128,13 @@
         </div>
     </div>
   
-    <div id="orientation-overlay" style="display: none;">
-      <div class="orientation-popup">
-        <img src="./assets/images/UI/rotate.svg" alt="rotate icon" class="rotate-icon">
-        <p>Please switch to portrait mode to continue using the app.</p>
-      </div>
+   <div id="orientation-overlay" style="display: none;">
+        <div class="orientation-popup">
+            <img src="./assets/images/UI/rotate.svg" alt="rotate icon" class="rotate-icon">
+            <p>Please switch to portrait mode to continue using the app.</p>
+        </div>
     </div>
 
-  
     <!--Background audio -->
     <audio id="background-audio" preload="auto" loop crossorigin="anonymous">
         <source src="./assets/audio/background2.mp3" type="audio/mpeg">
@@ -147,22 +146,18 @@
         <a-light type="ambient" color="#ffffff"></a-light>
         <a-light type="directional" color="#ffffff" position="-2 4 5"></a-light>
         <a-entity camera rotation-reader look-controls="touchEnabled: false" position="0 1.6 0"></a-entity>
-<!--         <a-image id="look_1" position="0 0 0" rotation="0 0 0" scale="14 4 1" visible="false"></a-image> -->
     </a-scene>
   
     <div class="icon-buttons">
         <button id="view-map" class="icon-button">
             <img src="./assets/images/UI/map-icon.svg" alt="Map button" class="button-icon"> Map
         </button>
-<!--         <button id="mute" class="icon-button">
-            <img src="./assets/mute-icon.svg" alt="Mute button" class="button-icon"> Mute
-        </button> -->
         <button id="refresh" class="icon-button">
             <img src="./assets/images/UI/refresh-icon.svg" alt="Refresh button" class="button-icon"> Refresh
         </button>
         <button id="help" class="help-button">
             <img src="./assets/images/UI/help-icon.svg" alt="help button" class="button-icon">
-      </button>
+        </button>
     </div>
     <div class="centered">
         <button data-action="change">
@@ -172,119 +167,50 @@
     
     <div id="loading-overlay" class="loading-overlay">Loading...</div>
 
+    <script src="./Scripts/ar.js"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const startExperienceButton = document.getElementById('start-experience');
+        const gotItButton = document.getElementById('got-it-button');
+        const overlay = document.getElementById('overlay');
+        const fullScreenOverlay = document.getElementById('full-screen-overlay');
+        const arScene = document.getElementById('ar-scene');
+        const loadingOverlay = document.getElementById('loading-overlay');
 
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    const startExperienceButton = document.getElementById('start-experience');
-    const gotItButton = document.getElementById('got-it-button');
-    const overlay = document.getElementById('overlay');
-    const fullScreenOverlay = document.getElementById('full-screen-overlay');
-    const arScene = document.getElementById('ar-scene');
-    const loadingOverlay = document.getElementById('loading-overlay');
+        overlay.classList.add('prehide');
+        fullScreenOverlay.classList.add('prehide');
 
-    // Add prehide class initially
-    overlay.classList.add('prehide');
-    fullScreenOverlay.classList.add('prehide');
-
-    let locationsData = {}; // Variable to store mediaConfig data
-
-    function requestPermissionsAndStartAR() {
-        initializeAR();
-    }
-
-    function initializeAR() {
         const urlParams = new URLSearchParams(window.location.search);
-        const locationId = urlParams.get("location");
-
-        if (!locationId) {
-            console.error("No location specified in URL");
-            return;
-        }
-
-        fetch("./Scripts/mediaConfig.json")
-            .then((response) => response.json())
-            .then((data) => {
-                locationsData = data; // Store data in the global variable
-                locations = Object.keys(data);
-                currentLocationIndex = locations.indexOf(locationId);
-
-                if (!data[locationId]) {
-                    console.error("Invalid location specified");
-                    return;
-                }
-                initializeMedia(data[locationId].media);
-                loadingOverlay.classList.remove('show'); // Hide loading indicator once data is loaded
-            })
-            .catch((error) => {
-                console.error("Error loading media config:", error);
-                loadingOverlay.classList.remove('show'); // Hide loading indicator on error
-            });
-    }
-
-    // Navigation logic
-    const nextButton = document.querySelector('[data-action="next"]');
-    const backButton = document.querySelector('[data-action="previous"]');
-
-    if (nextButton) {
-        nextButton.addEventListener('click', function() {
-            loadingOverlay.classList.add('show'); // Show loading indicator
-            loadNextLocation();
-        });
-    }
-
-    if (backButton) {
-        backButton.addEventListener('click', function() {
-            loadingOverlay.classList.add('show'); // Show loading indicator
-            loadPreviousLocation();
-        });
-    }
-
-    function loadNextLocation() {
-        currentLocationIndex = (currentLocationIndex + 1) % locations.length;
-        navigateToLocation(locations[currentLocationIndex]);
-    }
-
-    function loadPreviousLocation() {
-        currentLocationIndex = (currentLocationIndex - 1 + locations.length) % locations.length;
-        navigateToLocation(locations[currentLocationIndex]);
-    }
-
-    function navigateToLocation(locationId) {
-        const baseUrl = window.location.origin;
-        const newUrl = `${baseUrl}/ar.html?location=${locationId}&skipOverlays=true`;
-        window.location.href = newUrl;
-    }
-
-    // Skip overlays if the parameter is present
-    const urlParams = new URLSearchParams(window.location.search);
-    const skipOverlays = urlParams.get("skipOverlays");
-    if (skipOverlays) {
-        overlay.style.display = 'none';
-        fullScreenOverlay.style.display = 'none';
-        arScene.style.display = 'block';
-        loadingOverlay.classList.add('show'); // Show loading indicator
-        requestPermissionsAndStartAR();
-    } else {
-        // Remove prehide class if overlays need to be shown
-        overlay.classList.remove('prehide');
-        fullScreenOverlay.classList.remove('prehide');
-
-        startExperienceButton.addEventListener('click', function() {
+        const skipOverlays = urlParams.get("skipOverlays");
+        if (skipOverlays) {
             overlay.style.display = 'none';
-            fullScreenOverlay.style.display = 'flex';
-        });
-
-        gotItButton.addEventListener('click', function() {
             fullScreenOverlay.style.display = 'none';
             arScene.style.display = 'block';
-            requestPermissionsAndStartAR();
-        });
-    }
-});
+            loadingOverlay.classList.add('show');
+            // Call initialization function from ar.js
+            if (typeof initializeAR === "function") {
+                initializeAR();
+            }
+        } else {
+            overlay.classList.remove('prehide');
+            fullScreenOverlay.classList.remove('prehide');
+
+            startExperienceButton.addEventListener('click', function() {
+                overlay.style.display = 'none';
+                fullScreenOverlay.style.display = 'flex';
+            });
+
+            gotItButton.addEventListener('click', function() {
+                fullScreenOverlay.style.display = 'none';
+                arScene.style.display = 'block';
+                if (typeof initializeAR === "function") {
+                    initializeAR();
+                }
+            });
+        }
+    });
 </script>
 
-  
-    <script src="./Scripts/ar.js"></script>
-  
+
 </body>
 </html>
