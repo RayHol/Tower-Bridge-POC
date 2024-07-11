@@ -379,7 +379,7 @@ function displayMedia(mediaArray, index) {
 
         // Create and append image entity first as a placeholder
         imageEntity = document.createElement("a-image");
-        imageEntity.setAttribute("src", mediaItem.url); // Set placeholder image
+        imageEntity.setAttribute("src", "./assets/images/01.jpg"); // Set placeholder image
         imageEntity.setAttribute("position", position);
         imageEntity.setAttribute("rotation", rotation);
         imageEntity.setAttribute("scale", mediaItem.scale);
@@ -412,7 +412,7 @@ function displayMedia(mediaArray, index) {
             // Delay video playback for 1 second
             setTimeout(() => {
                 entity.play().catch((error) => console.error("Error playing video:", error));
-            }, 2000); // 1 second delay
+            }, 3000); // 1 second delay
 
             fadeOutElement(imageEntity);  // Fade out the image
         }, 2000); // Adjust the initial delay as needed
@@ -466,7 +466,7 @@ function fadeOutElement(element) {
     element.setAttribute("animation", {
         property: "opacity",
         to: 0,
-        dur: 1000,
+        dur: 500,
         easing: "easeInOutQuad",
         startEvents: "startFadeOut",
     });
