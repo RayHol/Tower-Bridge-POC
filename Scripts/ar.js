@@ -73,6 +73,15 @@ function refreshMediaPosition() {
         }
 
         console.log(`Media position reset to initial values`);
+      
+        // Reset modelIndex to 0 to display the first media item (image)
+        modelIndex = 0;
+      
+        // Stop any playing video
+        if (videoEntity) {
+            videoEntity.pause();
+            videoEntity.currentTime = 0;
+        }
 
         // Remove all current media elements before reloading
         removeAllMedia();
@@ -280,6 +289,13 @@ function removeAllMedia() {
         document.body.removeChild(currentAudio);
         currentAudio = null;
     }
+  
+      // Stop any playing video
+    if (videoEntity) {
+        videoEntity.pause();
+        videoEntity.currentTime = 0;
+    }
+    
 
     // Reset media references
     mediaEntity = null;
