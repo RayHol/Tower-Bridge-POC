@@ -364,6 +364,7 @@ function displayMedia(mediaArray, index) {
         entity.setAttribute("rotation", rotation);
         entity.setAttribute("scale", mediaItem.scale);
         entity.setAttribute("visible", "true");
+        entity.setAttribute("preload", "auto");
 
         scene.appendChild(entity);
         entity.flushToDOM();
@@ -410,7 +411,7 @@ function displayMedia(mediaArray, index) {
             // Delay video playback for 2 seconds
             setTimeout(() => {
                 entity.play().catch((error) => console.error("Error playing video:", error));
-            }, 3000); // 2 second delay
+            }, 1000); // 2 second delay
 
             fadeOutElement(imageEntity);  // Fade out the image
         }, 2000); // Adjust the initial delay as needed
@@ -466,7 +467,7 @@ function fadeOutElement(element) {
     element.setAttribute("animation", {
         property: "opacity",
         to: 0,
-        dur: 500,
+        dur: 2000,
         easing: "easeInOutQuad",
         startEvents: "startFadeOut",
     });
