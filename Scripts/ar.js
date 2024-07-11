@@ -374,9 +374,10 @@ function displayMedia(mediaArray, index) {
     } else if (mediaItem.type === "video") {
         console.log("Creating video entity");
 
-        // Create and append image entity first as a placeholder
+        // Create and append image entity first as a placeholder using mediaItem URL
         imageEntity = document.createElement("a-image");
-        imageEntity.setAttribute("src", './assets/images/01.jpg'); // Set placeholder image
+        const placeholderUrl = mediaArray[0].type === "image" ? mediaArray[0].url : './assets/Smartify-logo.svg';
+        imageEntity.setAttribute("src", placeholderUrl); 
         imageEntity.setAttribute("position", position);
         imageEntity.setAttribute("rotation", rotation);
         imageEntity.setAttribute("scale", mediaItem.scale);
