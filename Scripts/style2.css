@@ -15,6 +15,23 @@ body {
     overflow: hidden;
 }
 
+#controls {
+    position: fixed;
+    top: 30px; 
+    left: 3%; /* Adjust as needed */
+    font-family: 'Poppins', sans-serif;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 19.2px;
+    z-index: 1000; 
+    background: rgba(255, 255, 255, 0.9); 
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+
 
 /* Aframe dialoag formating overide*/
 html body .a-dialog,
