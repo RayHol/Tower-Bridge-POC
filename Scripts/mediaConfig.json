@@ -44,7 +44,7 @@
                 "type": "video",
                 "url": "https://rayhol.github.io/TB_Videos/Videos3/02.mp4",
                 "frameUrl": "./assets/frames/frame2.png",
-                "info": "Video 2",
+                "info": "Pause Animation",
                 "audioUrl": "https://rayhol.github.io/TB_Videos/Audio3/02.mp3"
             }
         ]
@@ -69,7 +69,7 @@
                 "type": "video",
                 "url": "https://rayhol.github.io/TB_Videos/Videos3/03.mp4",
                 "frameUrl": "./assets/frames/frame2.png",
-                "info": "Video 3",
+                "info": "Pause Animation",
                 "audioUrl": "https://rayhol.github.io/TB_Videos/Audio3/03.mp3"
             }
         ]
@@ -94,7 +94,7 @@
                 "type": "video",
                 "url": "https://rayhol.github.io/TB_Videos/Videos3/04.mp4",
                 "frameUrl": "./assets/frames/frame2.png",
-                "info": "Video 4",
+                "info": "Pause Animation",
                 "audioUrl": "https://rayhol.github.io/TB_Videos/Audio3/04.mp3"
             }
         ]
@@ -119,7 +119,7 @@
                 "type": "video",
                 "url": "https://rayhol.github.io/TB_Videos/Videos3/05.mp4",
                 "frameUrl": "./assets/frames/frame2.png",
-                "info": "Tap the button to switch back",
+                "info": "Pause Animation",
                 "audioUrl": "https://rayhol.github.io/TB_Videos/Audio3/05.mp3"
             }
         ]
@@ -144,7 +144,7 @@
                 "type": "video",
                 "url": "https://rayhol.github.io/TB_Videos/Videos3/06.mp4",
                 "frameUrl": "./assets/frames/frame2.png",
-                "info": "Tap the button to switch back",
+                "info": "Pause Animation",
                 "audioUrl": "https://rayhol.github.io/TB_Videos/Audio3/06.mp3"
             }
         ]
@@ -169,7 +169,7 @@
                 "type": "video",
                 "url": "https://rayhol.github.io/TB_Videos/Videos3/07.mp4",
                 "frameUrl": "./assets/frames/frame2.png",
-                "info": "Tap the button to switch back",
+                "info": "Pause Animation",
                 "audioUrl": "https://rayhol.github.io/TB_Videos/Audio3/07.mp3"
             }
         ]
@@ -194,7 +194,7 @@
                 "type": "video",
                 "url": "https://rayhol.github.io/TB_Videos/Videos3/08.mp4",
                 "frameUrl": "./assets/frames/frame2.png",
-                "info": "Tap the button to switch back",
+                "info": "Pause Animation",
                 "audioUrl": "https://rayhol.github.io/TB_Videos/Audio3/08.mp3"
             }
         ]
