@@ -459,7 +459,7 @@ function displayMedia(mediaArray, index, commonValues) {
 
             setTimeout(() => {
                 entity.play().catch((error) => console.error("Error playing video:", error));
-            }, 2000);
+            }, 1000);
 
             fadeOutElement(imageEntity);
         }, 2000);
