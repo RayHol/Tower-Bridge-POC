@@ -3,9 +3,9 @@
         "common": {
             "scale": "10 7 1",
             "rotation": "0 0 0",
-            "fixedAngleDegrees": 87,
-            "initialY": 0.1,
-            "initialZ": -25
+            "fixedAngleDegrees": 88.2,
+            "initialY": 0.6,
+            "initialZ": -26
         },
         "media": [
             {
@@ -28,9 +28,9 @@
         "common": {
             "scale": "10 7 1",
             "rotation": "0 0 0",
-            "fixedAngleDegrees": 84.14,
-            "initialY": -1.15,
-            "initialZ": -29
+            "fixedAngleDegrees": 115.60,
+            "initialY": -5,
+            "initialZ": -25
         },
         "media": [
             {
@@ -53,9 +53,9 @@
         "common": {
             "scale": "10 7 1",
             "rotation": "0 0 0",
-            "fixedAngleDegrees": 2,
-            "initialY": 1,
-            "initialZ": -25
+            "fixedAngleDegrees": -84.14,
+            "initialY": -1.15,
+            "initialZ": -29.01
         },
         "media": [
             {
@@ -78,9 +78,9 @@
         "common": {
             "scale": "10 7 1",
             "rotation": "0 0 0",
-            "fixedAngleDegrees": 0,
-            "initialY": 0,
-            "initialZ": -25
+            "fixedAngleDegrees": 88,
+            "initialY": 1.12,
+            "initialZ": -26
         },
         "media": [
             {
@@ -103,9 +103,9 @@
         "common": {
             "scale": "10 7 1",
             "rotation": "0 90 0",
-            "fixedAngleDegrees": 0,
-            "initialY": 0,
-            "initialZ": -25
+            "fixedAngleDegrees": -78.23,
+            "initialY": 2.06,
+            "initialZ": -30.10
         },
         "media": [
             {
@@ -128,9 +128,9 @@
         "common": {
             "scale": "10 7 1",
             "rotation": "0 90 0",
-            "fixedAngleDegrees": 0,
-            "initialY": 0,
-            "initialZ": -25
+            "fixedAngleDegrees": 7.14,
+            "initialY": -2.43,
+            "initialZ": -32.67
         },
         "media": [
             {
@@ -153,9 +153,9 @@
         "common": {
             "scale": "10 7 1",
             "rotation": "0 90 0",
-            "fixedAngleDegrees": 89.32,
-            "initialY": -0.06,
-            "initialZ": -25
+            "fixedAngleDegrees": 90,
+            "initialY": 0,
+            "initialZ": -27
         },
         "media": [
             {
@@ -178,8 +178,8 @@
         "common": {
             "scale": "10 7 1",
             "rotation": "0 90 0",
-            "fixedAngleDegrees": 0,
-            "initialY": 0,
+            "fixedAngleDegrees": 3,
+            "initialY": 3,
             "initialZ": -25
         },
         "media": [
