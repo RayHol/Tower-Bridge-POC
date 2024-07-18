@@ -88,6 +88,19 @@ function refreshMediaPosition() {
     }
 }
 
+function updateLookImages() {
+    lookImages.forEach((lookImage, index) => {
+        const angle = (index + 1) * 90;
+        const lookRadians = ((fixedAngleDegrees + angle) * Math.PI) / 180;
+        const lookX = -currentZoom * Math.sin(lookRadians);
+        const lookZ = -currentZoom * Math.cos(lookRadians);
+
+        lookImage.setAttribute("position", { x: lookX, y: 0, z: lookZ });
+        lookImage.setAttribute("rotation", { x: 0, y: angle + fixedAngleDegrees, z: 0 });
+    });
+}
+
+
 function toggleMuteButton(isMuted) {
     const buttonText = isMuted ? "Unmute" : "Mute";
     const buttonIcon = isMuted ? "./assets/images/UI/unmute-icon.svg" : "./assets/images/UI/mute-icon.svg";
