@@ -13,7 +13,6 @@
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/jeromeetienne/AR.js/master/aframe/build/aframe-ar.min.js"></script>
     
-  
 </head>
 
 <body style="margin: 0; overflow: hidden;">
@@ -162,7 +161,8 @@
     </audio>
     
     <div class="centered instructions"></div>
-    <a-scene id="ar-scene" vr-mode-ui="enabled: false" embedded arjs="debugUIEnabled: false;" style="display:none;">
+
+    <a-scene id="ar-scene" vr-mode-ui="enabled: false" arjs="debugUIEnabled: false;" style="display:none;">
         <a-light type="ambient" color="#ffffff"></a-light>
         <a-light type="directional" color="#ffffff" position="-2 4 5"></a-light>
         <a-entity camera rotation-reader look-controls="touchEnabled: false" position="0 1.6 0"></a-entity>
@@ -202,6 +202,18 @@
 
         const urlParams = new URLSearchParams(window.location.search);
         const skipOverlays = urlParams.get("skipOverlays");
+
+        // Detect Samsung Browser
+        const isSamsungBrowser = /SamsungBrowser/.test(navigator.userAgent);
+
+        // Update the ar-scene element if Samsung Browser is detected
+        if (isSamsungBrowser) {
+            arScene.removeAttribute('embedded');
+            arScene.classList.add('samsung-fix');
+        } else {
+            arScene.setAttribute('embedded', '');
+        }
+
         if (skipOverlays) {
             overlay.style.display = 'none';
             fullScreenOverlay.style.display = 'none';
@@ -231,6 +243,12 @@
     });
 </script>
 
+<!-- Add CSS for Samsung Browser fix -->
+<!-- <style>
+  .samsung-fix {
+      transform: scaleX(1.0); 
+  }
+</style> -->
 
 </body>
 </html>
