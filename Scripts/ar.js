@@ -5,6 +5,8 @@
 // - Added common values (scale, rotation, fixedAngleDegrees, initialY, initialZ) to each location in mediaConfig.json to avoid redundancy.
 // - Implemented setup mode elements to display current fixed angle, Y position, and Z depth for easier adjustments- "&setup=true"
 // - Ensured persistence of media position and orientation when switching between media types and locations.
+// v.35 Implemented Samsung Browser fix: Detect Samsung Browser and remove 'embedded' attribute from <a-scene>, Apply CSS transform to correct aspect ratio for Samsung Browser,
+
 
 // Global variable definitions
 let modelIndex = 0;
@@ -630,7 +632,7 @@ function createLookImages() {
         const lookZ = -currentZoom * Math.cos(radians);
 
         const lookImage = document.createElement("a-image");
-        lookImage.setAttribute("src", "./assets/images/UI/look-for.svg");
+        lookImage.setAttribute("src", "./assets/images/UI/look-for.png");
         lookImage.setAttribute("position", { x: lookX, y: 0, z: lookZ });
         lookImage.setAttribute("rotation", {
             x: 0,
@@ -688,7 +690,13 @@ document.addEventListener("touchmove", function (e) {
         let position = mediaEntity.getAttribute("position");
 
         if (dragAxis === "x") {
+            console.log(`Initial Fixed Angle: ${initialFixedAngle}`);
+            console.log(`Delta X: ${deltaX}`);
+            console.log(`Drag Speed X: ${dragSpeedX}`);
+
             fixedAngleDegrees = initialFixedAngle - deltaX * dragSpeedX;
+
+            console.log(`Updated Fixed Angle Degrees: ${fixedAngleDegrees}`);
 
             const radians = (fixedAngleDegrees * Math.PI) / 180;
             const x = -currentZoom * Math.sin(radians);
@@ -710,6 +718,10 @@ document.addEventListener("touchmove", function (e) {
                 lookImage.setAttribute("position", { x: lookX, y: 0, z: lookZ });
                 lookImage.setAttribute("rotation", { x: 0, y: angle + fixedAngleDegrees, z: 0 });
             });
+
+            console.log(`Media Entity Position: `, mediaEntity.getAttribute("position"));
+            console.log(`Media Entity Rotation: `, mediaEntity.getAttribute("rotation"));
+
         } else if (dragAxis === "y") {
             const adjustedDragSpeedY = dragSpeedY * (currentZoom / 45);
             const newY = position.y - deltaY * adjustedDragSpeedY;
@@ -728,6 +740,7 @@ document.addEventListener("touchmove", function (e) {
         updateCurrentValues();
     }
 }, { passive: false });
+
 
 
 document.addEventListener("touchend", function () {
