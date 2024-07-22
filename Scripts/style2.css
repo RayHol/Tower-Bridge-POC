@@ -444,7 +444,7 @@ html body .a-dialog-ok-button {
     flex-direction: column;
     align-items: flex-start;
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
 #full-screen-overlay .fsinstruction {
