@@ -1,13 +1,3 @@
-// v.31 Adjusted audio handling to play/pause and manage mute state directly within the changeMedia function, ensuring compatibility with iOS and Android.
-// v.32 Updated media handling and location change process to ensure correct media is displayed for each location and persistent positioning.
-// v.33 Updated to implement smooth image-to-video transition with initial delay for video visibility and playback. Also fixed the issue with next location media elements being loaded correctly.
-// v.34 Updated to include fixed angles, addition of setup elements, and updating mediaConfig.json with common values for each location.
-// - Added common values (scale, rotation, fixedAngleDegrees, initialY, initialZ) to each location in mediaConfig.json to avoid redundancy.
-// - Implemented setup mode elements to display current fixed angle, Y position, and Z depth for easier adjustments- "&setup=true"
-// - Ensured persistence of media position and orientation when switching between media types and locations.
-// v.35 Implemented Samsung Browser fix: Detect Samsung Browser and remove 'embedded' attribute from <a-scene>, Apply CSS transform to correct aspect ratio for Samsung Browser,
-
-
 // Global variable definitions
 let modelIndex = 0;
 let videoEntity = null;
@@ -54,9 +44,6 @@ let currentFixedAngleDisplay;
 let currentYPositionDisplay;
 let currentZDepthDisplay;
 
-function addToHomeScreen() {
-    console.log("Add to home screen functionality is not yet implemented.");
-}
 
 function saveAngle(location, angle) {
     const savedAngles = JSON.parse(localStorage.getItem('savedAngles')) || {};
@@ -90,9 +77,6 @@ function refreshMediaPosition() {
             frameEntity.setAttribute("position", position);
             frameEntity.setAttribute("rotation", rotation);
         }
-
-        console.log(`Media position reset to initial values: x: ${position.x}, y: ${position.y}, z: ${position.z}`);
-        console.log(`Rotation reset to initial values: x: ${rotation.x}, y: ${rotation.y}, z: ${rotation.z}`);
 
         removeAllMedia();
         loadLocationMedia();
@@ -158,8 +142,6 @@ function loadLocationMedia() {
             const locationData = data[locations[currentLocationIndex]];
             const commonValues = locationData.common;
             mediaArray = locationData.media;
-            console.log(`Loading media for location index ${currentLocationIndex}:`, mediaArray);
-
             modelIndex = 0;
             fixedAngleDegrees = commonValues.fixedAngleDegrees || 0;
             const radians = (fixedAngleDegrees * Math.PI) / 180;
@@ -280,7 +262,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
     if (viewMapButton) {
         viewMapButton.addEventListener("click", () => {
-            console.log("View Map button clicked");
         });
     }
 
@@ -357,7 +338,6 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function removeAllMedia() {
-    console.log("removeAllMedia called");
     let scene = document.querySelector("a-scene");
 
     let mediaElements = scene.querySelectorAll('a-image, a-video, a-audio');
@@ -366,7 +346,6 @@ function removeAllMedia() {
             element.pause();
             element.currentTime = 0;
         }
-        console.log(`Removing media element: ${element.tagName}, src: ${element.getAttribute('src')}`);
         element.parentNode.removeChild(element);
     });
 
@@ -379,7 +358,6 @@ function removeAllMedia() {
     mediaEntity = null;
     videoEntity = null;
 
-    console.log("Media elements removed");
 }
 
 function checkOrientation() {
@@ -396,7 +374,6 @@ window.addEventListener('orientationchange', checkOrientation);
 window.addEventListener('DOMContentLoaded', checkOrientation);
 
 function initializeMedia(mediaArray, commonValues) {
-    console.log("Initializing media:", mediaArray);
     const button = document.querySelector('button[data-action="change"]');
 
     // Clear previous button text
@@ -423,12 +400,11 @@ function initializeMedia(mediaArray, commonValues) {
 
 
 function displayMedia(mediaArray, index, commonValues, currentPosition, currentRotation) {
-    console.log("Displaying media from location:", locations[currentLocationIndex], "media index:", index);
     removeAllMedia();
 
     let scene = document.querySelector("a-scene");
     let mediaItem = mediaArray[index];
-    console.log("displayMedia called with media item:", mediaItem);
+    
 
     // Calculate initial position and rotation based on the provided values or commonValues
     const fixedAngleDegrees = commonValues.fixedAngleDegrees || 0;
@@ -440,8 +416,6 @@ function displayMedia(mediaArray, index, commonValues, currentPosition, currentR
     };
     const rotation = currentRotation || { x: 0, y: fixedAngleDegrees, z: 0 };
 
-    console.log(`Initial position calculated: x: ${position.x}, y: ${position.y}, z: ${position.z}`);
-    console.log(`Initial rotation calculated: x: ${rotation.x}, y: ${rotation.y}, z: ${rotation.z}`);
 
     initialMediaState.position = { ...position };
     initialMediaState.rotation = { ...rotation };
@@ -465,7 +439,7 @@ function displayMedia(mediaArray, index, commonValues, currentPosition, currentR
         buttonText.innerText = mediaItem.info;
         createLookImages();
     } else if (mediaItem.type === "video") {
-        console.log("Creating video entity");
+        
 
         imageEntity = document.createElement("a-image");
         const placeholderUrl = mediaArray[0].type === "image" ? mediaArray[0].url : './assets/Smartify-logo.svg';
@@ -494,7 +468,6 @@ function displayMedia(mediaArray, index, commonValues, currentPosition, currentR
         videoEntity = entity;
 
         setTimeout(() => {
-            console.log('Setting video visibility to true');
             entity.setAttribute("visible", "true");
 
             setTimeout(() => {
@@ -534,14 +507,11 @@ function displayMedia(mediaArray, index, commonValues, currentPosition, currentR
 
     const confirmedPosition = mediaEntity.getAttribute("position");
     const confirmedRotation = mediaEntity.getAttribute("rotation");
-    console.log(`Confirmed initial position: x: ${confirmedPosition.x}, y: ${confirmedPosition.y}, z: ${confirmedPosition.z}`);
-    console.log(`Confirmed initial rotation: x: ${confirmedRotation.x}, y: ${confirmedRotation.y}, z: ${confirmedRotation.z}`);
+    
 
     setTimeout(() => {
         const doubleCheckPosition = mediaEntity.getAttribute("position");
         const doubleCheckRotation = mediaEntity.getAttribute("rotation");
-        console.log(`Double-check position: x: ${doubleCheckPosition.x}, y: ${doubleCheckPosition.y}, z: ${doubleCheckPosition.z}`);
-        console.log(`Double-check rotation: x: ${doubleCheckRotation.x}, y: ${doubleCheckRotation.y}, z: ${doubleCheckRotation.z}`);
     }, 100);
 
     setTimeout(() => {
@@ -554,7 +524,6 @@ function displayMedia(mediaArray, index, commonValues, currentPosition, currentR
 
 
 function fadeOutElement(element) {
-    console.log(`Starting fade out animation for element: ${element.tagName}`);
     element.setAttribute("animation", {
         property: "opacity",
         to: 0,
@@ -564,9 +533,7 @@ function fadeOutElement(element) {
     });
 
     element.addEventListener("animationcomplete", () => {
-        console.log(`Fade out animation completed for element: ${element.tagName}`);
         element.parentNode.removeChild(element);
-        console.log(`Element removed from DOM: ${element.tagName}`);
     });
 
     element.emit("startFadeOut");
@@ -574,11 +541,9 @@ function fadeOutElement(element) {
 
 function changeMedia(mediaArray, commonValues) {
     if (isChangingMedia) {
-        console.log("changeMedia called, but media is already changing");
         return;
     }
     isChangingMedia = true;
-    console.log("changeMedia called");
 
     // Preserve current position and rotation
     const currentPosition = mediaEntity.getAttribute("position");
@@ -595,12 +560,9 @@ function changeMedia(mediaArray, commonValues) {
         if (currentAudio.paused) {
             currentAudio.muted = false; // Ensure the audio is unmuted
             currentAudio.play().catch(error => {
-                console.log("Error playing audio:", error);
             });
-            console.log("Audio is playing");
         } else {
             currentAudio.pause();
-            console.log("Audio is paused");
         }
     }
 
@@ -659,7 +621,6 @@ document.addEventListener("touchstart", function (e) {
     if (e.touches.length === 2) {
         initialPinchDistance = getPinchDistance(e);
         isPinching = true; // Set the flag to indicate a pinch gesture
-        console.log(`Initial touch start. initialPinchDistance: ${initialPinchDistance}`);
     } else if (e.touches.length === 1) {
         isDragging = true;
         initialTouchX = e.touches[0].pageX;
@@ -690,13 +651,8 @@ document.addEventListener("touchmove", function (e) {
         let position = mediaEntity.getAttribute("position");
 
         if (dragAxis === "x") {
-            console.log(`Initial Fixed Angle: ${initialFixedAngle}`);
-            console.log(`Delta X: ${deltaX}`);
-            console.log(`Drag Speed X: ${dragSpeedX}`);
-
             fixedAngleDegrees = initialFixedAngle - deltaX * dragSpeedX;
 
-            console.log(`Updated Fixed Angle Degrees: ${fixedAngleDegrees}`);
 
             const radians = (fixedAngleDegrees * Math.PI) / 180;
             const x = -currentZoom * Math.sin(radians);
@@ -719,8 +675,6 @@ document.addEventListener("touchmove", function (e) {
                 lookImage.setAttribute("rotation", { x: 0, y: angle + fixedAngleDegrees, z: 0 });
             });
 
-            console.log(`Media Entity Position: `, mediaEntity.getAttribute("position"));
-            console.log(`Media Entity Rotation: `, mediaEntity.getAttribute("rotation"));
 
         } else if (dragAxis === "y") {
             const adjustedDragSpeedY = dragSpeedY * (currentZoom / 45);
@@ -784,7 +738,6 @@ function updateZoom(currentPinchDistance) {
 document.querySelectorAll('a-entity, a-image, a-video').forEach(el => {
     const position = el.getAttribute('position');
     if (position.x === 0 && position.y === 0 && position.z === 0) {
-        console.log(`Element at origin: ${el.tagName}, id: ${el.getAttribute('id')}`);
     }
 });
 
