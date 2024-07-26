@@ -594,7 +594,7 @@ function createLookImages() {
         const lookZ = -currentZoom * Math.cos(radians);
 
         const lookImage = document.createElement("a-image");
-        lookImage.setAttribute("src", "./assets/images/UI/look-for.png");
+        lookImage.setAttribute("src", "./assets/images/UI/look-for1.png");
         lookImage.setAttribute("position", { x: lookX, y: 0, z: lookZ });
         lookImage.setAttribute("rotation", {
             x: 0,
