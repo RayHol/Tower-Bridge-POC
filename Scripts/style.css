@@ -92,7 +92,7 @@ html body .a-dialog-ok-button {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999; /* Ensure it appears above all other content */
+  z-index: 9999;
 }
 
 .orientation-popup {
@@ -325,17 +325,9 @@ html body .a-dialog-ok-button {
         display: flex;
         justify-content: space-between;
         width: 100%;
-        height: 100%; /* Ensure the content takes the full height */
+        height: 100%; 
     }
 
-/*     .overlay-left,
-    .overlay-right {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        width: 40%;
-        height: 100%;
-    } */
 
     .overlay-left {
         align-items: center;
@@ -380,7 +372,6 @@ html body .a-dialog-ok-button {
         position: fixed;
         bottom: 5%;
         left: 25%;
-/*         transform: translateX(-50%); */
         display: flex;
         align-items: center;
         justify-content: center;
@@ -466,7 +457,7 @@ html body .a-dialog-ok-button {
     flex-direction: column;
     align-items: flex-start;
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
 #full-screen-overlay .fsinstruction {
@@ -507,9 +498,6 @@ html body .a-dialog-ok-button {
     font-family: 'Kapra-Condensed', sans-serif;
 }
 
-/* #full-screen-overlay #got-it-button:hover {
-    background-color: #1B1B1B;
-} */
 
 #full-screen-overlay #powered-by-fullscreen {
     font-family: 'Poppins', sans-serif;
@@ -546,14 +534,14 @@ html body .a-dialog-ok-button {
     #full-screen-overlay {
         flex-direction: row;
         justify-content: space-between;
-        align-items: flex-start; /* Start aligning from the top */
+        align-items: flex-start; 
         padding: 20px;
     }
 
     #full-screen-overlay .overlay-content {
         display: flex;
         justify-content: space-between;
-        align-items: flex-start; /* Ensure content starts from the top */
+        align-items: flex-start;
         width: 100%;
         height: 100%; 
         padding: 10px;
@@ -576,23 +564,23 @@ html body .a-dialog-ok-button {
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
-        align-items: flex-start; /* Align items to the left */
+        align-items: flex-start;
         height: 100%;
         width: 45%;
         text-align: left; 
         margin-left: auto; 
-        margin-top: -50px; /* Ensure no top margin */
-        padding-top: 0; /* Ensure no top padding */
+        margin-top: -50px; 
+        padding-top: 0; 
         padding-right: 3%;
     }
 
     #full-screen-overlay .fsinstruction {
         display: flex;
         align-items: center;
-        justify-content: flex-start; /* Align content to the left */
+        justify-content: flex-start; 
         margin-bottom: 10px;
         width: 100%;
-        text-align: left; /* Align text to the left */
+        text-align: left; 
     }
 
     #full-screen-overlay .fsinstruction .fsinstruction-icon {
@@ -627,9 +615,6 @@ html body .a-dialog-ok-button {
         right: 8%;
     }
 
-/*     #full-screen-overlay #got-it-button:hover {
-        background-color: #1B1B1B;
-    } */
 
     #full-screen-overlay .powered-by-container {
         position: fixed;
@@ -666,35 +651,6 @@ body, html {
     align-items: center;
     position: relative;
 }
-/* 
-#videoElement {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover; 
-    z-index: -1; 
-} */
-
-/* #mediaOverlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 5;
-} */
-
-/* #mediaOverlay img,
-#mediaOverlay video {
-    max-width: 100%;
-    max-height: 100%;
-} */
-
 
 
 .icon-buttons,
@@ -812,12 +768,12 @@ button[data-action="change"] {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    background: rgba(0, 0, 0, 0.5); 
     z-index: 9999;
 }
 
 #congratulations-overlay .popup-content {
-    background: #FBD86F; /* Yellow background */
+    background: #FBD86F; 
     border-radius: 10px;
     padding: 20px;
     text-align: center;
@@ -889,10 +845,6 @@ button[data-action="change"] {
 }
 
 
-/* #congratulations-overlay button:hover {
-    background-color: #1B1B1B;
-} */
-
 #congratulations-overlay .close-button {
     position: absolute;
     top: -20px;
@@ -909,24 +861,24 @@ button[data-action="change"] {
 /* Congrats Landscape-specific styles */
 @media screen and (orientation: landscape) {
     #congratulations-overlay .popup-content {
-        max-width: 80%; /* Make the popup wider */
+        max-width: 80%; 
         width: auto;
         padding: 20px;
-        text-align: left; /* Align text to the left */
+        text-align: left; 
         transform: translate(5%, 0%);
     }
 
     #congratulations-overlay .popup-content img {
-        width: 120px; /* Adjust the image size if needed */
+        width: 120px; 
         height: auto;
-        float: left; /* Float the image to the left */
+        float: left; 
         margin-right: 20px;
     }
 
     #congratulations-overlay .congrats-text {
         display: inline-block;
         vertical-align: top;
-        max-width: calc(100% - 140px); /* Ensure text doesn't overlap with image */
+        max-width: calc(100% - 140px); 
         margin-top: -15px;
     }
 
@@ -949,7 +901,7 @@ button[data-action="change"] {
     display: flex;
     justify-content: center;
     position: fixed;
-    top: 10px; /* Adjusted to top of page */
+    top: 10px; 
     left: 50%;
     padding: 0px 30px;
     transform: translateX(-50%);
@@ -1005,7 +957,7 @@ button[data-action="change"] {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    background: rgba(0, 0, 0, 0.5); 
     z-index: 9999;
 }
 
@@ -1013,7 +965,7 @@ button[data-action="change"] {
     width: 100%;
     z-index: 99;
     opacity: 1;
-    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    background: rgba(0, 0, 0, 0.5); 
 }
 
 #map-overlay .overlay-content {
@@ -1037,9 +989,6 @@ button[data-action="change"] {
     content: "";
 }
 
-/* #close-map-overlay:hover {
-    background-color: #FFA500;
-} */
 
 .map-image {
     width: 90%;
@@ -1075,12 +1024,12 @@ button[data-action="change"] {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    background: rgba(0, 0, 0, 0.5); 
     z-index: 9999;
 }
 
 #help-overlay .overlay-content {
-    background: rgba(0, 0, 0, 0.8); /* Semi-transparent black background */
+    background: rgba(0, 0, 0, 0.8); 
     border-radius: 0;
     padding: 20px;
     text-align: center;
@@ -1095,7 +1044,7 @@ button[data-action="change"] {
     position: absolute;
     top: 0;
     left: 0;
-    box-sizing: border-box; /* Include padding in the element's total width and height */
+    box-sizing: border-box; 
 }
 
 #help-overlay .help-instruction {
@@ -1153,49 +1102,49 @@ button[data-action="change"] {
 /* Landscape mode adjustments for help overlay */
 @media (orientation: landscape) {
     #help-overlay .overlay-content {
-        flex-direction: row; /* Change to row for horizontal layout */
-        justify-content: center; /* Center contents horizontally */
-        align-items: center; /* Center contents vertically */
+        flex-direction: row; 
+        justify-content: center; 
+        align-items: center; 
         padding: 20px;
-        padding-left: 40px; /* Add left padding to prevent cutting off */
-        padding-right: 40px; /* Add right padding to prevent cutting off */
+        padding-left: 40px; 
+        padding-right: 40px; 
         text-align: center;
-        height: 100%; /* Ensure it takes the full height */
-        width: 100%; /* Ensure it takes the full width */
-        box-sizing: border-box; /* Include padding in the element's total width and height */
+        height: 100%; 
+        width: 100%; 
+        box-sizing: border-box; 
     }
 
     #help-overlay .help-instruction {
         flex-direction: column;
         align-items: center;
-        margin-bottom: 0; /* Remove bottom margin */
+        margin-bottom: 0; 
         margin-left: 20px;
         margin-right: 20px;
-        flex: 1; /* Allow instructions to take equal space */
+        flex: 1; 
     }
 
     #help-overlay .help-icon {
-        width: 36px; /* Adjust icon size */
-        height: 36px; /* Adjust icon size */
+        width: 36px;
+        height: 36px; 
     }
 
     #help-overlay .help-text {
         margin-top: 20px;
-        width: 100%; /* Make text take full width */
-        white-space: normal; /* Allow text to wrap */
+        width: 100%; 
+        white-space: normal; 
     }
 
     #help-overlay .help-text h2,
     #help-overlay .help-instruction h2 {
-        font-size: 24px; /* Adjust font size */
-        line-height: 32px; /* Adjust line height */
+        font-size: 24px; 
+        line-height: 32px; 
     }
 
     #help-overlay .help-text p,
     #help-overlay .help-instruction p {
-        font-size: 14px; /* Adjust font size */
-        line-height: 20px; /* Adjust line height */
-        padding: 0 10px; /* Add padding to ensure text wraps nicely */
+        font-size: 14px; 
+        line-height: 20px; 
+        padding: 0 10px; 
     }
 }
 .loading-overlay {
