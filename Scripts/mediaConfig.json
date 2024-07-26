@@ -3,9 +3,9 @@
         "common": {
             "scale": "10 7 1",
             "rotation": "0 0 0",
-            "fixedAngleDegrees": 87,
-            "initialY": 0.1,
-            "initialZ": -25
+            "fixedAngleDegrees": 80,
+            "initialY": 0.6,
+            "initialZ": -26
         },
         "media": [
             {
@@ -30,7 +30,7 @@
             "rotation": "0 0 0",
             "fixedAngleDegrees": 115.60,
             "initialY": -5,
-            "initialZ": -46.60
+            "initialZ": -25
         },
         "media": [
             {
@@ -44,7 +44,7 @@
                 "type": "video",
                 "url": "https://rayhol.github.io/TB_Videos/Videos3/02.mp4",
                 "frameUrl": "./assets/frames/frame2.png",
-                "info": "Video 2",
+                "info": "Pause Animation",
                 "audioUrl": "https://rayhol.github.io/TB_Videos/Audio3/02.mp3"
             }
         ]
@@ -53,9 +53,9 @@
         "common": {
             "scale": "10 7 1",
             "rotation": "0 0 0",
-            "fixedAngleDegrees": 2,
-            "initialY": 1,
-            "initialZ": -25
+            "fixedAngleDegrees": -84.14,
+            "initialY": -1.15,
+            "initialZ": -29.01
         },
         "media": [
             {
@@ -69,7 +69,7 @@
                 "type": "video",
                 "url": "https://rayhol.github.io/TB_Videos/Videos3/03.mp4",
                 "frameUrl": "./assets/frames/frame2.png",
-                "info": "Video 3",
+                "info": "Pause Animation",
                 "audioUrl": "https://rayhol.github.io/TB_Videos/Audio3/03.mp3"
             }
         ]
@@ -78,9 +78,9 @@
         "common": {
             "scale": "10 7 1",
             "rotation": "0 0 0",
-            "fixedAngleDegrees": 0,
-            "initialY": 0,
-            "initialZ": -25
+            "fixedAngleDegrees": 80,
+            "initialY": 1.12,
+            "initialZ": -26
         },
         "media": [
             {
@@ -94,7 +94,7 @@
                 "type": "video",
                 "url": "https://rayhol.github.io/TB_Videos/Videos3/04.mp4",
                 "frameUrl": "./assets/frames/frame2.png",
-                "info": "Video 4",
+                "info": "Pause Animation",
                 "audioUrl": "https://rayhol.github.io/TB_Videos/Audio3/04.mp3"
             }
         ]
@@ -103,7 +103,7 @@
         "common": {
             "scale": "10 7 1",
             "rotation": "0 90 0",
-            "fixedAngleDegrees": -78.23,
+            "fixedAngleDegrees": -70,
             "initialY": 2.06,
             "initialZ": -30.10
         },
@@ -119,7 +119,7 @@
                 "type": "video",
                 "url": "https://rayhol.github.io/TB_Videos/Videos3/05.mp4",
                 "frameUrl": "./assets/frames/frame2.png",
-                "info": "Tap the button to switch back",
+                "info": "Pause Animation",
                 "audioUrl": "https://rayhol.github.io/TB_Videos/Audio3/05.mp3"
             }
         ]
@@ -128,7 +128,7 @@
         "common": {
             "scale": "10 7 1",
             "rotation": "0 90 0",
-            "fixedAngleDegrees": 7.14,
+            "fixedAngleDegrees": 15,
             "initialY": -2.43,
             "initialZ": -32.67
         },
@@ -144,7 +144,7 @@
                 "type": "video",
                 "url": "https://rayhol.github.io/TB_Videos/Videos3/06.mp4",
                 "frameUrl": "./assets/frames/frame2.png",
-                "info": "Tap the button to switch back",
+                "info": "Pause Animation",
                 "audioUrl": "https://rayhol.github.io/TB_Videos/Audio3/06.mp3"
             }
         ]
@@ -153,9 +153,9 @@
         "common": {
             "scale": "10 7 1",
             "rotation": "0 90 0",
-            "fixedAngleDegrees": -77.16,
-            "initialY": -1.23,
-            "initialZ": -30
+            "fixedAngleDegrees": 80,
+            "initialY": 0,
+            "initialZ": -27
         },
         "media": [
             {
@@ -169,7 +169,7 @@
                 "type": "video",
                 "url": "https://rayhol.github.io/TB_Videos/Videos3/07.mp4",
                 "frameUrl": "./assets/frames/frame2.png",
-                "info": "Tap the button to switch back",
+                "info": "Pause Animation",
                 "audioUrl": "https://rayhol.github.io/TB_Videos/Audio3/07.mp3"
             }
         ]
@@ -178,8 +178,8 @@
         "common": {
             "scale": "10 7 1",
             "rotation": "0 90 0",
-            "fixedAngleDegrees": 0,
-            "initialY": 0,
+            "fixedAngleDegrees": 3,
+            "initialY": 3,
             "initialZ": -25
         },
         "media": [
@@ -194,7 +194,7 @@
                 "type": "video",
                 "url": "https://rayhol.github.io/TB_Videos/Videos3/08.mp4",
                 "frameUrl": "./assets/frames/frame2.png",
-                "info": "Tap the button to switch back",
+                "info": "Pause Animation",
                 "audioUrl": "https://rayhol.github.io/TB_Videos/Audio3/08.mp3"
             }
         ]
